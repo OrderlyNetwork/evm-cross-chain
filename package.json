@@ -1,0 +1,41 @@
+{
+  "name": "hardhat_demo",
+  "version": "1.0.0",
+  "description": "## Setting up a project ## Compiling and deploying contracts ## Writing tasks and testing contracts ## Hardhat Runtime Environment introduction ## Setting up tenderly ## Debugging and simulation with tenderly ## Q&A",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.1",
+    "@nomicfoundation/hardhat-ethers": "^3.0.4",
+    "@nomicfoundation/hardhat-foundry": "^1.0.2",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.0.4",
+    "@openzeppelin/hardhat-upgrades": "^2.0.1",
+    "@typechain/ethers-v6": "^0.4.3",
+    "@typechain/hardhat": "^8.0.3",
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
+    "chai": "^4.3.7",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.6.5",
+    "hardhat-deploy": "^0.11.34",
+    "hardhat-deploy-ethers": "^0.4.1",
+    "hardhat-deploy-tenderly": "^0.2.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.4",
+    "ts-node": "^10.9.1",
+    "typechain": "^8.3.1",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^4.9.2",
+    "hardhat": "^2.13.0"
+  }
+}
