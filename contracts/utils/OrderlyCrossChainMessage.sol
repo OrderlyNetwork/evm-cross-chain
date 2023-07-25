@@ -1,19 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-
 // Library to handle the conversion of the message structure to bytes array and vice versa
 library OrderlyCrossChainMessage {
-
     // List of methods that can be called cross-chain
-    enum CrossChainOption {
-        LayerZero
-    }
+    enum CrossChainOption {LayerZero}
 
     enum CrossChainMethod {
         Deposit, // from vault to ledger
         Withdraw, // from ledger to vault
-        WithdrawFinish // from vault to ledger
+        WithdrawFinish, // from vault to ledger
+        Ping, // for message testing
+        PingPong // ABA message testing
     }
 
     enum PayloadDataType {
@@ -35,9 +33,12 @@ library OrderlyCrossChainMessage {
         uint256 dstChainId; // Target blockchain ID
     }
 
-    
     // Encode the message structure to bytes array
-    function encodeMessageV1AndPayload(MessageV1 memory message, bytes memory payload) internal pure returns (bytes memory) {
+    function encodeMessageV1AndPayload(MessageV1 memory message, bytes memory payload)
+        internal
+        pure
+        returns (bytes memory)
+    {
         return abi.encode(message, payload);
     }
 
@@ -46,5 +47,4 @@ library OrderlyCrossChainMessage {
         (MessageV1 memory message, bytes memory payload) = abi.decode(data, (MessageV1, bytes));
         return (message, payload);
     }
-
 }

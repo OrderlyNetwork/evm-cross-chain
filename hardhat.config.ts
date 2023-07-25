@@ -65,6 +65,11 @@ const config: HardhatUserConfig = {
       chainId: 43113,
       saveDeployments: true,
       accounts: getAccount('fuji'),
+    },
+    orderly: {
+      url: getRpcUrl('orderly'),
+      chainId: 986532,
+      accounts: getAccount('orderly'),
     }
   },
   tenderly: {

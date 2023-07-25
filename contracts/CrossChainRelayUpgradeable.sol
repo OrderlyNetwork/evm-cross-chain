@@ -4,11 +4,10 @@ pragma solidity ^0.8.4;
 import "./interface/IOrderlyCrossChain.sol";
 import "./utils/OrderlyCrossChainMessage.sol";
 import "./layerzero/lzApp/LzAppUpgradeable.sol";
-import "openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
-import "openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
-import "openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-
-import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract CrossChainRelayDataLayout {
     // A mapping to track trusted callers
@@ -34,13 +33,17 @@ contract CrossChainRelayDataLayout {
 }
 
 contract CrossChainRelayUpgradeable is
-    CrossChainRelayDataLayout,
     IOrderlyCrossChain,
     Initializable,
     OwnableUpgradeable,
     LzAppUpgradeable,
-    UUPSUpgradeable
+    UUPSUpgradeable,
+    CrossChainRelayDataLayout
 {
+    event MsgReceived(uint8);
+    event Ping();
+    event Pong();
+
     using OrderlyCrossChainMessage for OrderlyCrossChainMessage.MessageV1;
 
     constructor() {
@@ -110,7 +113,7 @@ contract CrossChainRelayUpgradeable is
 
     // Allows a trusted caller to send a message
     function sendMessage(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
-        external
+        public
         payable
         override
     {
@@ -129,6 +132,32 @@ contract CrossChainRelayUpgradeable is
             lzEndpoint.estimateFees(lzDstChainId, address(this), lzPayload, false, adapterParams);
         _lzSend(lzDstChainId, lzPayload, payable(address(this)), address(0), adapterParams, nativeFee);
         emit MessageSent(data, payload);
+    }
+
+    function ping(uint256 dstChainId) public {
+        OrderlyCrossChainMessage.MessageV1 memory data = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping),
+            option: 0,
+            payloadDataType: 0,
+            srcCrossChainManager: address(0),
+            dstCrossChainManager: address(0),
+            srcChainId: _currentChainId,
+            dstChainId: dstChainId
+        });
+        sendMessage(data, bytes(""));
+    }
+
+    function pingPong(uint256 dstChainId) external onlyOwner {
+        OrderlyCrossChainMessage.MessageV1 memory data = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong),
+            option: 0,
+            payloadDataType: 0,
+            srcCrossChainManager: address(0),
+            dstCrossChainManager: address(0),
+            srcChainId: _currentChainId,
+            dstChainId: dstChainId
+        });
+        sendMessage(data, bytes(""));
     }
 
     // Allows a trusted caller to receive a message
@@ -153,6 +182,16 @@ contract CrossChainRelayUpgradeable is
             OrderlyCrossChainMessage.decodeMessageV1AndPayload(_payload);
         //require(message.srcChainId == rawSrcChainId, "CrossChainRelay: invalid src chain id");
         //require(_crossChainRelayMapping[rawSrcChainId] == address(bytes20(_srcAddress)), "CrossChainRelay: invalid src address");
-        receiveMessage(message, payload);
+
+        emit MsgReceived(message.method);
+        if (message.method == uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong)) {
+            // send pong back;
+            ping(message.srcChainId);
+            emit Pong();
+        } else if (message.method == uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping)) {
+            emit Ping();
+        } else {
+            receiveMessage(message, payload);
+        }
     }
 }
