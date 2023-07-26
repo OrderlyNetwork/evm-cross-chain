@@ -30,4 +30,16 @@ contract BaseScript is Script {
             revert("Invalid network");
         }
     }
+
+    function getRelayProxyAddress(string memory network) internal view returns (address) {
+        if (network.compare("fuji")) {
+            return vm.envAddress("FUJI_RELAY_PROXY");
+        } else if (network.compare("mumbai")) {
+            return vm.envAddress("MUMBAI_RELAY_PROXY");
+        } else if (network.compare("orderly")) {
+            return vm.envAddress("ORDERLY_RELAY_PROXY");
+        } else {
+            revert("Invalid network");
+        }
+    }
 }

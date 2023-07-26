@@ -2,6 +2,7 @@
 pragma solidity ^0.8.18;
 
 import "./BaseScript.s.sol";
+import "../contracts/layerzero/interfaces/ILayerZeroEndpoint.sol";
 
 contract RelayRetry is BaseScript {
     function run() external {
