@@ -15,6 +15,8 @@ import "./tasks/accounts";
 import "./tasks/sampleTask";
 import "./tasks/balance";
 import "./tasks/deployLock";
+import "./tasks/setupRelay";
+import "./tasks/sendPing";
 
 function getAccount(networkName: string) {
   console.log('using network: ', networkName)

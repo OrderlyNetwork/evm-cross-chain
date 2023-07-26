@@ -36,6 +36,8 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.2",
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
-    "hardhat": "^2.13.0"
+    "@types/yargs": "^17.0.24",
+    "hardhat": "^2.13.0",
+    "yargs": "^17.7.2"
   }
 }
