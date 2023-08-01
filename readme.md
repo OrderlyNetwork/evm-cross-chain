@@ -22,8 +22,8 @@ yarn run hardhat --network fuji setupRelay --target-network orderly
 ```
 ## Upgrade Proxy
 ```shell
-yarn run hardhat --network orderly run scripts/deployRelayUpgradeable.ts 
-yarn run hardhat --network fuji run scripts/deployRelayUpgradeable.ts 
+yarn run hardhat --network orderly run scripts/upgradeRelay.ts 
+yarn run hardhat --network fuji run scripts/upgradeRelay.ts 
 ```
 ## Ping Pong Test Cross-Chain Messages
 ```shell
