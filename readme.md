@@ -41,3 +41,17 @@ RETRY_PAYLOAD_RAW_DATA="0x"
 source .env
 forge script forgeScripts/RelayRetry.s.sol  --rpc-url $RPC_URL_ORDERLY -vvvv  --via-ir
 ```
+
+## Withdraw from relay
+set `WITHDRAW_RELAY_ADDRESS` and `CURRENT_NETWORK` in `.env`, and run:
+```shell
+source .env
+forge script forgeScripts/RelayWithdraw.s.sol  --rpc-url $RPC_URL_FUJI -vvvv  --via-ir --broadcast
+```
+
+## Transfer To Relay
+set `TRANFER_ADDRESS`, `TRANSFER_AMOUNT` and `CURRENT_NETWORK` in `.env`, and run:
+```shell
+source .env
+forge script forgeScripts/Transfer.s.sol  --rpc-url $RPC_URL_FUJI -vvvv  --via-ir --broadcast
+```
