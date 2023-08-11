@@ -55,3 +55,6 @@ set `TRANFER_ADDRESS`, `TRANSFER_AMOUNT` and `CURRENT_NETWORK` in `.env`, and ru
 source .env
 forge script forgeScripts/Transfer.s.sol  --rpc-url $RPC_URL_FUJI -vvvv  --via-ir --broadcast
 ```
+
+## Check Payload Stored
+visit https://testnet.layerzeroscan.com/ to search to the initial tx hash, then you can see the payload status.
