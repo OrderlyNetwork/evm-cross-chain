@@ -4,7 +4,7 @@ pragma solidity ^0.8.18;
 import "./BaseScript.s.sol";
 import "../contracts/CrossChainRelayUpgradeable.sol";
 
-contract RelayAddManagerAsCaller is BaseScript {
+contract SetManagerAddress is BaseScript {
     function run() external {
         string memory network = vm.envString("CURRENT_NETWORK");
         address relayProxyAddress = getRelayProxyAddress(network);
@@ -12,7 +12,7 @@ contract RelayAddManagerAsCaller is BaseScript {
         vm.startBroadcast(getPrivateKey(network));
 
         CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(relayProxyAddress));
-        relay.addCaller(managerProxyAddress);
+        relay.setManagerAddress(managerProxyAddress);
         vm.stopBroadcast();
     }
 

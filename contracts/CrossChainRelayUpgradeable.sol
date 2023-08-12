@@ -30,6 +30,9 @@ contract CrossChainRelayDataLayout {
 
     // The Current Chain ID
     uint256 public _currentChainId;
+
+    // the manager address
+    address public _managerAddress;
 }
 
 contract CrossChainRelayUpgradeable is
@@ -106,6 +109,11 @@ contract CrossChainRelayUpgradeable is
         _crossChainRelayMapping[chainId] = crossChainRelay;
     }
 
+    function setManagerAddress(address _address) external onlyOwner {
+        _managerAddress = _address;
+        _callers[_address] = 1;
+    }
+
     // Allows the owner to add a flow gas limit mapping
     function addFlowGasLimitMapping(uint8 flow, uint256 gasLimit) external onlyOwner {
         _flowGasLimitMapping[flow] = gasLimit;
@@ -168,7 +176,7 @@ contract CrossChainRelayUpgradeable is
     {
         require(_callers[msg.sender] == 1, "Caller is not the trusted caller");
         emit MessageReceived(data, payload);
-        IOrderlyCrossChainReceiver(data.dstCrossChainManager).receiveMessage(data, payload);
+        IOrderlyCrossChainReceiver(_managerAddress).receiveMessage(data, payload);
     }
 
     function _blockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload)

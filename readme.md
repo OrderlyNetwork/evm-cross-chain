@@ -59,9 +59,16 @@ forge script forgeScripts/Transfer.s.sol  --rpc-url $RPC_URL_FUJI -vvvv  --via-i
 ## Check Payload Stored
 visit https://testnet.layerzeroscan.com/ to search to the initial tx hash, then you can see the payload status.
 
-## Add Manager As Caller
-you need to set `CURRENT_NETWORK` in `.env`. and then call:
+## Add New Caller
+you need to set `CURRENT_NETWORK` `NEW_CALLER` in `.env`. and then call:
 ```shell
-forge script forgeScripts/RelayAddManagerAsCaller.sol  --rpc-url ${RPC_URL_XXX} -vvvv  --via-ir --broadcast
+forge script forgeScripts/RelayAddCaller.sol  --rpc-url $RPC_URL_XXX -vvvv  --via-ir --broadcast
+```
+replace XXX with the network name that suits you.
+
+## Set Manager address and add as caller
+you need to set `CURRENT_NETWORK` in `.env` and then call:
+```shell
+forge script forgeScripts/SetManagerAddress.sol --rpc-url $RPC_URL_XXX -vvvv  --via-ir --broadcast
 ```
 replace XXX with the network name that suits you.
