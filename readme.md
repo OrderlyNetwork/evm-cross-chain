@@ -34,12 +34,12 @@ yarn run hardhat --network fuji sendPing --target-network orderly
 setup variables in `.env`:
 ```yml
 # parameters for foundry scripts
-CURRENT_NETWORK="fuji"
+CURRENT_NETWORK="fuji" # or other network name
 RETRY_PAYLOAD_RAW_DATA="0x"
 ```
 ```shell
 source .env
-forge script forgeScripts/RelayRetry.s.sol  --rpc-url $RPC_URL_ORDERLY -vvvv  --via-ir
+forge script forgeScripts/RelayRetry.s.sol  --rpc-url $RPC_URL_XXX -vvvv  --via-ir
 ```
 
 ## Withdraw from relay

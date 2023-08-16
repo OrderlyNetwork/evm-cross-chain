@@ -20,6 +20,7 @@ contract CrossChainRelayDataLayout {
     mapping(uint16 => uint256) public _lzChainIdMapping;
 
     // chain id to cross chain manager contract address
+    // @deprecated
     mapping(uint256 => address) public _crossChainManagerMapping;
 
     // chain id to cross chain relay contract address
