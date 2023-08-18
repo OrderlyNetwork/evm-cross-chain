@@ -14,6 +14,10 @@ contract BaseScript is Script {
             return vm.envUint("MUMBAI_PRIVATE_KEY");
         } else if (network.compare("orderly")) {
             return vm.envUint("ORDERLY_PRIVATE_KEY");
+        } else if (network.compare("orderlyop")) {
+            return vm.envUint("ORDERLYOP_PRIVATE_KEY");
+        } else if (network.compare("arbitrumgoerli")) {
+            return vm.envUint("ARBITRUMGOERLI_PRIVATE_KEY");
         } else {
             revert("Invalid network");
         }
@@ -38,6 +42,10 @@ contract BaseScript is Script {
             return vm.envAddress("MUMBAI_RELAY_PROXY");
         } else if (network.compare("orderly")) {
             return vm.envAddress("ORDERLY_RELAY_PROXY");
+        } else if (network.compare("orderlyop")) {
+            return vm.envAddress("ORDERLYOP_RELAY_PROXY");
+        } else if (network.compare("arbitrumgoerli")) {
+            return vm.envAddress("ARBITRUMGOERLI_RELAY_PROXY");
         } else {
             revert("Invalid network");
         }
@@ -50,6 +58,10 @@ contract BaseScript is Script {
             return vm.envAddress("MUMBAI_MANAGER_PROXY");
         } else if (network.compare("orderly")) {
             return vm.envAddress("ORDERLY_MANAGER_PROXY");
+        } else if (network.compare("orderlyop")) {
+            return vm.envAddress("ORDERLYOP_MANAGER_PROXY");
+        } else if (network.compare("arbitrumgoerli")) {
+            return vm.envAddress("ARBITRUMGOERLI_MANAGER_PROXY");
         } else {
             revert("Invalid network");
         }

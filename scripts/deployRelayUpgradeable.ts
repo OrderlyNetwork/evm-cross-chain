@@ -5,6 +5,9 @@ async function main() {
 
     const network = hre.network.name;
 
+    // print all lz endpoints
+    console.log('lzEndpoints: ', lzEndpoints)
+
     const endpointAddress = lzEndpoints[network];
 
     // print endpoint address
@@ -17,11 +20,15 @@ async function main() {
 
     const { deploy } = hre.deployments;
 
+    const manualGasPrice = hre.ethers.parseUnits("10", "gwei").toString();
+    console.log('manual gas price: ', manualGasPrice);
+
     // deploy cross-chain relay
     const relay = await deploy('CrossChainRelayUpgradeable', {
         from: deployer.address,
         args: [],
         log: true,
+        gasPrice: manualGasPrice
     });
 
     // deploy proxy
@@ -29,11 +36,17 @@ async function main() {
         from: deployer.address,
         args: [relay.address, "0x"],
         log: true,
+        // manaually set gas price to 10gwei
+        gasPrice: manualGasPrice,
     });
 
     const relayContract = await hre.ethers.getContractAt('CrossChainRelayUpgradeable', proxy.address);
 
-    const tx = await relayContract.initialize(endpointAddress);
+    const tx = await relayContract.initialize(endpointAddress,
+            {
+                gasPrice: manualGasPrice,
+            }
+        );
 
     // wait for tx
     tx.wait();

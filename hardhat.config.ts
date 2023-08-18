@@ -17,6 +17,7 @@ import "./tasks/balance";
 import "./tasks/deployLock";
 import "./tasks/setupRelay";
 import "./tasks/sendPing";
+import "./tasks/mockCrossChain";
 
 function getAccount(networkName: string) {
   console.log('using network: ', networkName)
@@ -72,7 +73,17 @@ const config: HardhatUserConfig = {
       url: getRpcUrl('orderly'),
       chainId: 986532,
       accounts: getAccount('orderly'),
-    }
+    },
+    orderlyop: {
+      url: getRpcUrl('orderlyop'),
+      chainId: 4460,
+      accounts: getAccount('orderlyop'),
+    },
+    arbitrumgoerli: {
+      url:  getRpcUrl('arbitrumgoerli'),
+      chainId: 421613,  
+      accounts: getAccount('arbitrumgoerli'),
+    } 
   },
   tenderly: {
     project: 'project',
