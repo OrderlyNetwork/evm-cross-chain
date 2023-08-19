@@ -1,0 +1,10 @@
+{
+    "fuji": {
+        "cross-chain-manager": "0x",
+        "role": "vault"
+    },
+    "orderlyop": {
+        "cross-chain-manager": "0x",
+        "role": "vault"
+    }
+}

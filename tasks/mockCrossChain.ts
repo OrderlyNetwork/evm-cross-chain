@@ -23,35 +23,12 @@ const eventSignature = 'MessageSent((uint8,uint8,uint8,address,address,uint256,u
 //const eventSignature = 'MessageSent(OrderlyCrossChainMessage.MessageV1,bytes)'
 
 async function sendMsg(network: string, data: string, relayAddress: string, hre: HardhatRuntimeEnvironment) {
-  
-  // set provider
-  const provider = new hre.ethers.JsonRpcProvider(process.env[`RPC_URL_${network.toUpperCase()}`]);
-  // get pk and set an account 
-  const pk = process.env[`${network.toUpperCase()}_PRIVATE_KEY`];
-  if (pk === undefined) {
-    throw new Error(`private key not found for network ${network}`);
+
+  const networkChainId = process.env[`${network.toUpperCase()}_CHAIN_ID`];
+  if (networkChainId === undefined) {
+    throw new Error(`chainId not found for network ${network}`);
   }
-  const wallet = new hre.ethers.Wallet(pk, provider);
 
-
-  // call with function selector and data
-  // function receiveMessage((uint8,uint8,uint8,address,address,uint256,uint256),bytes)
-  // calculate function selector
-  // const functionSelector = hre.ethers.id('receiveMessage((uint8,uint8,uint8,address,address,uint256,uint256),bytes)');
-  // call relayAddress with functionSelector and data
-  const relayContract = await hre.ethers.getContractAt('CrossChainRelayUpgradeable', relayAddress);
-  // call function with struct
-  // struct MessageV1 {
-  //  uint8 method; // enum CrossChainMethod to uint8
-  //  uint8 option; // enum CrossChainOption to uint8
-  //  uint8 payloadDataType; // enum PayloadDataType to uint8
-  //  address srcCrossChainManager; // Source cross-chain manager address
-  //  address dstCrossChainManager; // Target cross-chain manager address
-  //  uint256 srcChainId; // Source blockchain ID
-  //  uint256 dstChainId; // Target blockchain ID
-  // }
-  // decode data into CrossChainMessage
-  
   // ethers decode abi
   const decodedData = hre.ethers.AbiCoder.defaultAbiCoder().decode(
     [ 'uint8', 'uint8', 'uint8', 'address', 'address', 'uint256', 'uint256', 'bytes'],
@@ -71,9 +48,35 @@ async function sendMsg(network: string, data: string, relayAddress: string, hre:
     dstChainId: decodedData[6],
   };
   console.log('crossChainMessage: ', crossChainMessage);
+  // dstChainId must equal to networkChainId
+  if (crossChainMessage.dstChainId !== parseInt(networkChainId)) {
+    console.log(`crossChainMessage.dstChainId ${crossChainMessage.dstChainId} not equal to networkChainId ${networkChainId}, skip`);
+    return;
+  }
+  
+  // set provider
+  const provider = new hre.ethers.JsonRpcProvider(process.env[`RPC_URL_${network.toUpperCase()}`]);
+  // get pk and set an account 
+  const pk = process.env[`${network.toUpperCase()}_PRIVATE_KEY`];
+  if (pk === undefined) {
+    throw new Error(`private key not found for network ${network}`);
+  }
+  const wallet = new hre.ethers.Wallet(pk, provider);
+
+
+  // call with function selector and data
+  // function receiveMessage((uint8,uint8,uint8,address,address,uint256,uint256),bytes)
+  // calculate function selector
+  // const functionSelector = hre.ethers.id('receiveMessage((uint8,uint8,uint8,address,address,uint256,uint256),bytes)');
+  // call relayAddress with functionSelector and data
+  const relayContract = await hre.ethers.getContractAt('CrossChainRelayUpgradeable', relayAddress);
+  
   // call with wallet
   const tx = await relayContract.connect(wallet).receiveMessage(crossChainMessage, decodedData[7]);
 
+  tx.wait();
+  
+  console.log('tx hash: ', tx.hash);
   
 }
 
@@ -89,6 +92,16 @@ async function getLatestBlock(network: string, dstNetwork: string, hre: HardhatR
     // get event topics
     const eventTopic = hre.ethers.id(eventSignature);
     console.log(`event topic: `, eventTopic)
+
+    // dstRelayAddress
+    const dstRelayAddress = process.env[`${dstNetwork.toUpperCase()}_RELAY_PROXY`];
+    if (dstRelayAddress === undefined) {
+      throw new Error(`relayAddress not found for network ${dstNetwork}`);
+    }
+    const relayAddress = process.env[`${network.toUpperCase()}_RELAY_PROXY`];
+    if (relayAddress === undefined) {
+      throw new Error(`relayAddress not found for network ${network}`);
+    }
 
     // create provider
     const provider = new hre.ethers.JsonRpcProvider(netowrkRpcUrl);
@@ -126,7 +139,11 @@ async function getLatestBlock(network: string, dstNetwork: string, hre: HardhatR
           fromBlock: crossChainProcessInfo.finishedBlock,
           toBlock: endBlockNum,
         });
-        const myEvents = logs.filter((log) => log.topics[0] === eventTopic);
+        // and filter logs by event topic and contract address (relayAddress)
+        const myEvents = logs.filter((log) => {
+          return log.topics.includes(eventTopic) && log.address === relayAddress;
+        });
+
         // sort myEvents by blockNumber and index
         myEvents.sort((a, b) => {
           if (a.blockNumber === b.blockNumber) {
@@ -145,14 +162,25 @@ async function getLatestBlock(network: string, dstNetwork: string, hre: HardhatR
         //   // dump log to file
         //   fs.writeFileSync(eventFile, JSON.stringify(log, null, 2));
         // });
-
         
+        // process all events
+        for (let i = 0; i < myEvents.length; i++) {
+          const log = myEvents[i];
+          const eventFile = `${network}-${log.blockNumber}-${log.index}.json`;
+          // if eventFile in sentFiles, skip
+          if (sentFiles.includes(eventFile)) {
+            console.log(`${eventFile} already processed, skip`);
+            continue;
+          }
+          await sendMsg(dstNetwork, log.data, dstRelayAddress, hre);
+          // dump log to file
+          fs.writeFileSync(`mockSentMsgs/${eventFile}`, JSON.stringify(log, null, 2));
+        }
 
         crossChainProcessInfo.finishedBlock = endBlockNum + 1;
         // write back to file
         fs.writeFileSync(fileName, JSON.stringify(crossChainProcessInfo, null, 2));
 
-        // 
       } else {
         await new Promise(r => setTimeout(r, 1000));
       }
@@ -169,14 +197,15 @@ task("mockCrossChain",
     console.log('ethers version: ', hre.ethers.version);
     // get src network and dst network from taskArgs
     const { network1, network2} = taskArgs;
+   
+    // start too threads and then wait for them to finish
+    // getLatestBlock(network1, network2, hre);
+    // getLatestBlock(network2, network1, hre);
+    await Promise.all([
+      getLatestBlock(network1, network2, hre),
+      getLatestBlock(network2, network1, hre),
+    ]);
     
-    // get relay proxy address
-    const relayAddress = process.env[`${network1.toUpperCase()}_RELAY_PROXY`];
-
-    if (relayAddress === undefined) {
-      throw new Error(`relayAddress not found for network ${network1}`);
-    }
-    await sendMsg(network1, '0x000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000066eed000000000000000000000000000000000000000000000000000000000000116c00000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000', relayAddress, hre);
 
 }).addParam("network1", "The cross-chain source network")
   .addParam("network2", "The cross-chain destination network")

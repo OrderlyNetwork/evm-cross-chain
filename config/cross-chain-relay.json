@@ -1,0 +1,12 @@
+{
+  "fuji": {
+    "owner": "0x",
+    "proxy": "0x",
+    "relay": "0x"
+  },
+  "orderlyop": {
+    "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+    "proxy": "0xB3fFeb022a8f2d42D9485d672926cffAAd7B8fD4",
+    "relay": "0x2521750f89bEb11C53a3646D45073bef33312a91"
+  }
+}

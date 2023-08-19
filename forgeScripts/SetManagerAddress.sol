@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import "./BaseScript.s.sol";
+import "../baseScripts/BaseScript.s.sol";
 import "../contracts/CrossChainRelayUpgradeable.sol";
 
 contract SetManagerAddress is BaseScript {

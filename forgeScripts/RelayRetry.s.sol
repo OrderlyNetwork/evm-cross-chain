@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.18;
 
-import "./BaseScript.s.sol";
+import "../baseScripts/BaseScript.s.sol";
 import "../contracts/layerzero/interfaces/ILayerZeroEndpoint.sol";
 
 contract RelayRetry is BaseScript {
