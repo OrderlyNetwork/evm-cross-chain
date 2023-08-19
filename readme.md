@@ -6,6 +6,25 @@
 3. Setup Endpoins addresses
 
 # Operations
+
+## Workflow
+1. you need to set all common public env variables first
+ - RPC urls for each network in `.env` and `hardhat.config.ts`
+ - chain ids for each network in `.env` and `hardhat.config.ts`
+ - private keys for each network `.env`
+ - lz endpoints address in `.env` `constants/lzEndpoints.ts` and `constants/layerzeroEndpoints.json`
+ - lz chain ids and mappings in `constants/chainIds.ts` and `constants/lzChainIdMapping.ts`
+2. set project related env variables
+ *after deployment:*
+ - vault relay address per network
+ - ledger relay address per network
+ *after setup:*
+ - ledger manager address
+ - vault manager address
+2. deploy relay
+3. setup relay
+4. send test tx(ABA) for test cross-chain msg sending and receiving
+5. set manager address
 ## Deploy Proxy and Upgradeable Relay
 ```shell
 yarn run hardhat --network orderly run scripts/deployRelayUpgradeable.ts  
@@ -74,4 +93,5 @@ forge script forgeScripts/SetManagerAddress.sol --rpc-url $RPC_URL_XXX -vvvv  --
 replace XXX with the network name that suits you.
 
 ## Update Layerzero Endpoint
-first you need set the endpoint address in `.env`. and you should set the relay proxy address in `.env`
+first you need set the endpoint address in `.env`. and you should set the relay proxy address in `.env`. and then call the command:
+```shell
