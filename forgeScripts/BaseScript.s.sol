@@ -30,6 +30,10 @@ contract BaseScript is Script {
             return vm.envAddress("MUMBAI_ENDPOINT");
         } else if (network.compare("orderly")) {
             return vm.envAddress("ORDERLY_ENDPOINT");
+        } else if (network.compare("orderlyop")) {
+            return vm.envAddress("ORDERLYOP_ENDPOINT");
+        } else if (network.compare("arbitrumgoerli")) {
+            return vm.envAddress("ARBITRUMGOERLI_ENDPOINT");
         } else {
             revert("Invalid network");
         }

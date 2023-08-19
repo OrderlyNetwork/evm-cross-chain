@@ -62,6 +62,11 @@ contract CrossChainRelayUpgradeable is
         _callers[_endpoint] = 1;
     }
 
+    function updateEndpoint(address _endpoint) external onlyOwner {
+        lzEndpoint = ILayerZeroEndpoint(_endpoint);
+        _callers[_endpoint] = 1;
+    }
+
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     function upgradeTo(address newImplementation) public override onlyOwner onlyProxy {
@@ -177,7 +182,15 @@ contract CrossChainRelayUpgradeable is
     {
         require(_callers[msg.sender] == 1, "Caller is not the trusted caller");
         emit MessageReceived(data, payload);
-        IOrderlyCrossChainReceiver(_managerAddress).receiveMessage(data, payload);
+        if (data.method == uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong)) {
+            // send pong back;
+            ping(data.srcChainId);
+            emit Pong();
+        } else if (data.method == uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping)) {
+            emit Ping();
+        } else {
+            IOrderlyCrossChainReceiver(_managerAddress).receiveMessage(data, payload);
+        }
     }
 
     function _blockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload)
@@ -191,16 +204,8 @@ contract CrossChainRelayUpgradeable is
             OrderlyCrossChainMessage.decodeMessageV1AndPayload(_payload);
         //require(message.srcChainId == rawSrcChainId, "CrossChainRelay: invalid src chain id");
         //require(_crossChainRelayMapping[rawSrcChainId] == address(bytes20(_srcAddress)), "CrossChainRelay: invalid src address");
-
         emit MsgReceived(message.method);
-        if (message.method == uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong)) {
-            // send pong back;
-            ping(message.srcChainId);
-            emit Pong();
-        } else if (message.method == uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping)) {
-            emit Ping();
-        } else {
-            receiveMessage(message, payload);
-        }
+
+        receiveMessage(message, payload);
     }
 }

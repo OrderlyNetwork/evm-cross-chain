@@ -15,12 +15,17 @@ async function sendPing(taskArgs: any, hre: HardhatRuntimeEnvironment) {
 
     const dstChainId = lzChainIdMapping[dstNetwork][0];
 
+    // manual gas
+    const manualGasPrice = hre.ethers.parseUnits("10", "gwei").toString();
+
     if (taskArgs.pong) {
         const tx = await relay.pingPong(dstChainId);
         tx.wait();
         console.log('pingPong tx hash: ', tx.hash);
     } else {
-        const tx = await relay.ping(dstChainId);
+        const tx = await relay.ping(dstChainId, {
+            gasPrice: manualGasPrice,
+        });
         tx.wait();
         console.log('ping tx hash: ', tx.hash);
     }

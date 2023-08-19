@@ -17,11 +17,16 @@ async function main() {
 
     const { deploy } = hre.deployments;
 
+    // manual gas
+    const manualGasPrice = hre.ethers.parseUnits("10", "gwei").toString();
+
     // deploy cross-chain relay
     const relay = await deploy('CrossChainRelayUpgradeable', {
         from: deployer.address,
         args: [],
         log: true,
+        gasPrice: manualGasPrice
+
     });
 
     // get deployed proxy address
@@ -29,7 +34,9 @@ async function main() {
 
     const relayContract = await hre.ethers.getContractAt('CrossChainRelayUpgradeable', proxy.address);
 
-    const tx = await relayContract.upgradeTo(relay.address);
+    const tx = await relayContract.upgradeTo(relay.address,{
+            gasPrice: manualGasPrice,
+    });
 
     // wait for tx
     tx.wait();

@@ -72,3 +72,6 @@ you need to set `CURRENT_NETWORK` in `.env` and then call:
 forge script forgeScripts/SetManagerAddress.sol --rpc-url $RPC_URL_XXX -vvvv  --via-ir --broadcast
 ```
 replace XXX with the network name that suits you.
+
+## Update Layerzero Endpoint
+first you need set the endpoint address in `.env`. and you should set the relay proxy address in `.env`
