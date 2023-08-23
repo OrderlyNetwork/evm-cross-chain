@@ -93,5 +93,17 @@ forge script forgeScripts/SetManagerAddress.sol --rpc-url $RPC_URL_XXX -vvvv  --
 replace XXX with the network name that suits you.
 
 ## Update Layerzero Endpoint
-first you need set the endpoint address in `.env`. and you should set the relay proxy address in `.env`. and then call the command:
+first you need set the endpoint address in `.env`. and you should set the relay proxy address and also `CURRENT_NETWORK` in `.env`. and then call the command:
 ```shell
+forge script forgeScripts/updateEndpoint.s.sol --rpc-url $RPC_URL_XXX -vvvv  --via-ir --broadcast
+```
+
+# All Forge Script Deployment and Confiuration
+Consider using all forge scripts to deploy, upgrade, setup, update and more operations. Because forge scripts also support read and write files.
+
+Operations are all configured in files under `config/tasks`, project related variables are put under `config`, for example `cross-chain-relay.json` stores the latest cross-chain-relay and its proxy address.
+## Deployment
+
+```shell
+forge script easyScripts/deployRelay.s.sol  -vvvv  --via-ir --broadcast
+```

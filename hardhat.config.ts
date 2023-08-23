@@ -7,7 +7,7 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "hardhat-deploy-tenderly";
 import '@openzeppelin/hardhat-upgrades';
-import "@nomicfoundation/hardhat-foundry";
+// import "@nomicfoundation/hardhat-foundry";
 //import * as tdly from "./tenderly-hardhat/src";
 //tdly.setup();
 

@@ -6,7 +6,12 @@
   },
   "orderlyop": {
     "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-    "proxy": "0xB3fFeb022a8f2d42D9485d672926cffAAd7B8fD4",
-    "relay": "0x2521750f89bEb11C53a3646D45073bef33312a91"
+    "proxy": "0x2730d08725c2430B419D2B795d0dA98A48Eae613",
+    "relay": "0x7613280ba1ce920df4152102f8AfF736ca6b555a"
+  },
+  "arbitrumgoerli": {
+    "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+    "proxy": "0x7613280ba1ce920df4152102f8AfF736ca6b555a",
+    "relay": "0xB3fFeb022a8f2d42D9485d672926cffAAd7B8fD4"
   }
 }

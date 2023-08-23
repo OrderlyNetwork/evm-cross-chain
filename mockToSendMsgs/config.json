@@ -1,0 +1,14 @@
+{
+    "network_pairs": [
+        {
+            "network_1": {
+                "relayAddress": "",
+                "chainId": 1
+            },
+            "network_2": {
+                "relayAddress": "",
+                "chainId": 2
+            }
+        }
+    ]
+}

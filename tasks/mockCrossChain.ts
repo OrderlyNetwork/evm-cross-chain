@@ -5,8 +5,43 @@ import dotenv from "dotenv";
 dotenv.config();
 import fs from "fs";
 
+// {
+//   "network_pairs": [
+//       {
+//           "network_1": {
+//               "name": "orderly",
+//               "relayAddress": "",
+//               "chainId": 1,
+//               "rpc": ""
+//           },
+//           "network_2": {
+//               "name": "fuji",
+//               "relayAddress": "",
+//               "chainId": 2,
+//               "rpc": ""
+//           }
+//       }
+//   ]
+// }
+
+interface NetworkInfo {
+  name: string;
+  relayAddress: string;
+  chainId: number;
+  rpc: string;
+}
+interface NetworkPair {
+  network_1: NetworkInfo;
+  network_2: NetworkInfo;
+}
+
+interface NetworkPairs {
+  network_pairs: NetworkPair[];
+}
+
 interface CrossChainProcessInfo {
   finishedBlock: number;
+  finishedIndex: number;
 }
 
 interface CrossChainMessage {
@@ -22,20 +57,14 @@ interface CrossChainMessage {
 const eventSignature = 'MessageSent((uint8,uint8,uint8,address,address,uint256,uint256),bytes)'
 //const eventSignature = 'MessageSent(OrderlyCrossChainMessage.MessageV1,bytes)'
 
-async function sendMsg(network: string, data: string, relayAddress: string, hre: HardhatRuntimeEnvironment) {
-
-  const networkChainId = process.env[`${network.toUpperCase()}_CHAIN_ID`];
-  if (networkChainId === undefined) {
-    throw new Error(`chainId not found for network ${network}`);
-  }
+async function sendMsg(networkInfo: NetworkInfo, data: string, hre: HardhatRuntimeEnvironment) {
+  const { name, relayAddress, chainId, rpc } = networkInfo;
 
   // ethers decode abi
   const decodedData = hre.ethers.AbiCoder.defaultAbiCoder().decode(
     [ 'uint8', 'uint8', 'uint8', 'address', 'address', 'uint256', 'uint256', 'bytes'],
     data
   );
-  //const iface = new hre.ethers.Interface(['function receiveMessage((uint8,uint8,uint8,address,address,uint256,uint256),bytes)']);
-  // const functionData = iface.decodeFunctionData('receiveMessage((uint8,uint8,uint8,address,address,uint256,uint256),bytes)', data);
 
   console.log('functionData: ', decodedData);
   const crossChainMessage: CrossChainMessage = {
@@ -49,70 +78,60 @@ async function sendMsg(network: string, data: string, relayAddress: string, hre:
   };
   console.log('crossChainMessage: ', crossChainMessage);
   // dstChainId must equal to networkChainId
-  if (crossChainMessage.dstChainId !== parseInt(networkChainId)) {
-    console.log(`crossChainMessage.dstChainId ${crossChainMessage.dstChainId} not equal to networkChainId ${networkChainId}, skip`);
+  if (crossChainMessage.dstChainId !== chainId) {
+    console.log(`crossChainMessage.dstChainId ${crossChainMessage.dstChainId} not equal to networkChainId ${chainId}, skip`);
     return;
   }
   
   // set provider
-  const provider = new hre.ethers.JsonRpcProvider(process.env[`RPC_URL_${network.toUpperCase()}`]);
+  const provider = new hre.ethers.JsonRpcProvider(rpc);
   // get pk and set an account 
-  const pk = process.env[`${network.toUpperCase()}_PRIVATE_KEY`];
+  const pk = process.env[`${name.toUpperCase()}_PRIVATE_KEY`];
   if (pk === undefined) {
-    throw new Error(`private key not found for network ${network}`);
+    throw new Error(`private key not found for network ${name}`);
   }
   const wallet = new hre.ethers.Wallet(pk, provider);
 
-
-  // call with function selector and data
-  // function receiveMessage((uint8,uint8,uint8,address,address,uint256,uint256),bytes)
-  // calculate function selector
-  // const functionSelector = hre.ethers.id('receiveMessage((uint8,uint8,uint8,address,address,uint256,uint256),bytes)');
-  // call relayAddress with functionSelector and data
   const relayContract = await hre.ethers.getContractAt('CrossChainRelayUpgradeable', relayAddress);
   
-  // call with wallet
-  const tx = await relayContract.connect(wallet).receiveMessage(crossChainMessage, decodedData[7]);
+  let tx;
+  while (true) {
+    try {
+      tx = await relayContract.connect(wallet).receiveMessage(crossChainMessage, decodedData[7]);
+      break;
+    } catch (e) {
+      console.log(`tx failed or reverted, wait for 5 seconds and retry`);
+      await new Promise(r => setTimeout(r, 5000));
+    }
+  }
 
+  // wait for tx
   tx.wait();
   
   console.log('tx hash: ', tx.hash);
   
 }
 
-async function getLatestBlock(network: string, dstNetwork: string, hre: HardhatRuntimeEnvironment) {
+async function getLatestBlock(networkPair: NetworkPair, hre: HardhatRuntimeEnvironment) {
 
-    const { ethers } = hre;
-    // convert network name to RPC URL env var name, put in uppercase
-    const rpcUrlEnvVarName = `RPC_URL_${network.toUpperCase()}`;
-    // from dotenv get network provider, e.g. "RINKEBY_RPC_URL"
-    const netowrkRpcUrl = process.env[rpcUrlEnvVarName];
-    console.log(`network ${network} RPC URL: `, netowrkRpcUrl)
+    const network1 = networkPair.network_1;
+    const network2 = networkPair.network_2;
+    const { name, relayAddress, chainId, rpc } = network1;
 
     // get event topics
     const eventTopic = hre.ethers.id(eventSignature);
     console.log(`event topic: `, eventTopic)
 
-    // dstRelayAddress
-    const dstRelayAddress = process.env[`${dstNetwork.toUpperCase()}_RELAY_PROXY`];
-    if (dstRelayAddress === undefined) {
-      throw new Error(`relayAddress not found for network ${dstNetwork}`);
-    }
-    const relayAddress = process.env[`${network.toUpperCase()}_RELAY_PROXY`];
-    if (relayAddress === undefined) {
-      throw new Error(`relayAddress not found for network ${network}`);
-    }
-
     // create provider
-    const provider = new hre.ethers.JsonRpcProvider(netowrkRpcUrl);
+    const provider = new hre.ethers.JsonRpcProvider(rpc);
 
     // get all files match the pattern
-    const sentFiles = fs.readdirSync('mockSentMsgs').filter(fn => fn.startsWith(`${network}-`));
+    const sentFiles = fs.readdirSync('mockSentMsgs').filter(fn => fn.startsWith(`${name}-`));
     console.log(`files: `, sentFiles)
 
     // load finished-block from json
     // file name network-finished-block.json
-    const fileName = `mockToSendMsgs/${network}-finished-block.json`;
+    const fileName = `mockToSendMsgs/${name}-${network2.name}-finished-block.json`;
     // load file
     const file = fs.readFileSync(fileName);
     // parse file
@@ -130,18 +149,15 @@ async function getLatestBlock(network: string, dstNetwork: string, hre: HardhatR
     while (true) {
       const blockNumber = await provider.getBlockNumber();
       if (crossChainProcessInfo.finishedBlock < blockNumber) {
-        let endBlockNum = blockNumber;
-        // maximum 2048 blocks
-        if (endBlockNum - crossChainProcessInfo.finishedBlock > 2047) {
-          endBlockNum = crossChainProcessInfo.finishedBlock + 2047;
-        }
+
         const logs = await provider.getLogs({
           fromBlock: crossChainProcessInfo.finishedBlock,
-          toBlock: endBlockNum,
+          toBlock: crossChainProcessInfo.finishedBlock,
         });
+
         // and filter logs by event topic and contract address (relayAddress)
         const myEvents = logs.filter((log) => {
-          return log.topics.includes(eventTopic) && log.address === relayAddress;
+          return log.topics.includes(eventTopic) && log.address === relayAddress && log.index > crossChainProcessInfo.finishedIndex;
         });
 
         // sort myEvents by blockNumber and index
@@ -153,36 +169,23 @@ async function getLatestBlock(network: string, dstNetwork: string, hre: HardhatR
           }
         });
         console.log(`myEvents: `, myEvents)
-        // save every event to a file
-        // with name mockToSendMsgs/network-blockNumber-eventIndex.json
-        // e.g. mockToSendMsgs/rinkeby-23783476-0.json
-        // myEvents.forEach((log, index) => {
-        //   const eventFile = `mockToSendMsgs/${network}-${log.blockNumber}-${log.index}.json`;
-        //   console.log(`writing ${eventFile}...`);
-        //   // dump log to file
-        //   fs.writeFileSync(eventFile, JSON.stringify(log, null, 2));
-        // });
         
         // process all events
         for (let i = 0; i < myEvents.length; i++) {
           const log = myEvents[i];
-          const eventFile = `${network}-${log.blockNumber}-${log.index}.json`;
-          // if eventFile in sentFiles, skip
-          if (sentFiles.includes(eventFile)) {
-            console.log(`${eventFile} already processed, skip`);
-            continue;
-          }
-          await sendMsg(dstNetwork, log.data, dstRelayAddress, hre);
-          // dump log to file
-          fs.writeFileSync(`mockSentMsgs/${eventFile}`, JSON.stringify(log, null, 2));
+          await sendMsg(network2, log.data, hre);
+          // update 
+          crossChainProcessInfo.finishedIndex = log.index;
+          fs.writeFileSync(fileName, JSON.stringify(crossChainProcessInfo, null, 2));
         }
 
-        crossChainProcessInfo.finishedBlock = endBlockNum + 1;
+        crossChainProcessInfo.finishedBlock += 1;
+        crossChainProcessInfo.finishedIndex = -1;
         // write back to file
         fs.writeFileSync(fileName, JSON.stringify(crossChainProcessInfo, null, 2));
 
       } else {
-        await new Promise(r => setTimeout(r, 1000));
+        await new Promise(r => setTimeout(r, 10));
       }
     }
 
@@ -195,20 +198,30 @@ task("mockCrossChain",
   async (taskArgs: any, hre: HardhatRuntimeEnvironment) => {
     // print ethers version
     console.log('ethers version: ', hre.ethers.version);
-    // get src network and dst network from taskArgs
-    const { network1, network2} = taskArgs;
-   
-    // start too threads and then wait for them to finish
-    // getLatestBlock(network1, network2, hre);
-    // getLatestBlock(network2, network1, hre);
-    await Promise.all([
-      getLatestBlock(network1, network2, hre),
-      getLatestBlock(network2, network1, hre),
-    ]);
-    
 
-}).addParam("network1", "The cross-chain source network")
-  .addParam("network2", "The cross-chain destination network")
+    // load network pairs from file
+    const configPath = 'mockToSendMsgs/config.json';
+    const file = fs.readFileSync(configPath);
+    // load from file
+    const networkPairs: NetworkPairs = JSON.parse(file.toString());
+    // run all all pairs in different threads simultaneously
+    // await Promise.all([
+    //   getLatestBlock(network1, network2, hre),
+    //   getLatestBlock(network2, network1, hre),
+    // ]);
+    const promises = networkPairs.network_pairs.map(networkPair => getLatestBlock(networkPair, hre));
+    Promise.all(promises).then(() => {
+      console.log('all done');
+    }).catch((e) => {
+      console.log('error: ', e);
+    });
+
+    // loop forever
+    while (true) {
+      await new Promise(r => setTimeout(r, 10000));
+    }
+
+})
   
 
 // command of calling this task
