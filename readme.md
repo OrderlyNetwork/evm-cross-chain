@@ -160,3 +160,16 @@ for this type, you can define by your own.
 for every foundry script, you should have a config json, you define your struct inside your script. and you should automatically save your deployment and neccessary information into corresponding json files. please refer to `easyScripts/deployRelay.s.sol`
 
 all base script contracts and helper function are under `baseScripts`
+
+
+## How to run scripts
+here is a scripts for substituting env variables in `.env` so that we can pass config file as arguments.
+just run
+```shell
+bash easyScripts/easy_script.sh setup config/tasks/qa-setupRelay.json
+```
+the env variable associated with setup command will be replace with the new value. then you can run foundry scripts like this:
+```shell
+easyScripts/setupRelay.s.sol -vvvv --broadcast
+```
+you don't need to pass the rpc url, because the scripts will do it base on your config.
