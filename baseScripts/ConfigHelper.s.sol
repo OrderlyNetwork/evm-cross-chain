@@ -41,6 +41,7 @@ contract ConfigHelper is Script {
 
     function getValueByKey(string memory path, string memory key1, string memory key2, string memory key3)
         internal
+        view
         returns (bytes memory)
     {
         string memory fileData = vm.readFile(path);
