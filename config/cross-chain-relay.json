@@ -1,17 +1,26 @@
 {
-  "fuji": {
-    "owner": "0x",
-    "proxy": "0x",
-    "relay": "0x"
+  "qa-mock": {
+    "fuji": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xBE404b97de8A6B1304F3dbC17F565034721A40b7",
+      "relay": "0xAcf376844CEDe2f8cdaA8bA88A44FE4d4332A4DF"
+    },
+    "orderly": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x8E1f5dBF1E0601f99bE7563cca3B319AdF814684",
+      "relay": "0xB20a5257B32bFb0E17C10Ed98CD618335bBA0EFF"
+    }
   },
-  "orderlyop": {
-    "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-    "proxy": "0x2730d08725c2430B419D2B795d0dA98A48Eae613",
-    "relay": "0x7613280ba1ce920df4152102f8AfF736ca6b555a"
-  },
-  "arbitrumgoerli": {
-    "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-    "proxy": "0x7613280ba1ce920df4152102f8AfF736ca6b555a",
-    "relay": "0xB3fFeb022a8f2d42D9485d672926cffAAd7B8fD4"
+  "qa": {
+    "orderlyop": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
+      "relay": "0xe0B0b683aa7d2745118B1F7D893fB20924dCEdcF"
+    },
+    "arbitrumgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
+      "relay": "0xe0B0b683aa7d2745118B1F7D893fB20924dCEdcF"
+    }
   }
 }

@@ -1,10 +1,12 @@
 {
-    "fuji": {
-        "cross-chain-manager": "0x",
-        "role": "vault"
-    },
-    "orderlyop": {
-        "cross-chain-manager": "0x",
-        "role": "vault"
+    "qa-mock": {
+        "fuji": {
+            "manager": "0xb3461f0e51E32bb77cB19D47bf8536E88CC884d2",
+            "role": "vault"
+        },
+        "orderly": {
+            "manager": "0x78398524Ab8500736B56eaAb1a590733c2B04144", 
+            "role": "ledger"
+        }
     }
 }

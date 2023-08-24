@@ -2,34 +2,36 @@
 pragma solidity ^0.8.10;
 
 import "../baseScripts/BaseScript.s.sol";
+import "../baseScripts/ConfigHelper.s.sol";
 import "../contracts/CrossChainRelayUpgradeable.sol";
 import "../contracts/CrossChainRelayProxy.sol";
 
-contract DeployRelay is BaseScript {
+contract DeployRelay is BaseScript, ConfigHelper {
 
     using StringUtils for string;
 
+    // variable order must be alphabetical
     struct DeployRelayConfig {
+        string env;
         string[] networks;
     }
 
     function run() external {
-        string memory configFile = vm.envString("DEPLOY_RELAY_CONFIG_FILE");
-        string memory fileData = vm.readFile(configFile);
-        bytes memory encodedData = vm.parseJson(fileData);
+        bytes memory encodedData = getConfigFileData("DEPLOY_RELAY_CONFIG_FILE");
         DeployRelayConfig memory config = abi.decode(encodedData, (DeployRelayConfig));
         for (uint i = 0; i < config.networks.length; i++) {
             string memory network = config.networks[i];
-            deployRelay(network);
+            deployRelay(network, config.env);
         }
     }
 
-    function deployRelay(string memory network) internal {
+    function deployRelay(string memory network, string memory env) internal {
         console.log("network: ", network);
-        string memory rpcUrl = getRpcUrl(network);
+
         uint256 pk = getPrivateKey(network);
-        vm.createSelectFork(rpcUrl); 
-        vm.startBroadcast(pk);
+        
+        vmSelectRpcAndBroadcast(network);
+
         CrossChainRelayUpgradeable relay = new CrossChainRelayUpgradeable();
         console.log("deployed relay address: ", address(relay));
         CrossChainRelayProxy relayProxy = new CrossChainRelayProxy(address(relay), bytes(""));
@@ -41,15 +43,10 @@ contract DeployRelay is BaseScript {
 
         console.log("network: ", network);
 
-        // save the relay and relay proxy address
-        string memory relayProxyAddressKey = network.formJsonKey().concat(string("proxy").formJsonKey());
-        string memory relayAddressKey = network.formJsonKey().concat(string("relay").formJsonKey());
-        string memory ownerKey = network.formJsonKey().concat(string("owner").formJsonKey());
-
-        string memory deploySaveFile = "config/cross-chain-relay.json";
-        vm.writeJson(vm.toString(address(relayProxy)), deploySaveFile, relayProxyAddressKey);
-        vm.writeJson(vm.toString(address(relay)), deploySaveFile, relayAddressKey);
-        vm.writeJson(vm.toString(vm.addr(pk)), deploySaveFile, ownerKey);
+        string memory deploySaveFile = vm.envString("DEPLOY_RELAY_SAVE_FILE");
+        writeToJsonFileByKey(vm.toString(address(relayProxy)), deploySaveFile, env, network, "proxy");
+        writeToJsonFileByKey(vm.toString(address(relay)), deploySaveFile, env, network, "relay");
+        writeToJsonFileByKey(vm.toString(vm.addr(pk)), deploySaveFile, env, network, "owner");
 
         vm.stopBroadcast();
     }

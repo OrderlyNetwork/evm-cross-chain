@@ -1,6 +1,7 @@
 {
     "network_pairs": [
         {
+            "env": "qa",
             "network_1": {
                 "relayAddress": "",
                 "chainId": 1
