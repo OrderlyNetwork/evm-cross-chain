@@ -21,14 +21,22 @@ contract SetManager is BaseScript, ConfigHelper {
         bytes memory encodedData = getConfigFileData("SET_CCMANAGER_CONFIG_FILE");
         SetManagerConfig memory config = abi.decode(encodedData, (SetManagerConfig));
 
-        RelayDeployData memory network1RelayData = getRelayDeployData(env, config.network1);
-        RelayDeployData memory network2RelayData = getRelayDeployData(env, config.network2);
+        console.log("network1: ", config.network1);
+        console.log("network2: ", config.network2);
 
-        CCManagerDeployData memory network1ManagerData = getCCManagerDeployData(env, config.network1);
-        CCManagerDeployData memory network2ManagerData = getCCManagerDeployData(env, config.network2);
+        RelayDeployData memory network1RelayData = getRelayDeployData(config.env, config.network1);
+        RelayDeployData memory network2RelayData = getRelayDeployData(config.env, config.network2);
 
-        setManager(config.network1, network1RelayData.proxy, network1ManagerData.manager);
-        setManager(config.network2, network2RelayData.proxy, network2ManagerData.manager);
+        CCManagerDeployData memory network1ManagerData = getCCManagerDeployData(config.env, config.network1);
+        CCManagerDeployData memory network2ManagerData = getCCManagerDeployData(config.env, config.network2);
+
+        console.log("network1RelayData.proxy: ", network1RelayData.proxy);
+        console.log("network2RelayData.proxy: ", network2RelayData.proxy);
+        console.log("network1ManagerData.proxy: ", network1ManagerData.proxy);
+        console.log("network2ManagerData.proxy: ", network2ManagerData.proxy);
+
+        setManager(config.network1, network1RelayData.proxy, network1ManagerData.proxy);
+        setManager(config.network2, network2RelayData.proxy, network2ManagerData.proxy);
 
     }
 

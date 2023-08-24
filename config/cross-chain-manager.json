@@ -8,5 +8,19 @@
             "manager": "0x78398524Ab8500736B56eaAb1a590733c2B04144", 
             "role": "ledger"
         }
-    }
+    },
+    "qa": {
+        "orderlyop": {
+          "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+          "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+          "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
+          "role": "ledger"
+        },
+        "arbitrumgoerli": {
+          "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+          "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+          "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
+          "role": "vault"
+        }
+      }
 }
