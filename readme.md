@@ -158,3 +158,5 @@ for this type, you can define by your own.
 
 ## foundry script
 for every foundry script, you should have a config json, you define your struct inside your script. and you should automatically save your deployment and neccessary information into corresponding json files. please refer to `easyScripts/deployRelay.s.sol`
+
+all base script contracts and helper function are under `baseScripts`
