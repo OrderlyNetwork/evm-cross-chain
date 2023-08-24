@@ -4,7 +4,6 @@ pragma solidity ^0.8.18;
 import "forge-std/Script.sol";
 import "./Utils.sol";
 
-
 struct CCManagerDeployData {
     address manager;
     address owner;
@@ -17,7 +16,6 @@ struct RelayDeployData {
     address proxy;
     address relay;
 }
-
 
 contract ConfigHelper is Script {
     using StringUtils for string;
@@ -33,11 +31,27 @@ contract ConfigHelper is Script {
         return key1.formJsonKey().concat(key2.formJsonKey());
     }
 
-    function formKey(string memory key1, string memory key2, string memory key3) internal pure returns (string memory) {
+    function formKey(string memory key1, string memory key2, string memory key3)
+        internal
+        pure
+        returns (string memory)
+    {
         return key1.formJsonKey().concat(key2.formJsonKey().concat(key3.formJsonKey()));
     }
 
-    function getCCManagerDeployData(string memory env, string memory network) internal returns (CCManagerDeployData memory) {
+    function getValueByKey(string memory path, string memory key1, string memory key2, string memory key3)
+        internal
+        returns (bytes memory)
+    {
+        string memory fileData = vm.readFile(path);
+        bytes memory encodedData = vm.parseJson(fileData, formKey(key1, key2, key3));
+        return encodedData;
+    }
+
+    function getCCManagerDeployData(string memory env, string memory network)
+        internal
+        returns (CCManagerDeployData memory)
+    {
         string memory deploySavePath = vm.envString("DEPLOY_CCMANAGER_SAVE_FILE");
         string memory deployData = vm.readFile(deploySavePath);
         string memory networkKey = env.formJsonKey().concat(network.formJsonKey());
@@ -59,11 +73,19 @@ contract ConfigHelper is Script {
         return networkRelayData;
     }
 
-    function writeToJsonFileByKey(string memory value, string memory path, string memory key1, string memory key2) internal {
+    function writeToJsonFileByKey(string memory value, string memory path, string memory key1, string memory key2)
+        internal
+    {
         vm.writeJson(value, path, formKey(key1, key2));
     }
 
-    function writeToJsonFileByKey(string memory value, string memory path, string memory key1, string memory key2, string memory key3) internal {
+    function writeToJsonFileByKey(
+        string memory value,
+        string memory path,
+        string memory key1,
+        string memory key2,
+        string memory key3
+    ) internal {
         vm.writeJson(value, path, formKey(key1, key2, key3));
     }
 }
