@@ -1,3 +1,6 @@
 [submodule "lib/forge-std"]
 	path = lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "lib/contract-evm"]
+	path = lib/contract-evm
+	url = git@gitlab.com:orderlynetwork/orderly-v2/contract-poc-demo.git

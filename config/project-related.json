@@ -1,0 +1,11 @@
+{
+    "qa": {
+        "arbitrumgoerli": {
+            "vault": "0x22b10472d3Da206aaA85D3f19E91A8da15E0F56A"
+        },
+        "orderlyop": {
+            "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
+            "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
+        }
+    }
+}

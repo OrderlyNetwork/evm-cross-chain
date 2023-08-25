@@ -17,6 +17,12 @@ struct RelayDeployData {
     address relay;
 }
 
+struct TokenDecimalConfig {
+    uint256 decimals;
+    string name;
+    bytes32 tokenHash;
+}
+
 contract ConfigHelper is Script {
     using StringUtils for string;
 
@@ -52,6 +58,16 @@ contract ConfigHelper is Script {
         return encodedData;
     }
 
+    function getValueByKey(string memory path, string memory key1, string memory key2)
+        internal
+        view
+        returns (bytes memory)
+    {
+        string memory fileData = vm.readFile(path);
+        bytes memory encodedData = vm.parseJson(fileData, formKey(key1, key2));
+        return encodedData;
+    }
+
     function getCCManagerDeployData(string memory env, string memory network)
         internal
         returns (CCManagerDeployData memory)
@@ -74,6 +90,16 @@ contract ConfigHelper is Script {
         vm.writeJson(value, deploySavePath, networkKey);
     }
 
+    function writeCCManagerDeployData(string memory env, string memory network, CCManagerDeployData memory data)
+        internal
+    {
+        string memory deploySaveFile = vm.envString("DEPLOY_CCMANAGER_SAVE_FILE");
+        writeToJsonFileByKey(vm.toString(data.proxy), deploySaveFile, env, network, "proxy");
+        writeToJsonFileByKey(vm.toString(data.manager), deploySaveFile, env, network, "manager");
+        writeToJsonFileByKey(vm.toString(data.owner), deploySaveFile, env, network, "owner");
+        writeToJsonFileByKey(data.role, deploySaveFile, env, network, "role");
+    }
+
     function getRelayDeployData(string memory env, string memory network) internal returns (RelayDeployData memory) {
         string memory deploySavePath = vm.envString("DEPLOY_RELAY_SAVE_FILE");
         string memory deployData = vm.readFile(deploySavePath);
@@ -83,6 +109,13 @@ contract ConfigHelper is Script {
         // close file
         vm.closeFile(deploySavePath);
         return networkRelayData;
+    }
+
+    function writeRelayDeployData(string memory env, string memory network, RelayDeployData memory data) internal {
+        string memory deploySaveFile = vm.envString("DEPLOY_RELAY_SAVE_FILE");
+        writeToJsonFileByKey(vm.toString(data.proxy), deploySaveFile, env, network, "proxy");
+        writeToJsonFileByKey(vm.toString(data.relay), deploySaveFile, env, network, "relay");
+        writeToJsonFileByKey(vm.toString(data.owner), deploySaveFile, env, network, "owner");
     }
 
     function writeRelayDeployData(string memory env, string memory network, string memory key, string memory value)
@@ -107,5 +140,16 @@ contract ConfigHelper is Script {
         string memory key3
     ) internal {
         vm.writeJson(value, path, formKey(key1, key2, key3));
+    }
+
+    function getTokenDecimals(string memory env, string memory network)
+        internal
+        view
+        returns (TokenDecimalConfig[] memory)
+    {
+        string memory tokenDecimalsConfigPath = vm.envString("TOKEN_DECIMAL_CONFIG_FILE");
+        bytes memory encodedData = getValueByKey(tokenDecimalsConfigPath, env, network);
+        TokenDecimalConfig[] memory configs = abi.decode(encodedData, (TokenDecimalConfig[]));
+        return configs;
     }
 }

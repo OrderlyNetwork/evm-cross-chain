@@ -1,0 +1,8 @@
+{
+    "env": "qa",
+    "managerNetwork": "orderlyop",
+    "networks": [
+        "orderlyop",
+        "arbitrumgoerli"
+    ]
+}
