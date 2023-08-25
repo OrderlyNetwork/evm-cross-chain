@@ -20,10 +20,13 @@ struct RelayDeployData {
 contract ConfigHelper is Script {
     using StringUtils for string;
 
-    function getConfigFileData(string memory envVar) internal view returns (bytes memory) {
+    function getConfigFileData(string memory envVar) internal returns (bytes memory) {
         string memory configFile = vm.envString(envVar);
         string memory fileData = vm.readFile(configFile);
         bytes memory encodedData = vm.parseJson(fileData);
+
+        vm.closeFile(configFile);
+
         return encodedData;
     }
 
@@ -63,6 +66,14 @@ contract ConfigHelper is Script {
         return networkManagerData;
     }
 
+    function writeCCManagerDeployData(string memory env, string memory network, string memory key, string memory value)
+        internal
+    {
+        string memory deploySavePath = vm.envString("DEPLOY_CCMANAGER_SAVE_FILE");
+        string memory networkKey = env.formJsonKey().concat(network.formJsonKey()).concat(key.formJsonKey());
+        vm.writeJson(value, deploySavePath, networkKey);
+    }
+
     function getRelayDeployData(string memory env, string memory network) internal returns (RelayDeployData memory) {
         string memory deploySavePath = vm.envString("DEPLOY_RELAY_SAVE_FILE");
         string memory deployData = vm.readFile(deploySavePath);
@@ -72,6 +83,14 @@ contract ConfigHelper is Script {
         // close file
         vm.closeFile(deploySavePath);
         return networkRelayData;
+    }
+
+    function writeRelayDeployData(string memory env, string memory network, string memory key, string memory value)
+        internal
+    {
+        string memory deploySavePath = vm.envString("DEPLOY_RELAY_SAVE_FILE");
+        string memory networkKey = env.formJsonKey().concat(network.formJsonKey()).concat(key.formJsonKey());
+        vm.writeJson(value, deploySavePath, networkKey);
     }
 
     function writeToJsonFileByKey(string memory value, string memory path, string memory key1, string memory key2)
