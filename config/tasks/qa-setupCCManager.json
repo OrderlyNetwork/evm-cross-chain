@@ -1,5 +1,5 @@
 {
     "env": "qa",
     "vaultNetwork": "arbitrumgoerli",
-    "ledgerNetwrok": "orderlyop"
+    "ledgerNetwork": "orderlyop"
 }
