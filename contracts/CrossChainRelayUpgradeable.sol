@@ -125,6 +125,25 @@ contract CrossChainRelayUpgradeable is
         _flowGasLimitMapping[flow] = gasLimit;
     }
 
+    // estimate gas limit
+    function estimateGasFee(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
+        public
+        view
+        override
+        returns (uint256)
+    {
+        uint16 lzDstChainId = _chainIdMapping[data.dstChainId];
+        require(lzDstChainId != 0, "CrossChainRelay: invalid dst chain id");
+        uint16 version = 1;
+        uint256 gasLimit = _flowGasLimitMapping[data.method];
+        if (gasLimit == 0) {
+            gasLimit = 3000000;
+        }
+        bytes memory adapterParams = abi.encodePacked(version, gasLimit);
+        (uint256 nativeFee,) = lzEndpoint.estimateFees(lzDstChainId, address(this), payload, false, adapterParams);
+        return nativeFee;
+    }
+
     // Allows a trusted caller to send a message
     function sendMessage(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
         public
@@ -134,6 +153,7 @@ contract CrossChainRelayUpgradeable is
         require(_callers[msg.sender] == 1, "Caller is not the trusted caller");
         bytes memory lzPayload = data.encodeMessageV1AndPayload(payload);
         uint16 lzDstChainId = _chainIdMapping[data.dstChainId];
+        require(lzDstChainId != 0, "CrossChainRelay: invalid dst chain id");
 
         uint16 version = 1;
         uint256 gasLimit = _flowGasLimitMapping[data.method];
@@ -142,8 +162,7 @@ contract CrossChainRelayUpgradeable is
         }
         bytes memory adapterParams = abi.encodePacked(version, gasLimit);
 
-        (uint256 nativeFee, uint256 _zroFee) =
-            lzEndpoint.estimateFees(lzDstChainId, address(this), lzPayload, false, adapterParams);
+        (uint256 nativeFee,) = lzEndpoint.estimateFees(lzDstChainId, address(this), lzPayload, false, adapterParams);
         _lzSend(lzDstChainId, lzPayload, payable(address(this)), address(0), adapterParams, nativeFee);
         emit MessageSent(data, payload);
     }
@@ -193,7 +212,8 @@ contract CrossChainRelayUpgradeable is
         }
     }
 
-    function _blockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload)
+    //function _blockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload)
+    function _blockingLzReceive(uint16 _srcChainId, bytes memory, uint64, bytes memory _payload)
         internal
         virtual
         override

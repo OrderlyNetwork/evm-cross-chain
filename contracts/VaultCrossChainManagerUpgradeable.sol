@@ -77,7 +77,7 @@ contract VaultCrossChainManagerUpgradeable is
 
         // if token is CrossChainManagerTest
         if (keccak256(bytes(data.tokenSymbol)) == keccak256(bytes("CrossChainManagerTest"))) {
-            sendTestWithdrawBack();
+            _sendTestWithdrawBack();
         } else {
             VaultTypes.VaultWithdraw memory withdrawData = VaultTypes.VaultWithdraw({
                 accountId: data.accountId,
@@ -89,13 +89,28 @@ contract VaultCrossChainManagerUpgradeable is
                 fee: data.fee,
                 withdrawNonce: data.withdrawNonce
             });
-            sendWithdrawToVault(withdrawData);
+            _sendWithdrawToVault(withdrawData);
         }
     }
 
     // user withdraw USDC
-    function sendWithdrawToVault(VaultTypes.VaultWithdraw memory data) internal {
+    function _sendWithdrawToVault(VaultTypes.VaultWithdraw memory data) internal {
         vault.withdraw(data);
+    }
+
+    function getDepositFee(VaultTypes.VaultDeposit memory data) public view override returns (uint256) {
+        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit),
+            srcCrossChainManager: address(this),
+            dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
+            srcChainId: chainId,
+            dstChainId: ledgerChainId
+        });
+        bytes memory payload = abi.encode(data);
+
+        return crossChainRelay.estimateGasFee(message, payload);
     }
 
     function deposit(VaultTypes.VaultDeposit memory data) external override {
@@ -130,7 +145,7 @@ contract VaultCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
-    function sendTestWithdrawBack() internal {
+    function _sendTestWithdrawBack() internal {
         VaultTypes.VaultWithdraw memory data = VaultTypes.VaultWithdraw({
             accountId: bytes32(0),
             sender: address(0),
