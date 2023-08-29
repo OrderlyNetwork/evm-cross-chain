@@ -27,6 +27,17 @@ interface IOrderlyCrossChain {
     function sendMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) external payable;
 
     /**
+     * Send a message to another chain with fee
+     *
+     * @param message The message to be sent to the other chain
+     * @param payload The payload to be sent to the other chain
+     * @param amount The amount of native token to be sent to the other chain
+     */
+    function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload, uint256 amount)
+        external
+        payable;
+
+    /**
      * Receive a message from another chain
      *
      * @param payload The payload received from the other chain

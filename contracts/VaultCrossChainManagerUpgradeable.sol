@@ -129,6 +129,22 @@ contract VaultCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
+    function depositWithFee(VaultTypes.VaultDeposit memory data, uint256 amount) external payable override {
+        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit),
+            srcCrossChainManager: address(this),
+            dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
+            srcChainId: chainId,
+            dstChainId: ledgerChainId
+        });
+        // encode message
+        bytes memory payload = abi.encode(data);
+
+        crossChainRelay.sendMessageWithFee{value: amount}(message, payload, amount);
+    }
+
     function withdraw(VaultTypes.VaultWithdraw memory data) external override {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.WithdrawFinish),

@@ -167,6 +167,26 @@ contract CrossChainRelayUpgradeable is
         emit MessageSent(data, payload);
     }
 
+    function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload, uint256 feeAmount)
+        public
+        payable
+        override
+    {
+        require(_callers[msg.sender] == 1, "Caller is not the trusted caller");
+        bytes memory lzPayload = data.encodeMessageV1AndPayload(payload);
+        uint16 lzDstChainId = _chainIdMapping[data.dstChainId];
+        require(lzDstChainId != 0, "CrossChainRelay: invalid dst chain id");
+
+        uint16 version = 1;
+        uint256 gasLimit = _flowGasLimitMapping[data.method];
+        if (gasLimit == 0) {
+            gasLimit = 3000000;
+        }
+        bytes memory adapterParams = abi.encodePacked(version, gasLimit);
+
+        _lzSend(lzDstChainId, lzPayload, payable(address(this)), address(0), adapterParams, feeAmount);
+    }
+
     function ping(uint256 dstChainId) public {
         OrderlyCrossChainMessage.MessageV1 memory data = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping),
