@@ -45,13 +45,13 @@
         "orderlyop": {
             "manager": "0xdecdf6f646d5cfaf16abf12222ccc84febae5934",
             "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0xb592011550a7E2a85c69EdF1788F460075b958fc",
+            "proxy": "0xdecdf6f646d5cfaf16abf12222ccc84febae5934",
             "role": "ledger"
         },
         "arbitrumgoerli": {
             "manager": "0xbc9c21d0986fb7b5ef70caeb16e0abb7c36f1595",
             "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0xFA59A70dD17Fb89F031A34e27728754e8B7f19fb",
+            "proxy": "0xbc9c21d0986fb7b5ef70caeb16e0abb7c36f1595",
             "role": "vault"
         }
     }
