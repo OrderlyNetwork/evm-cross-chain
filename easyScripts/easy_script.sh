@@ -17,11 +17,13 @@ env_file=".env"
 
 # Define a mapping from method names to variable names
 # Add more mappings as needed
-if [ "$method_name" == "deploy" ]; then
+if [ "$method_name" == "deploy-relay" ]; then
   var_name="DEPLOY_RELAY_CONFIG_FILE"
-elif [ "$method_name" == "setup" ]; then
+elif [ "$method_name" == "setup-relay" ]; then
   var_name="SETUP_RELAY_CONFIG_FILE"
 elif [ "$method_name" == "setManager" ]; then
+  var_name="SET_CCMANAGER_CONFIG_FILE"
+elif [ "$method_name" == "deploy-cc-manager" ]; then
   var_name="SET_CCMANAGER_CONFIG_FILE"
 else
   echo "Invalid method name: $method_name"

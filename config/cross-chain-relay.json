@@ -22,5 +22,29 @@
       "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
       "relay": "0xe0B0b683aa7d2745118B1F7D893fB20924dCEdcF"
     }
+  },
+  "staging": {
+    "orderlyop": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xa1a9C94bb24B09739Af80E6EfaB7ca0F576182bc",
+      "relay": "0xfD89A24390BfEBbA227c0e8BcD4447d0c3A84FC2"
+    },
+    "arbitrumgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xF920a86c1ea7788933c188e7A3516807A18655d6",
+      "relay": "0x6a3da3CB0579a0f60BF0afdAaaaEf0c0A9bDe6A7"
+    }
+  },
+  "dev": {
+    "orderlyop": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xa1a9C94bb24B09739Af80E6EfaB7ca0F576182bc",
+      "relay": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0"
+    },
+    "arbitrumgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
+      "relay": "0x6a3da3CB0579a0f60BF0afdAaaaEf0c0A9bDe6A7"
+    }
   }
 }

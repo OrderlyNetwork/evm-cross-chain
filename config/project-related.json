@@ -7,5 +7,14 @@
             "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
             "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
         }
+    },
+    "staging": {
+        "arbitrumgoerli": {
+            "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
+        },
+        "orderlyop": {
+            "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
+            "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
+        }
     }
 }

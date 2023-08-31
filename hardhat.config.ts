@@ -80,10 +80,10 @@ const config: HardhatUserConfig = {
       accounts: getAccount('orderlyop'),
     },
     arbitrumgoerli: {
-      url:  getRpcUrl('arbitrumgoerli'),
-      chainId: 421613,  
+      url: getRpcUrl('arbitrumgoerli'),
+      chainId: 421613,
       accounts: getAccount('arbitrumgoerli'),
-    } 
+    }
   },
   tenderly: {
     project: 'project',

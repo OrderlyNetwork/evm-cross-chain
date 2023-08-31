@@ -36,7 +36,7 @@ contract SetupCCManager is BaseScript, ConfigHelper {
         console.log("vaultRelayData.proxy: ", vaultRelayData.proxy);
         console.log("ledgerRelayData.proxy: ", ledgerRelayData.proxy);
 
-        setupLedger(config.ledgerNetwork, config.env, vaultDeployData.proxy, vaultRelayData.proxy);
+        setupLedger(config.ledgerNetwork, config.env, ledgerDeployData.proxy, ledgerRelayData.proxy);
 
         setupVault(
             config.vaultNetwork,

@@ -25,14 +25,23 @@ contract OneClickDeploy is BaseScript, ConfigHelper {
         console.log("vaultNetwork: ", config.vaultNetwork);
         console.log("ledgerNetwork: ", config.ledgerNetwork);
         console.log("env: ", config.env);
+
+        console.log("deploying ledger");
         // deploy ledger cc manager and relay
         CCManagerDeployData memory ledgerDeployData = deployLedger(config.ledgerNetwork);
+
+        console.log("deploying relay");
         RelayDeployData memory ledgerRelayData = deployRelay(config.ledgerNetwork);
         // deploy vault cc manager and relay
+        console.log("deploying vault");
         CCManagerDeployData memory vaultDeployData = deployVault(config.vaultNetwork);
+
+        console.log("deploying relay");
         RelayDeployData memory vaultRelayData = deployRelay(config.vaultNetwork);
         // setup ledger cc manager and relay
+        console.log("setup ledger");
         setupLedger(config.ledgerNetwork, config.vaultNetwork, config.env, vaultDeployData.proxy, vaultRelayData.proxy);
+        console.log("setup relay");
         setupRelay(
             config.ledgerNetwork,
             config.vaultNetwork,
@@ -43,6 +52,7 @@ contract OneClickDeploy is BaseScript, ConfigHelper {
         );
 
         // setup vault cc manager and relay
+        console.log("setup vault");
         setupVault(
             config.vaultNetwork,
             config.ledgerNetwork,
@@ -51,6 +61,7 @@ contract OneClickDeploy is BaseScript, ConfigHelper {
             ledgerDeployData.proxy,
             vaultRelayData.proxy
         );
+        console.log("setup relay");
         setupRelay(
             config.vaultNetwork,
             config.ledgerNetwork,
@@ -89,6 +100,7 @@ contract OneClickDeploy is BaseScript, ConfigHelper {
         address ledgerAddr = abi.decode(ledgerEncodedData, (address));
         address operatorAddr = abi.decode(operatorEncodedData, (address));
 
+        console.log("cc manager setup start");
         vmSelectRpcAndBroadcast(network);
 
         LedgerCrossChainManagerUpgradeable ledger = LedgerCrossChainManagerUpgradeable(payable(managerAddress));
@@ -101,14 +113,18 @@ contract OneClickDeploy is BaseScript, ConfigHelper {
         TokenDecimalConfig[] memory ledgerNetworkTokenConfigs = getTokenDecimals(env, network);
         for (uint256 i = 0; i < ledgerNetworkTokenConfigs.length; i++) {
             ledger.setTokenDecimal(
-                ledgerNetworkTokenConfigs[i].tokenHash, getChainId(network), uint128(ledgerNetworkTokenConfigs[i].decimals)
+                ledgerNetworkTokenConfigs[i].tokenHash,
+                getChainId(network),
+                uint128(ledgerNetworkTokenConfigs[i].decimals)
             );
         }
 
         TokenDecimalConfig[] memory vaultNetworkTokenConfigs = getTokenDecimals(env, vaultNetwork);
         for (uint256 i = 0; i < vaultNetworkTokenConfigs.length; i++) {
             ledger.setTokenDecimal(
-                vaultNetworkTokenConfigs[i].tokenHash, getChainId(vaultNetwork), uint128(vaultNetworkTokenConfigs[i].decimals)
+                vaultNetworkTokenConfigs[i].tokenHash,
+                getChainId(vaultNetwork),
+                uint128(vaultNetworkTokenConfigs[i].decimals)
             );
         }
 

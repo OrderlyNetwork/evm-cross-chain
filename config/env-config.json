@@ -1,0 +1,20 @@
+{
+    "qa": {
+        "ledger": "orderlyop",
+        "vault": [
+            "arbitrumgoerli"
+        ]
+    },
+    "dev": {
+        "ledger": "orderlyop",
+        "vault": [
+            "arbitrumgoerli"
+        ]
+    },
+    "staging": {
+        "ledger": "orderlyop",
+        "vault": [
+            "arbitrumgoerli"
+        ]
+    }
+}
