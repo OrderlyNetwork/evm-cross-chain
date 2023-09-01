@@ -16,5 +16,14 @@
             "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
             "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
         }
+    },
+    "test": {
+        "arbitrumgoerli": {
+            "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
+        },
+        "orderlyop": {
+            "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
+            "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
+        }
     }
 }

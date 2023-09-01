@@ -40,7 +40,9 @@ contract OneClickDeploy is BaseScript, ConfigHelper {
         RelayDeployData memory vaultRelayData = deployRelay(config.vaultNetwork);
         // setup ledger cc manager and relay
         console.log("setup ledger");
-        setupLedger(config.ledgerNetwork, config.vaultNetwork, config.env, vaultDeployData.proxy, vaultRelayData.proxy);
+        setupLedger(
+            config.ledgerNetwork, config.vaultNetwork, config.env, ledgerDeployData.proxy, ledgerRelayData.proxy
+        );
         console.log("setup relay");
         setupRelay(
             config.ledgerNetwork,
@@ -166,7 +168,7 @@ contract OneClickDeploy is BaseScript, ConfigHelper {
         string memory dstNetwork,
         address srcRelayProxyAddress,
         address dstRelayProxyAddress,
-        string memory env,
+        string memory,
         address managerAddress
     ) internal {
         CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(srcRelayProxyAddress));
@@ -174,7 +176,7 @@ contract OneClickDeploy is BaseScript, ConfigHelper {
         vmSelectRpcAndBroadcast(srcNetwork);
 
         // 1. call and send 2 ether to relay handle return
-        (bool success,) = srcRelayProxyAddress.call{value: 2 ether}("");
+        (bool success,) = srcRelayProxyAddress.call{value: 1 ether}("");
         require(success, "transfer failed");
 
         // 2. add chain Id mapping
