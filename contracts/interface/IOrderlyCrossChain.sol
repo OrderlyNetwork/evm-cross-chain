@@ -11,46 +11,36 @@ interface IOrderlyCrossChain {
     // Event to be emitted when a message is received
     event MessageReceived(OrderlyCrossChainMessage.MessageV1 message, bytes payload);
 
-    /**
-     * Estimate the gas fee for sending a message to another chain
-     */
+    /// @notice estimate gas fee
+    /// @param data message data
+    /// @param payload payload
     function estimateGasFee(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
         external
         view
         returns (uint256);
 
-    /**
-     * Send a message to another chain
-     *
-     * @param payload The payload to be sent to the other chain
-     */
+    /// @notice send message
+    /// @param message message
+    /// @param payload payload
     function sendMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) external payable;
 
-    /**
-     * Send a message to another chain with fee
-     *
-     * @param message The message to be sent to the other chain
-     * @param payload The payload to be sent to the other chain
-     * @param amount The amount of native token to be sent to the other chain
-     */
+    /// @notice send message with fee, so no estimate gas fee will not run
+    /// @param message message
+    /// @param payload payload
     function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload, uint256 amount)
         external
         payable;
 
-    /**
-     * Receive a message from another chain
-     *
-     * @param payload The payload received from the other chain
-     */
+    /// @notice receive message after decoding the message
+    /// @param message message
+    /// @param payload payload
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) external payable;
 }
 
 // Interface for the Cross Chain Receiver
 interface IOrderlyCrossChainReceiver {
-    /**
-     * Receive a message from another chain
-     *
-     * @param payload The payload received from the other chain
-     */
+    /// @notice receive message from relay, relay will call this function to send messages
+    /// @param message message
+    /// @param payload payload
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) external;
 }
