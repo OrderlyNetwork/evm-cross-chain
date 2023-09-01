@@ -54,6 +54,11 @@ contract CrossChainRelayUpgradeable is
         _disableInitializers();
     }
 
+    modifier onlyCaller() {
+        require(_callers[msg.sender] == 1, "It is not a trusted caller.");
+        _;
+    }
+
     function initialize(address _endpoint) public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -67,7 +72,7 @@ contract CrossChainRelayUpgradeable is
         _callers[_endpoint] = 1;
     }
 
-    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+    function _authorizeUpgrade(address newImplementation) internal override {}
 
     function upgradeTo(address newImplementation) public override onlyOwner onlyProxy {
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
@@ -149,8 +154,8 @@ contract CrossChainRelayUpgradeable is
         public
         payable
         override
+        onlyCaller
     {
-        require(_callers[msg.sender] == 1, "Caller is not the trusted caller");
         bytes memory lzPayload = data.encodeMessageV1AndPayload(payload);
         uint16 lzDstChainId = _chainIdMapping[data.dstChainId];
         require(lzDstChainId != 0, "CrossChainRelay: invalid dst chain id");
@@ -171,8 +176,8 @@ contract CrossChainRelayUpgradeable is
         public
         payable
         override
+        onlyCaller
     {
-        require(_callers[msg.sender] == 1, "Caller is not the trusted caller");
         bytes memory lzPayload = data.encodeMessageV1AndPayload(payload);
         uint16 lzDstChainId = _chainIdMapping[data.dstChainId];
         require(lzDstChainId != 0, "CrossChainRelay: invalid dst chain id");
@@ -187,7 +192,7 @@ contract CrossChainRelayUpgradeable is
         _lzSend(lzDstChainId, lzPayload, payable(address(this)), address(0), adapterParams, feeAmount);
     }
 
-    function ping(uint256 dstChainId) public {
+    function ping(uint256 dstChainId) public onlyOwner {
         OrderlyCrossChainMessage.MessageV1 memory data = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping),
             option: 0,
@@ -218,8 +223,8 @@ contract CrossChainRelayUpgradeable is
         public
         payable
         override
+        onlyCaller
     {
-        require(_callers[msg.sender] == 1, "Caller is not the trusted caller");
         emit MessageReceived(data, payload);
         if (data.method == uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong)) {
             // send pong back;
@@ -242,8 +247,7 @@ contract CrossChainRelayUpgradeable is
         require(rawSrcChainId != 0, "CrossChainRelay: invalid src chain id");
         (OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) =
             OrderlyCrossChainMessage.decodeMessageV1AndPayload(_payload);
-        //require(message.srcChainId == rawSrcChainId, "CrossChainRelay: invalid src chain id");
-        //require(_crossChainRelayMapping[rawSrcChainId] == address(bytes20(_srcAddress)), "CrossChainRelay: invalid src address");
+
         emit MsgReceived(message.method);
 
         receiveMessage(message, payload);

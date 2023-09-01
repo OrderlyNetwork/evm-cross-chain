@@ -248,4 +248,8 @@ contract LedgerCrossChainManagerUpgradeable is
     function getVersion() external pure returns (string memory) {
         return "0.0.1";
     }
+
+    function getRole() external pure returns (string memory) {
+        return "ledger";
+    }
 }

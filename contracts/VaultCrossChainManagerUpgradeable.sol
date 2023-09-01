@@ -114,6 +114,7 @@ contract VaultCrossChainManagerUpgradeable is
     }
 
     function deposit(VaultTypes.VaultDeposit memory data) external override {
+        require(msg.sender == address(vault), "only vault can call deposit");
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -130,6 +131,7 @@ contract VaultCrossChainManagerUpgradeable is
     }
 
     function depositWithFee(VaultTypes.VaultDeposit memory data, uint256 amount) external payable override {
+        require(msg.sender == address(vault), "only vault can call depositWithFee");
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -146,6 +148,7 @@ contract VaultCrossChainManagerUpgradeable is
     }
 
     function withdraw(VaultTypes.VaultWithdraw memory data) external override {
+        require(msg.sender == address(vault), "only vault can call withdraw");
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.WithdrawFinish),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
