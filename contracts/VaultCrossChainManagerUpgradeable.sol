@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
 import "contract-evm/src/interface/IVault.sol";
@@ -34,6 +34,7 @@ contract VaultCrossChainManagerUpgradeable is
     UUPSUpgradeable,
     VaultCrossChainManagerDatalayout
 {
+    /// @notice Initializes the contract.
     function initialize() public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -45,27 +46,34 @@ contract VaultCrossChainManagerUpgradeable is
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
     }
 
-    // set chain id
+    /// @notice Sets the chain ID.
+    /// @param _chainId ID of the chain.
     function setChainId(uint256 _chainId) public onlyOwner {
         chainId = _chainId;
     }
 
-    // set vault
+    /// @notice Sets the vault address.
+    /// @param _vault Address of the new vault.
     function setVault(address _vault) public onlyOwner {
         vault = IVault(_vault);
     }
 
-    // set crossChainRelay
+    /// @notice Sets the cross-chain relay address.
+    /// @param _crossChainRelay Address of the new cross-chain relay.
     function setCrossChainRelay(address _crossChainRelay) public onlyOwner {
         crossChainRelay = IOrderlyCrossChain(_crossChainRelay);
     }
 
-    // set ledgerCrossChainManager
+    /// @notice Sets the ledger chain ID.
+    /// @param _chainId ID of the ledger chain.
     function setLedgerCrossChainManager(uint256 _chainId, address _ledgerCrossChainManager) public onlyOwner {
         ledgerChainId = _chainId;
         ledgerCrossChainManagers[_chainId] = _ledgerCrossChainManager;
     }
 
+    /// @notice receive message from relay, relay will call this function to send messages
+    /// @param message message
+    /// @param payload payload
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload)
         external
         override
@@ -93,11 +101,14 @@ contract VaultCrossChainManagerUpgradeable is
         }
     }
 
-    // user withdraw USDC
+    /// @notice Triggers a withdrawal from the ledger.
+    /// @param data Struct containing withdrawal data.
     function _sendWithdrawToVault(VaultTypes.VaultWithdraw memory data) internal {
         vault.withdraw(data);
     }
 
+    /// @notice Fetches the deposit fee based on deposit data.
+    /// @param data Struct containing deposit data.
     function getDepositFee(VaultTypes.VaultDeposit memory data) public view override returns (uint256) {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
@@ -113,6 +124,8 @@ contract VaultCrossChainManagerUpgradeable is
         return crossChainRelay.estimateGasFee(message, payload);
     }
 
+    /// @notice Initiates a deposit to the vault.
+    /// @param data Struct containing deposit data.
     function deposit(VaultTypes.VaultDeposit memory data) external override {
         require(msg.sender == address(vault), "only vault can call deposit");
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
@@ -130,8 +143,12 @@ contract VaultCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
+    /// @notice Initiates a deposit to the vault along with native fees.
+    /// @param data Struct containing deposit data.
+    /// @param amount Amount of native fee.
     function depositWithFee(VaultTypes.VaultDeposit memory data, uint256 amount) external payable override {
         require(msg.sender == address(vault), "only vault can call depositWithFee");
+        require(msg.value >= amount, "not enough fee");
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -147,6 +164,8 @@ contract VaultCrossChainManagerUpgradeable is
         crossChainRelay.sendMessageWithFee{value: amount}(message, payload, amount);
     }
 
+    /// @notice Approves a cross-chain withdrawal from the ledger to the vault.
+    /// @param data Struct containing withdrawal data.
     function withdraw(VaultTypes.VaultWithdraw memory data) external override {
         require(msg.sender == address(vault), "only vault can call withdraw");
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
@@ -164,6 +183,7 @@ contract VaultCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
+    /// @notice send test withdraw back
     function _sendTestWithdrawBack() internal {
         VaultTypes.VaultWithdraw memory data = VaultTypes.VaultWithdraw({
             accountId: bytes32(0),
@@ -188,5 +208,15 @@ contract VaultCrossChainManagerUpgradeable is
         bytes memory payload = abi.encode(data);
 
         crossChainRelay.sendMessage(message, payload);
+    }
+
+    /// @notice get version
+    function getVersion() external pure returns (string memory) {
+        return "0.0.1";
+    }
+
+    /// @notice get role
+    function getRole() external pure returns (string memory) {
+        return "vault";
     }
 }

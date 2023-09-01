@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
 import "contract-evm/src/interface/ILedger.sol";
@@ -32,14 +32,25 @@ contract LedgerCrossChainManagerDatalayout {
 }
 
 contract DecimalManager is LedgerCrossChainManagerDatalayout {
+    /// @notice Sets the token decimal.
+    /// @param tokenHash token hash
+    /// @param tokenChainId token chain id
+    /// @param decimal decimal
     function setTokenDecimal(bytes32 tokenHash, uint256 tokenChainId, uint128 decimal) external {
         tokenDecimalMapping[tokenHash][tokenChainId] = decimal;
     }
 
+    /// @notice Gets the token decimal.
+    /// @param tokenHash token hash
+    /// @param tokenChainId token chain id
     function getTokenDecimal(bytes32 tokenHash, uint256 tokenChainId) internal view returns (uint128) {
         return tokenDecimalMapping[tokenHash][tokenChainId];
     }
 
+    /// @notice convert token amount to dst chain decimal
+    /// @param tokenAmount token amount
+    /// @param srcDecimal src chain decimal
+    /// @param dstDecimal dst chain decimal
     function convertDecimal(uint128 tokenAmount, uint128 srcDecimal, uint128 dstDecimal)
         internal
         pure
@@ -54,6 +65,11 @@ contract DecimalManager is LedgerCrossChainManagerDatalayout {
         }
     }
 
+    /// @notice convert token amount to dst chain decimal
+    /// @param tokenAmount token amount
+    /// @param tokenHash token hash
+    /// @param srcChainId src chain id
+    /// @param dstChainId dst chain id
     function convertDecimal(uint128 tokenAmount, bytes32 tokenHash, uint256 srcChainId, uint256 dstChainId)
         internal
         view
@@ -84,6 +100,7 @@ contract LedgerCrossChainManagerUpgradeable is
     event DepositReceived(AccountTypes.AccountDeposit data);
     event TestWithdrawDone();
 
+    /// @notice Initializes the contract.
     function initialize() public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -95,36 +112,47 @@ contract LedgerCrossChainManagerUpgradeable is
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
     }
 
-    // set chain id
+    /// @notice set chain id
+    /// @param _chainId chain id
     function setChainId(uint256 _chainId) external onlyOwner {
         chainId = _chainId;
     }
 
-    // set ledger
+    /// @notice set ledger
+    /// @param _ledger ledger address
     function setLedger(address _ledger) external onlyOwner {
         ledger = ILedger(_ledger);
     }
 
-    // set crossChainRelay
+    /// @notice set crossChainRelay
+    /// @param _crossChainRelay crossChainRelay address
     function setCrossChainRelay(address _crossChainRelay) external onlyOwner {
         crossChainRelay = IOrderlyCrossChain(_crossChainRelay);
     }
 
-    // set operatorManager
+    /// @notice set operatorManager
+    /// @param _operatorManager operatorManager address
     function setOperatorManager(address _operatorManager) external onlyOwner {
         operatorManager = IOperatorManager(_operatorManager);
     }
 
-    // set vaultCrossChainManager
+    /// @notice set vaultCrossChainManager
+    /// @param _chainId chain id
+    /// @param _vaultCrossChainManager vaultCrossChainManager address
     function setVaultCrossChainManager(uint256 _chainId, address _vaultCrossChainManager) external onlyOwner {
         vaultCrossChainManagers[_chainId] = _vaultCrossChainManager;
     }
 
+    /// @notice send a cross-chain deposit
+    /// @param data deposit data
     function deposit(AccountTypes.AccountDeposit memory data) internal {
         emit DepositReceived(data);
         ledger.accountDeposit(data);
     }
 
+    /// @notice receive message from relay, relay will call this function to send messages
+    /// @param message message
+    /// @param payload payload
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload)
         external
         override
@@ -177,6 +205,8 @@ contract LedgerCrossChainManagerUpgradeable is
         }
     }
 
+    /// @notice send a cross-chain withdrawal from the ledger to the vault.
+    /// @param data Struct containing withdrawal data.
     function withdraw(EventTypes.WithdrawData memory data) public override {
         // only ledger can call this function
         require(msg.sender == address(ledger), "caller is not ledger");
@@ -203,6 +233,8 @@ contract LedgerCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
+    /// @notice send a test cross-chain withdrawal for connection test
+    /// @param dstChainId destination chain id
     function sendTestWithdraw(uint256 dstChainId) external onlyOwner {
         EventTypes.WithdrawData memory data = EventTypes.WithdrawData({
             tokenAmount: 100,
@@ -241,14 +273,18 @@ contract LedgerCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
+    /// @notice withdraw finished
+    /// @param message withdraw message
     function withdrawFinish(AccountTypes.AccountWithdraw memory message) internal {
         ledger.accountWithDrawFinish(message);
     }
 
+    /// @notice get version
     function getVersion() external pure returns (string memory) {
         return "0.0.1";
     }
 
+    /// @notice get role
     function getRole() external pure returns (string memory) {
         return "ledger";
     }
