@@ -38,7 +38,7 @@
   "dev": {
     "orderlyop": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "proxy": "0xa1a9C94bb24B09739Af80E6EfaB7ca0F576182bc",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
       "relay": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0"
     },
     "arbitrumgoerli": {
