@@ -6,16 +6,25 @@ This project is built for providing cross-chain service for Orderly V2, which ha
 ![structure](imgs/infra)
 
 ## An simple example: deposit
+
 1. The vault receives a user's deposit request.
+
 2. The deposit message is sent to the Vault Cross-Chain Manager.
+
 3. The manager constructs a cross-chain message including source and target chain information.
+
 4. This message is sent to the Relay on the source chain.
+
 5. The Relay transmits the message to the target chain, where the Ledger is deployed.
+
 6. The Relay on the target chain forwards the message to the Ledger Cross-Chain Manager.
+
 7. This manager decodes the message and constructs a recognizable message for the Ledger.
+
 8. Finally, the Ledger processes the deposit.
 
 ## File Structure
+
 Here's an overview of the main folders in this project and what they contain:
 
 * `contracts/`: This folder houses all the Solidity smart contracts essential for the project's blockchain functionality.
@@ -27,16 +36,24 @@ Here's an overview of the main folders in this project and what they contain:
 * `config/tasks/`: Holds JSON files that configure and parameterize the scripts, making it easier to manage tasks.
 
 * `config/`: A general folder for storing project-related informations like contract address.
+
 ## Deployment and Setup
+
 #### Setup RPCs and Related infos in .env
+
 1. Setup available accounts(format like this: `ORDERLY_PRIVATE_KEY`, network name with `_PRIVATE_KEY`)
+
 2. Setup RPC URLs
+
 3. Setup Endpoins addresses
+
 4. And some configuration file paths for scripts
 
 you can refer to `.env.example`. I am using foundry for deployment and scripting. My scripts will read infos from `.env` and r/w json files under `config`. 
 ### Deployment
+
 1. **Cross-Chain Relay Deployment**
+
 for cross-chain relay's deployment, you need to write a json file for the task and put it under `config/tasks`.
 And then set `DEPLOY_RELAY_CONFIG_FILE` to the path of the json file in `.env`.
 The format of the json file look like this:
@@ -72,22 +89,31 @@ one more thing, you should add the following json into `cross-chain-relay.json` 
 the reason is because foundry script will not write the key if it is not in the json file. So, we manual setup the keys in the json file. After deployment, you will have a updated json file will information about your deployment.
 
 2. **Cross-Chain Manager Deployment** 
+
 the following steps are similiar, you can refer to example task json files under `config/tasks`.
 
 a. write a task json and set the env var `DEPLOY_CCMANAGER_CONFIG_FILE` in `.env`
+
 b. add required keys in json file `cross-chain-manager.json`
+
 c. run `forge script easyScripts/deployCCManager.s.sol -vvvv --broadcast`
 
 3. **Cross-Chain Relay Setup**
+
 a. write a task json and set env var `SETUP_RELAY_CONFIG_FILE` in `.env`
+
 b. run `forge script easyScripts/setupRelay.s.sol -vvvv --broadcast`
 
 4. **Cross-Chain Manager Setup**
+
 a. write a task json and set env var `SETUP_CCMANAGER_CONFIG_FILE` in `.env`
+
 b. run `forge script easyScripts/setupCCManager.s.sol -vvvv --broadcast`
 
 5. **Set Manager Address in Relays**
+
 a. write a task json and set env var `SET_CCMANAGER_CONFIG_FILE` in `.env`
+
 b. run `forge script easyScripts/setManager.s.sol  -vvvv --broadcast`
 
 after the finish the above steps, we have our cross-chain managers and relays deployed. The reason that we don't write a single script to do it is because of the limitation of foundry scripts. And also because some operations can be run repeatedly such as setup. We can also use shell scripts to turn the above steps into one single script.
