@@ -7,7 +7,6 @@ import "../contracts/CrossChainRelayUpgradeable.sol";
 import "../contracts/CrossChainRelayProxy.sol";
 
 contract SetupRelay is BaseScript, ConfigHelper {
-
     using StringUtils for string;
 
     // variable order must be alphabetical
@@ -26,10 +25,11 @@ contract SetupRelay is BaseScript, ConfigHelper {
 
         setupRelay(config.network1, network1DeployData.proxy, config.network2, network2DeployData.proxy);
         setupRelay(config.network2, network2DeployData.proxy, config.network1, network1DeployData.proxy);
-
     }
 
-    function setupRelay(string memory srcNetwork, address srcProxy, string memory dstNetwork, address dstProxy) internal {
+    function setupRelay(string memory srcNetwork, address srcProxy, string memory dstNetwork, address dstProxy)
+        internal
+    {
         console.log("srcNetwork: ", srcNetwork);
         console.log("dstNetwork: ", dstNetwork);
 
@@ -44,10 +44,9 @@ contract SetupRelay is BaseScript, ConfigHelper {
         // 3. set src chain id
         relay.setSrcChainId(getChainId(srcNetwork));
         // 4. set trusted remote
-        bytes memory remoteAndLocal = abi.encodePacked(dstProxy, dstProxy);
+        bytes memory remoteAndLocal = abi.encodePacked(dstProxy, srcProxy);
         relay.setTrustedRemote(getLzChainId(dstNetwork), remoteAndLocal);
 
         vm.stopBroadcast();
     }
-
 }
