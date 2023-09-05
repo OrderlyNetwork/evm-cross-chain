@@ -1,0 +1,7 @@
+// ## Foundry scripts support
+// LEDGER_ADDRESS=""
+// LEDGER_NETWORK=""
+// LEDGER_CC_MANAGER_ADDRESS=""
+// VAULT_ADDRESS=""
+// VAULT_NETWORK=""
+// VAULT_CC_MANAGER_ADDRESS=""
