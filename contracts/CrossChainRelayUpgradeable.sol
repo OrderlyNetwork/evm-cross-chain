@@ -77,7 +77,7 @@ contract CrossChainRelayUpgradeable is
         _callers[_endpoint] = 1;
     }
 
-    function _authorizeUpgrade(address newImplementation) internal override {}
+    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
     function upgradeTo(address newImplementation) public override onlyOwner onlyProxy {
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
