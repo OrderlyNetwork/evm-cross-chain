@@ -228,7 +228,7 @@ contract CrossChainRelayUpgradeable is
 
     /// @notice test function, send ping to another chain
     /// @param dstChainId the destination chain id
-    function ping(uint256 dstChainId) public onlyOwner {
+    function ping(uint256 dstChainId) internal {
         OrderlyCrossChainMessage.MessageV1 memory data = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping),
             option: 0,

@@ -1,0 +1,1 @@
+export const foundry_script_folder = "foundry_scripts";
