@@ -4,9 +4,12 @@ import * as fs from "fs";
 import {foundry_script_folder} from "./const";
 
 // foundry wrapper function, send an operation method name to the function and run a command
-export function foundry_wrapper(method_name: string, broadcast: boolean = false) {
+export function foundry_wrapper(method_name: string, broadcast: boolean, simulate: boolean = false) {
     let broadcastFlag = broadcast ? "--broadcast" : "";
     let command = `forge script ${foundry_script_folder}/${method_name}.s.sol -vvvv ${broadcastFlag}`;
+    console.log(`Running ${method_name} script: ${command}`);
+
+    if (simulate) {return;}
 
     // run the command
     let result = exec(command);
@@ -25,6 +28,9 @@ export function foundry_wrapper(method_name: string, broadcast: boolean = false)
 export function set_env_var(method_name: string, var_name: string, value: string) {
     // var_name all caps
     var_name = `FS_${method_name}_${var_name}`;
+    
+    console.log("setting env var: " + var_name + " to " + value);
+
     // open the .env file
     let env_file = ".env";
     // read the .env file
@@ -32,11 +38,14 @@ export function set_env_var(method_name: string, var_name: string, value: string
     // if the variable is already in the .env file, replace the value
     if (env_data.includes(var_name)) {
         // replace the value
-        env_data = env_data.replace(`${var_name}=${process.env[var_name]}`, `${var_name}=${value}`);
+        // using regex to replace the line
+        // it should also with start of the line
+        env_data = env_data.replace(new RegExp(`^${var_name}=.*`, "gm"), `${var_name}=${value}`);
     } else {
         // if the variable is not in the .env file, add the variable and value
         env_data += `\n${var_name}=${value}`;
     }
+    // console.log(env_data);
     // save back to .env
     fs.writeFileSync(env_file, env_data);
 }
