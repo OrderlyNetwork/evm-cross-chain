@@ -20,6 +20,7 @@
     "@typechain/hardhat": "^8.0.3",
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
+    "@types/shelljs": "^0.8.12",
     "chai": "^4.3.7",
     "dotenv": "^16.3.1",
     "ethers": "^6.6.5",
@@ -27,6 +28,7 @@
     "hardhat-deploy-ethers": "^0.4.1",
     "hardhat-deploy-tenderly": "^0.2.0",
     "hardhat-gas-reporter": "^1.0.9",
+    "minimist": "^1.2.8",
     "solidity-coverage": "^0.8.4",
     "ts-node": "^10.9.1",
     "typechain": "^8.3.1",
@@ -37,6 +39,7 @@
     "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "@types/yargs": "^17.0.24",
     "hardhat": "^2.13.0",
+    "shelljs": "^0.8.5",
     "yargs": "^17.7.2"
   }
 }
