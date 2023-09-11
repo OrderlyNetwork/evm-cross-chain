@@ -4,6 +4,27 @@
 
 This project is built for providing cross-chain service for Orderly V2, which has components including multiple vaults, a dedicated ledger, cross-chain managers for both the vaults and the ledger, and cross-relay for each chain with our services. These components are deployed across blockchains, such as Ethereum, Arbitrum, and Avalanche. The vaults serve as secure repositories for user funds, while the ledger acts as a comprehensive database for all user-related information. To facilitate seamless communication between the vaults and the ledger—each residing on different blockchains—we have implemented dedicated cross-chain managers. These managers are tasked with converting messages into cross-chain payloads, enabling fluid inter-blockchain communication. Recognizing the variety of existing cross-chain solutions, a relay is positioned on each blockchain to encapsulate multiple cross-chain options. This relay plays a key role in transmitting messages from the cross-chain managers, thereby ensuring robust and flexible cross-chain interactions
 
+### Role And Responsiblility
+
+**cross-chain-relay**:
+
+- receiving messages from cross-chain-managers
+- sending messages received from the other chain to cross-chain-managers
+- send message and payload through layerzero or other cross-chain method to the destination chain
+
+**Ledger cross-chain-manager**:
+
+- receiving message from cross-chain-relay and forward to ledger
+- construct cross-chain message and payload and send then to cross-chain-relay
+- convert messages sent from vault to ledger into the recognizeable type and forward to ledger
+- convert token amount by using token decimal information for all message from and to vault on the other chain
+
+**Vault cross-chain-manager**:
+
+- receiving message from cross-chain-relay and forward to vault
+- construct cross-chain message and payload and send then to cross-chain-relay
+- convert messages sent from ledger on the other chain to vault into the recognizeable type and forward to vault
+
 ## 2. Diagram
 
 ![structure](imgs/infra)
