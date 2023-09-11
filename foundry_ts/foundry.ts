@@ -1,12 +1,18 @@
 // Timestamp: 10/16/2019 7:50 PM
 import { exec } from "shelljs";
 import * as fs from "fs";
-import {foundry_script_folder} from "./const";
+import {foundry_script_folder} from "./utils/const";
+import { findFoundryScript } from "./utils/findFoundryScript";
 
 // foundry wrapper function, send an operation method name to the function and run a command
-export function foundry_wrapper(method_name: string, broadcast: boolean, simulate: boolean = false) {
+export function foundry_wrapper(method_name: string, broadcast: boolean, simulate: boolean) {
     let broadcastFlag = broadcast ? "--broadcast" : "";
-    let command = `forge script ${foundry_script_folder}/${method_name}.s.sol -vvvv ${broadcastFlag}`;
+    const foundryScriptPath = findFoundryScript(foundry_script_folder, method_name);
+    if (!foundryScriptPath) {
+        console.log(`Cannot find ${method_name} script in ${foundry_script_folder}`);
+        process.exit(1);
+    }
+    let command = `forge script ${foundryScriptPath} -vvvv ${broadcastFlag}`;
     console.log(`Running ${method_name} script: ${command}`);
 
     if (simulate) {return;}

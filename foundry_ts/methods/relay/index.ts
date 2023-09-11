@@ -1,0 +1,9 @@
+// import all modules under this folder
+// Path: foundry_ts/methods/relay
+
+import "./addRelayLzChainMapping";
+import "./deployRelay";
+import "./relayMsgTest";
+import "./setRelayTrustedRemote";
+import "./setupRelay";
+import "./transferNativeTokenToRelay";

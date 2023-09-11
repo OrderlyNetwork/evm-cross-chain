@@ -1,16 +1,11 @@
 
-import { deployRelay } from "./methods/deployRelay";
-import { generalMethod } from "./methods/generalMethod";
-import { relayMsgTest } from "./methods/relayMsgTest";
-import { checkArgs} from "./helper";
-import { retryPayload } from "./methods/retryPayload";
-import { transferNativeToken } from "./methods/transferNativeToken";
-import { setupDeployJson } from "./utils/setup_json";
+import { operation_map } from "./utils/config";
+import "./methods";
 
 const argv = require('minimist')(process.argv.slice(2), {'string': "data"});
 
 if (argv.method === undefined) {
-    console.error(`Usage: ts-node foundry_ts/entry.ts --method <method> [--broadcast <true|false>] ...`);
+    console.error(`Usage: ts-node foundry_ts/entry.ts --method <method> [--broadcast] [--simulate] ...`);
     process.exit(1);
 }
 
@@ -28,48 +23,14 @@ if (argv.simulate === undefined) {
 console.log("argv: ");
 console.log(argv);
 
-// general methods only requires env, network, broadcast, simulate
-const general_methods = ["upgradeRelay", "setRelayChainId"];
-
-// argv.method in general_methods
-if (general_methods.includes(argv.method)) {
-    const required_flags = ["env", "network", "broadcast", "simulate"];
-    checkArgs(argv.method, argv, required_flags);
-    generalMethod(argv.method, argv.env, argv.network, argv.broadcast, argv.simulate);
-}
-
-if (argv.method === "checkFlags") {
-    console.log("doing nothing");
-}
-
-if (argv.method === "relayMsgTest") {
-    const required_flags = ["env", "srcNetwork", "dstNetwork", "broadcast"];
-    checkArgs(argv.method, argv, required_flags);
-
-    relayMsgTest(argv.env, argv.srcNetwork, argv.dstNetwork, argv.broadcast);
-}
-
-if (argv.method === "retryPayload") {
-    const required_flags = ["env", "network", "broadcast", "data"];
-    checkArgs(argv.method, argv, required_flags);
-    retryPayload(argv.network, argv.data, argv.broadcast);
-}
-
-if (argv.method === "deployRelay") {
-    const required_flags = ["env", "network", "broadcast"];
-    checkArgs(argv.method, argv, required_flags);
-    deployRelay(argv.env, argv.network, argv.broadcast, argv.simulate);
-}
-
-if (argv.method === "transferNativeToken") {
-    const required_flags = ["network", "to", "ether", "broadcast"];
-    checkArgs(argv.method, argv, required_flags);
-    transferNativeToken(argv.network, argv.to, argv.ether, argv.broadcast);
-}
-
-// TODO
-if (argv.method === "deployAndSetupAnEnv") {
-
+console.log("available operations: ");
+console.log(operation_map);
+const func = operation_map.get(argv.method)
+if (func) {
+    func(argv); 
+} else {
+    console.error(`method ${argv.method} is not found`);
+    process.exit(1);
 }
 
 // some situations require to run multiple operations

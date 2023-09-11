@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "../baseScripts/BaseScript.s.sol";
-import "../baseScripts/ConfigHelper.s.sol";
-import "../baseScripts/RelayHelper.s.sol";
-import "../contracts/CrossChainRelayUpgradeable.sol";
-import "../contracts/CrossChainRelayProxy.sol";
+import "evm-cross-chain/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/baseScripts/RelayHelper.s.sol";
+import "evm-cross-chain/contracts/CrossChainRelayUpgradeable.sol";
+import "evm-cross-chain/contracts/CrossChainRelayProxy.sol";
 
 contract TransferNativeToken is BaseScript, ConfigHelper, RelayHelper {
     function run() external {
         string memory network = vm.envString("FS_transferNativeToken_network");
-        string memory to = vm.envString("FS_transferNativeToken_to");
-        uint256 memory amount = vm.env("FS_transferNativeToken_amount");
+        address to = vm.envAddress("FS_transferNativeToken_to");
+        uint256 amount = vm.envUint("FS_transferNativeToken_amount");
 
         console.log("[TransferNativeToken]to: ", to);
         console.log("[TransferNativeToken]network: ", network);
