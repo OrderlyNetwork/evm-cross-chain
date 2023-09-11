@@ -1,11 +1,14 @@
 # Orderly Cross-Chain Service
-## Introduction
+
+## 1. Introduction
+
 This project is built for providing cross-chain service for Orderly V2, which has components including multiple vaults, a dedicated ledger, cross-chain managers for both the vaults and the ledger, and cross-relay for each chain with our services. These components are deployed across blockchains, such as Ethereum, Arbitrum, and Avalanche. The vaults serve as secure repositories for user funds, while the ledger acts as a comprehensive database for all user-related information. To facilitate seamless communication between the vaults and the ledger—each residing on different blockchains—we have implemented dedicated cross-chain managers. These managers are tasked with converting messages into cross-chain payloads, enabling fluid inter-blockchain communication. Recognizing the variety of existing cross-chain solutions, a relay is positioned on each blockchain to encapsulate multiple cross-chain options. This relay plays a key role in transmitting messages from the cross-chain managers, thereby ensuring robust and flexible cross-chain interactions
 
-## Diagram
+## 2. Diagram
+
 ![structure](imgs/infra)
 
-## An simple example: deposit
+## 3. An simple example: deposit
 
 1. The vault receives a user's deposit request.
 
@@ -23,55 +26,30 @@ This project is built for providing cross-chain service for Orderly V2, which ha
 
 8. Finally, the Ledger processes the deposit.
 
-## File Structure
+## 4. File Structure
 
 Here's an overview of the main folders in this project and what they contain:
 
-* `contracts/`: This folder houses all the Solidity smart contracts essential for the project's blockchain functionality.
+- `contracts/`: This folder houses all the Solidity smart contracts essential for the project's blockchain functionality.
 
-* `baseScripts/`: Contains the base classes for various scripts along with utility functions and helpers.
+- `baseScripts/`: Contains the base classes for various scripts along with utility functions and helpers.
 
-* `easyScripts/`: This directory is specifically designed for Foundry scripts that facilitate deployment, setup, and other operational tasks.
+- `foundry_scripts/`: This directory is specifically designed for Foundry scripts that facilitate deployment, setup, and other operational tasks.
 
-* `config/tasks/`: Holds JSON files that configure and parameterize the scripts, making it easier to manage tasks.
+- `foundry_ts/`: This directory stores typescript wrapper for foundry scripts, so that foundry scripts can be better utilized.
 
-* `config/`: A general folder for storing project-related informations like contract address.
+- `config/`: A general folder for storing project-related informations like contract address.
 
-## Deployment and Setup
+## 5. Deployment and Setup
 
-#### Setup RPCs and Related infos in .env
+In this section, I will introduce how to deploy evm-cross-chain service for orderly v2, and how to setup every contracts. Scripts organization and related file format will also be introduced.
 
-1. Setup available accounts(format like this: `ORDERLY_PRIVATE_KEY`, network name with `_PRIVATE_KEY`)
+### 5.1 Json File Format under `config`
 
-2. Setup RPC URLs
+first of all, I will introduce the role of json files under `config`. Foundry scripts are not like javascript or ts. It is not that convenient to save deployment infos and projecte related infos into files. So we usually copy and paste the info into some place(confluence, or readme). But copy paste isn't a good habit. So I decide to put everything into json files automatically. So I write a helper base class for foundry scripts so that it can help users better read from and write to json files.
 
-3. Setup Endpoins addresses
+The json files under `config` is organized by `env` first, and then `network`, and then specific infos. Just like the following relay deployment example:
 
-4. And some configuration file paths for scripts
-
-you can refer to `.env.example`. I am using foundry for deployment and scripting. My scripts will read infos from `.env` and r/w json files under `config`. 
-### Deployment
-
-1. **Cross-Chain Relay Deployment**
-
-for cross-chain relay's deployment, you need to write a json file for the task and put it under `config/tasks`.
-And then set `DEPLOY_RELAY_CONFIG_FILE` to the path of the json file in `.env`.
-The format of the json file look like this:
-```json
-{
-    "networks": [
-        "orderlyop",
-        "arbitrumgoerli"
-    ],
-    "env": "staging"
-}
-```
-in this json, it specifies the networks on which the relay should be deployed. and set the environment is staging.
-the you can run to deploy cross-relay on both orderlyop and arbitrumgoerli:
-```shell
-forge script easyScripts/deployRelay.s.sol -vvvv --broadcast
-```
-one more thing, you should add the following json into `cross-chain-relay.json` under `config`:
 ```json
   "staging": {
     "orderlyop": {
@@ -86,102 +64,143 @@ one more thing, you should add the following json into `cross-chain-relay.json` 
     }
   }
 ```
-the reason is because foundry script will not write the key if it is not in the json file. So, we manual setup the keys in the json file. After deployment, you will have a updated json file will information about your deployment.
 
-2. **Cross-Chain Manager Deployment** 
+The above example stores cross-chain-relay service's deployment address and owner information for staging environment. Because we are developing under a certain env, it would be better if we separate infos of different envs.
 
-the following steps are similiar, you can refer to example task json files under `config/tasks`.
+Other project related json files are oragized by the same way. The json file read and write helper foundry script is `baseScripts/ConfigHelper.s.sol` it wraps the read and write of cross-chain-relay infos and cross-chain-manager infos, and other useful helper functions.
 
-a. write a task json and set the env var `DEPLOY_CCMANAGER_CONFIG_FILE` in `.env`
+#### 5.2 Infos in .env
 
-b. add required keys in json file `cross-chain-manager.json`
+Beside json files under `config`, other public informations are stored in `.env`, and the example is `.env.example`.
 
-c. run `forge script easyScripts/deployCCManager.s.sol -vvvv --broadcast`
+in `.env` you can set your private keys, chain RPC URLs, chain Ids and other public information.
 
-3. **Cross-Chain Relay Setup**
+1. Setup available accounts(format like this: `ORDERLY_PRIVATE_KEY`, network name with `_PRIVATE_KEY`)
 
-a. write a task json and set env var `SETUP_RELAY_CONFIG_FILE` in `.env`
+2. Setup RPC URLs
 
-b. run `forge script easyScripts/setupRelay.s.sol -vvvv --broadcast`
+3. Setup Layerzero Endpoins addresses
 
-4. **Cross-Chain Manager Setup**
+### 5.3 Deployment and Setup
 
-a. write a task json and set env var `SETUP_CCMANAGER_CONFIG_FILE` in `.env`
+Before you start deployment and setup, please make sure you setup your .env correctly.
 
-b. run `forge script easyScripts/setupCCManager.s.sol -vvvv --broadcast`
+In this repo `evm-cross-chain`, which provids cross-chain-service for orderly v2 between vault and ledger. It has two main components, `cross-chain-relay` and `cross-chain-manager`. I won't elaborate the role and responsibility of the two componenets here, but I will introduce the procedures of deployment and setup of both.
 
-5. **Set Manager Address in Relays**
+Both components take advantage of UUPS for upgradeable contracts deployment. so the deployment of them includes the following steps:
 
-a. write a task json and set env var `SET_CCMANAGER_CONFIG_FILE` in `.env`
+1. deploy the implementation contract
+2. deploy proxy contract
+3. initialize the contract (one-time function)
 
-b. run `forge script easyScripts/setManager.s.sol  -vvvv --broadcast`
+After deployment, you need to setup the contracts. Cross-chain-relay and cross-chain-manager has different setup procedures. for cross-chain-relay, please follow the following setup procedure:
 
-after the finish the above steps, we have our cross-chain managers and relays deployed. The reason that we don't write a single script to do it is because of the limitation of foundry scripts. And also because some operations can be run repeatedly such as setup. We can also use shell scripts to turn the above steps into one single script.
+1. set the current chain Id
+2. transfer native token to the proxy address, for future cross-chain consumption
+3. set native chain Ids to layerzero chain Ids mapping
+4. set the corresponding cross-chain-manager's address
+5. set layerzero trusted remote
 
-## More on standard of scripting
-there are three types of envs:
-1. public envs: RPC_URLs, Private Keys, Chain IDs, etc. Something that not change very often
-2. project related envs: contract deployment address, or other information
-3. script configuration files
+for ledger cross-chain-manager, the setup procedure is like:
 
-for type 1, it should be stored in `.env`, for type 2, it should be automatically stored in json, and it can be easily copy to other projects. for type 3, it should also stored in json files.
+1. set the the current chain Id
+2. set the cross-chain-relay's address
+3. set Ledger address
+4. set operator manager address
+5. set token decimal information for different chains
 
-But there is a problem, foundry script doesn't accept custom arguments, so we have to put argument into `.env`. here is some example:
-```bash
-### deploy relay
-DEPLOY_RELAY_CONFIG_FILE="config/tasks/qa-deploy.json"
-### setup relay
-SETUP_RELAY_CONFIG_FILE="config/tasks/qa-deploy.json"
-### set manager
-SET_CCMANAGER_CONFIG_FILE="config/tasks/setManager.json"
+for vault cross-chain-manager, the setup procedure is like:
 
+1. set the the current chain Id
+2. set the cross-chain-relay's address
+3. set Vault address
+4. set the ledger cross-chain-manager's network chain Id and the the address
 
-## project relate env files
-DEPLOY_RELAY_SAVE_FILE="config/cross-chain-relay.json"
-DEPLOY_MANAGER_SAVE_FILE="config/cross-chain-manager.json"
+Some components relies on other components, so you'd better deploy all of them so before your setup starts.
+
+## 6 Operation Scripts
+
+To better manage the complex procedures of cross-chain-relay and cross-chain-manager, we define the single operation of each step in above procedures as `operation`. Each operation is realized using a foundry script and a typescript wrapper. And some useful composite operations(includes several operations together) can be built using typescript wrapper (call several operations in one invocation).
+
+Before we start on introducing the operation script structure. We need to introduce some helper scripts first. Because cross-chain-relay and cross-chain-manager has fixed procedures, so we don't need write a same operation again and again. Therefore, I provide some helper function in scripts to help users better build more other operations. For example, cross-chain-relay's helper script locates at `baseScripts/RelayHelper.s.sol`, it implements all operations for cross-chain-relay. Cross-chain-manager's helper script locates at `baseScripts/CCManagerHelper.s.sol`.
+
+Now let's take a look at the structure of the actual operation scripts.
+
+### 6.1 The design of operation scripts
+
+First an operation implemented by a foundry script under `./foundry_scripts`. The file structure under `./foundry_scripts` depends on the role of the operations, relay's operations are placed under `relay`, cross-chain-manager's operations are placed under `ccmanager`. General operations like `retryPayload`, `transferNativeToken` is place under `./foundry_scripts`.
+
+Every foundry script is wrapped by a typescript script. The required input arguments of foundry scripts are passed from typescript script's arguments. The arguments will be formatted as `FS_${operation_name}_${argument_name}` and set in `.env` by typescript, so that foundry script can read them by using `vm.env`. Let's take a look at an example, to see how a script is invoked.
+
+To deploy cross-chain-relay, we first write a foundry script and inherit necessary base contracts and helper scripts.
+
+```solidty
+contract DeployRelay is BaseScript, ConfigHelper, RelayHelper {...}
 ```
-for every command like deploy, setup, or others, there should be a env varibale in `.env`. for project related variable it also needs an env variables.
 
-## json format
-### type 2
-first classify using environment, qa, dev, release, etc. then network names like this:
-```json
-{
-  "qa-mock": {
-    "fuji": {
-      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "proxy": "0xBE404b97de8A6B1304F3dbC17F565034721A40b7",
-      "relay": "0xAcf376844CEDe2f8cdaA8bA88A44FE4d4332A4DF"
-    },
-    "orderly": {
-      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "proxy": "0x8E1f5dBF1E0601f99bE7563cca3B319AdF814684",
-      "relay": "0xB20a5257B32bFb0E17C10Ed98CD618335bBA0EFF"
-    }
-  }
+deploy a cross-chain-relay, you need to know what current env is and which network to deploy. So, you need `env` and `network`, let we name this operation as `deployRelay`. Then the variables set int `.env` will be `FS_deployRelay_env` and `FS_deployRelay_network`.
+
+You need to read these arguments from `.env` and deploy cross-chain-relay.
+
+But manually set values in `.env` is not a wise choice, so we let the typescript wrapper to do that (every foundry scripts has a typescript wrapper).
+
+```typescript
+export function deployRelay(
+  env: string,
+  network: string,
+  broadcast: boolean,
+  simulate: boolean
+) {
+  setupDeployJson(relay_deploy_json, env, network, "relay");
+  set_env_var(method_name, "env", env);
+  set_env_var(method_name, "network", network);
+  set_env_var(method_name, "broadcast", broadcast.toString());
+  foundry_wrapper(method_name, broadcast, simulate);
 }
 ```
-### type 3
-for this type, you can define by your own.
 
-## foundry script
-for every foundry script, you should have a config json, you define your struct inside your script. and you should automatically save your deployment and neccessary information into corresponding json files. please refer to `easyScripts/deployRelay.s.sol`
+The above function is from the typescript wrapper. It first setup the json file for storing the deployment infos (as we explained in previous section, we let the foundry script automatically save the deployment infos, but because of the limitation of foundry script, we setup it using typescript first).
 
-all base script contracts and helper function are under `baseScripts`
+Then it setup `.env` for foundry script to read. Finally it invokes the foundry script by calling foundry wrapper function.
 
+This function is from `./foundry_ts/methods/relay/deployRelay.ts`.
 
-## How to run scripts
-here is a scripts for substituting env variables in `.env` so that we can pass config file as arguments.
-just run
-```shell
-bash easyScripts/easy_script.sh setup config/tasks/qa-setupRelay.json
+after writing the above function, we need also register the operation, so that we can use a unified command line scripts to invoke operations.
+
+```typescript
+export function deployRelayWithArgv(argv: any) {
+  const required_flags = ["env", "network"];
+  checkArgs(method_name, argv, required_flags);
+  deployRelay(argv.env, argv.network, argv.broadcast, argv.simulate);
+}
+
+addOperation(method_name, deployRelayWithArgv);
 ```
-the env variable associated with setup command will be replace with the new value. then you can run foundry scripts like this:
-```shell
-easyScripts/setupRelay.s.sol -vvvv --broadcast
-```
-you don't need to pass the rpc url, because the scripts will do it base on your config.
 
+the first function checks the required arguments are passed and then invoke the operation. And then calling `addOperation` to register the operation.
+
+After finishing above programming, we can call `deployRelay` using command line:
+
+```shell
+ts-node foundry_ts/entry.ts --method deployRelay --env qa --network eth --broadcast --simulate
+```
+
+you may notice there are two more arguments `--broadcast` and `--simulate`, if `--broadcast` is present, then the tx will be broadcast, if `--simulate` is present then the foundry script will not get executed, it will only print the command that invoke the foundry script.
+
+(PS: because we are using minimum argument parser, we have little limitation on the type of arugment, so if you want to read bytes, you should define your argument name as `bytes`, because it is manually set as string in the script, or else hex strings will be parsed as integers.)
+
+### 6.2 Script Sum Up
+
+To add a new script, 1. you need to write a foundry script first, and then 2. add a typescript wrapper and 3. register the operation into the script.
+
+Of course you can start will existing typescript operations, and just add a new typescript operation by calling several existing typescript operations. In this way, you are building more complex operations and don't need to write a foundry script. But you also have to register it.
+
+The second way of adding new script using typescript is recommended. Foundry script should be regarded as low-level invocation of contract operation. Complex operations that are more useful in real situation should be implemented in typescript.
+
+## 7. Useful Commands during Your Development and Maintainance
+
+// TODO
 
 ## License
+
 [MIT License](LICENSE)
