@@ -25,6 +25,11 @@ export function deployAndSetupAnEnv(env: string, vaultNetwork: string, ledgerNet
     deployRelay(env, ledgerNetwork, broadcast, simulate);
 
     // 2. deploy cc manager
+    // TODO
+
+    // 3. setup relay
+
+    // 4. setup cc manager
 
 }
 
