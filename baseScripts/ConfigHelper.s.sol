@@ -118,6 +118,15 @@ contract ConfigHelper is Script {
         writeToJsonFileByKey(vm.toString(data.owner), deploySaveFile, env, network, "owner");
     }
 
+    function writeRelayDeployData(string memory env, string memory network, address relay, address proxy, address owner)
+        internal
+    {
+        string memory deploySaveFile = vm.envString("DEPLOY_RELAY_SAVE_FILE");
+        writeToJsonFileByKey(vm.toString(proxy), deploySaveFile, env, network, "proxy");
+        writeToJsonFileByKey(vm.toString(relay), deploySaveFile, env, network, "relay");
+        writeToJsonFileByKey(vm.toString(owner), deploySaveFile, env, network, "owner");
+    }
+
     function writeRelayDeployData(string memory env, string memory network, string memory key, string memory value)
         internal
     {
