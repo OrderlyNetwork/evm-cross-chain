@@ -100,6 +100,21 @@ contract ConfigHelper is Script {
         writeToJsonFileByKey(data.role, deploySaveFile, env, network, "role");
     }
 
+    function writeCCManagerDeployData(
+        string memory env,
+        string memory network,
+        string memory role,
+        address manager,
+        address proxy,
+        address owner
+    ) internal {
+        string memory deploySaveFile = vm.envString("DEPLOY_CCMANAGER_SAVE_FILE");
+        writeToJsonFileByKey(vm.toString(proxy), deploySaveFile, env, network, "proxy");
+        writeToJsonFileByKey(vm.toString(manager), deploySaveFile, env, network, "manager");
+        writeToJsonFileByKey(vm.toString(owner), deploySaveFile, env, network, "owner");
+        writeToJsonFileByKey(role, deploySaveFile, env, network, "role");
+    }
+
     function getRelayDeployData(string memory env, string memory network) internal returns (RelayDeployData memory) {
         string memory deploySavePath = vm.envString("DEPLOY_RELAY_SAVE_FILE");
         string memory deployData = vm.readFile(deploySavePath);
@@ -116,6 +131,15 @@ contract ConfigHelper is Script {
         writeToJsonFileByKey(vm.toString(data.proxy), deploySaveFile, env, network, "proxy");
         writeToJsonFileByKey(vm.toString(data.relay), deploySaveFile, env, network, "relay");
         writeToJsonFileByKey(vm.toString(data.owner), deploySaveFile, env, network, "owner");
+    }
+
+    function writeRelayDeployData(string memory env, string memory network, address relay, address proxy, address owner)
+        internal
+    {
+        string memory deploySaveFile = vm.envString("DEPLOY_RELAY_SAVE_FILE");
+        writeToJsonFileByKey(vm.toString(proxy), deploySaveFile, env, network, "proxy");
+        writeToJsonFileByKey(vm.toString(relay), deploySaveFile, env, network, "relay");
+        writeToJsonFileByKey(vm.toString(owner), deploySaveFile, env, network, "owner");
     }
 
     function writeRelayDeployData(string memory env, string memory network, string memory key, string memory value)
@@ -151,5 +175,23 @@ contract ConfigHelper is Script {
         bytes memory encodedData = getValueByKey(tokenDecimalsConfigPath, env, network);
         TokenDecimalConfig[] memory configs = abi.decode(encodedData, (TokenDecimalConfig[]));
         return configs;
+    }
+
+    function getLedgerAddress(string memory env, string memory network) internal view returns (address) {
+        string memory projectRelatedFile = vm.envString("DEPLOY_PROJECT_RELATED_FILE");
+        bytes memory ledgerData = getValueByKey(projectRelatedFile, env, network, "ledger");
+        return abi.decode(ledgerData, (address));
+    }
+
+    function getVaultAddress(string memory env, string memory network) internal view returns (address) {
+        string memory projectRelatedFile = vm.envString("DEPLOY_PROJECT_RELATED_FILE");
+        bytes memory vaultData = getValueByKey(projectRelatedFile, env, network, "vault");
+        return abi.decode(vaultData, (address));
+    }
+
+    function getOperatorAddress(string memory env, string memory network) internal view returns (address) {
+        string memory projectRelatedFile = vm.envString("DEPLOY_PROJECT_RELATED_FILE");
+        bytes memory data = getValueByKey(projectRelatedFile, env, network, "operator-manager");
+        return abi.decode(data, (address));
     }
 }

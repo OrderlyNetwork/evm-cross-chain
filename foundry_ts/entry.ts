@@ -1,21 +1,21 @@
 
-import { upgradeRelay } from "./methods/upgradeRelay";
-import { generalMethod } from "./methods/generalMethod";
-import { relayMsgTest } from "./methods/relayMsgTest";
-import { checkArgs} from "./helper";
-import { retryPayload } from "./methods/retryPayload";
+import { operation_map } from "./utils/config";
+import "./methods";
 
 const argv = require('minimist')(process.argv.slice(2), {'string': "data"});
 
 if (argv.method === undefined) {
-    console.error(`Usage: ts-node foundry_ts/entry.ts --method <method> [--broadcast <true|false>] ...`);
+    console.error(`Usage: ts-node foundry_ts/entry.ts --method <method> [--broadcast] [--simulate] ...`);
     process.exit(1);
 }
 
 // fill default values
+// if broadcast is not activated, foundry script will not send tx to networks
 if (argv.broadcast === undefined) {
     argv.broadcast = false;
 }
+
+// under simulate mode, foundry script will not be executed
 if (argv.simulate === undefined) {
     argv.simulate = false;
 }
@@ -23,28 +23,16 @@ if (argv.simulate === undefined) {
 console.log("argv: ");
 console.log(argv);
 
-// add new method here
-
-if (argv.method === "upgradeRelay") {
-    const required_flags = ["env", "network", "broadcast", "simulate"];
-    checkArgs(argv.method, argv, required_flags);
-    //upgradeRelay(argv.env, argv.network, argv.broadcast, argv.simulate);
-    generalMethod(argv.method, argv.env, argv.network, argv.broadcast, argv.simulate);
+console.log("available operations: ");
+console.log(operation_map);
+const func = operation_map.get(argv.method)
+if (func) {
+    func(argv); 
+} else {
+    console.error(`method ${argv.method} is not found`);
+    process.exit(1);
 }
 
-if (argv.method === "checkFlags") {
-    console.log("doing nothing");
-}
-
-if (argv.method === "relayMsgTest") {
-    const required_flags = ["env", "srcNetwork", "dstNetwork", "broadcast"];
-    checkArgs(argv.method, argv, required_flags);
-
-    relayMsgTest(argv.env, argv.srcNetwork, argv.dstNetwork, argv.broadcast);
-}
-
-if (argv.method === "retryPayload") {
-    const required_flags = ["env", "network", "broadcast", "data"];
-    checkArgs(argv.method, argv, required_flags);
-    retryPayload(argv.network, argv.data, argv.broadcast);
-}
+// some situations require to run multiple operations
+// 1. setup an environment, like qa, dev, prod, or staging, which requires to deploy and setup relays and cc managers
+// 2. add an additional vault chain for an env, deploy and setup both relay and cc manager, and update neccessary relay and cc managers on other chains

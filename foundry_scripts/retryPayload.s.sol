@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "../baseScripts/BaseScript.s.sol";
-import "../baseScripts/ConfigHelper.s.sol";
-import "../contracts/CrossChainRelayUpgradeable.sol";
-import "../contracts/CrossChainRelayProxy.sol";
-import "../contracts/layerzero/interfaces/ILayerZeroEndpoint.sol";
+import "evm-cross-chain/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/contracts/CrossChainRelayUpgradeable.sol";
+import "evm-cross-chain/contracts/CrossChainRelayProxy.sol";
+import "evm-cross-chain/contracts/layerzero/interfaces/ILayerZeroEndpoint.sol";
 
 contract RetryPayload is BaseScript, ConfigHelper {
     using StringUtils for string;

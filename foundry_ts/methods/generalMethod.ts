@@ -1,4 +1,12 @@
+import { addOperation } from "../utils/config";
 import { set_env_var, foundry_wrapper } from "../foundry";
+import { checkArgs } from "../helper";
+
+export function generalMethodWithArgv(argv: any) {
+    const required_flags = ["env", "network"]
+    checkArgs(argv.method, argv, required_flags);
+    generalMethod(argv.method, argv.env, argv.network, argv.broadcast, argv.simulate);
+}
 
 export function generalMethod(method_name: string, env: string, network: string, broadcast: boolean, simulate: boolean) {
 
@@ -9,3 +17,6 @@ export function generalMethod(method_name: string, env: string, network: string,
 
 }
 
+addOperation("upgradeRelay", generalMethodWithArgv);
+addOperation("setRelayManager", generalMethodWithArgv);
+addOperation("setRelayChainId", generalMethodWithArgv);
