@@ -3,3 +3,4 @@ import "./generalMethod"
 import "./retryPayload";
 import "./transferNativeToken";
 import "./relay";
+import "./ccmanager";

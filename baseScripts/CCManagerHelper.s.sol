@@ -9,32 +9,48 @@ import "./BaseScript.s.sol";
 import "./OperationHelper.s.sol";
 
 contract CCManagerHelper is BaseScript, OperationHelper {
-    function deployVaultManager() internal {
-        // TODO
+    function deployVaultManager() internal returns (address, address) {
+        VaultCrossChainManagerUpgradeable vaultManager = new VaultCrossChainManagerUpgradeable();
+        CrossChainManagerProxy proxy = new CrossChainManagerProxy(address(vaultManager), bytes(""));
+        VaultCrossChainManagerUpgradeable(payable(proxy)).initialize();
+        return (address(vaultManager), address(proxy));
     }
 
-    function deployLedgerManager() internal {
-        // TODO
+    function deployLedgerManager() internal returns (address, address) {
+        LedgerCrossChainManagerUpgradeable vaultManager = new LedgerCrossChainManagerUpgradeable();
+        CrossChainManagerProxy proxy = new CrossChainManagerProxy(address(vaultManager), bytes(""));
+        LedgerCrossChainManagerUpgradeable(payable(proxy)).initialize();
+        return (address(vaultManager), address(proxy));
     }
 
-    function upgradeManager(address proxy) internal {
-        // TODO
+    function upgradeVaultManager(address proxy) internal returns (address) {
+        VaultCrossChainManagerUpgradeable vaultManager = new VaultCrossChainManagerUpgradeable();
+
+        VaultCrossChainManagerUpgradeable(payable(proxy)).upgradeTo(address(vaultManager));
+        return address(vaultManager);
+    }
+
+    function upgradeLedgerManager(address proxy) internal returns (address) {
+        LedgerCrossChainManagerUpgradeable ledgerManager = new LedgerCrossChainManagerUpgradeable();
+
+        LedgerCrossChainManagerUpgradeable(payable(proxy)).upgradeTo(address(ledgerManager));
+        return address(ledgerManager);
     }
 
     function setCrossChainRelay(address managerProxy, address relay) internal {
-        // TODO
+        ICrossChainManager(payable(managerProxy)).setCrossChainRelay(relay);
     }
 
-    function setChainId(uint256 chainId) internal {
-        // TODO
+    function setChainId(string memory network, address managerProxy) internal {
+        ICrossChainManager(payable(managerProxy)).setChainId(getChainId(network));
     }
 
     function setVaultAddress(address vaultManagerProxy, address vaultAddress) internal {
-        // TODO
+        VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).setVault(vaultAddress);
     }
 
     function setLedgerAddress(address ledgerManagerProxy, address ledgerAddress) internal {
-        // TODO
+        LedgerCrossChainManagerUpgradeable(payable(ledgerManagerProxy)).setLedger(ledgerAddress);
     }
 
     function setLedgerCCManager(
@@ -42,16 +58,20 @@ contract CCManagerHelper is BaseScript, OperationHelper {
         string memory ledgerNetwork,
         address ledgerManagerProxyAddress
     ) internal {
-        // TODO
+        VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).setLedgerCrossChainManager(
+            getChainId(ledgerNetwork), ledgerManagerProxyAddress
+        );
     }
 
     function setLedgerOperatorManager(address ledgerManagerProxy, address operator) internal {
-        // TODO
+        LedgerCrossChainManagerUpgradeable(payable(ledgerManagerProxy)).setOperatorManager(operator);
     }
 
-    function setTokenDecimal(address ledgerManagerProxy, bytes32 tokenHash, uint256 tokenChainId, uint128 decimal)
+    function setTokenDecimal(address ledgerManagerProxy, bytes32 tokenHash, string memory network, uint128 decimal)
         internal
     {
-        // TODO
+        LedgerCrossChainManagerUpgradeable(payable(ledgerManagerProxy)).setTokenDecimal(
+            tokenHash, getChainId(network), decimal
+        );
     }
 }
