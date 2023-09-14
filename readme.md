@@ -220,7 +220,13 @@ The second way of adding new script using typescript is recommended. Foundry scr
 
 ## 7. Useful Commands during Your Development and Maintainance
 
-// TODO
+### change layerzero cross-chain airdrop gas
+
+here is a sample command line:
+
+```shell
+ts-node foundry_ts/entry.ts --method setCrossChainFee --ccmethod pingPong --fee 500000 --env dev --network orderlyop --broadcast
+```
 
 ## License
 
