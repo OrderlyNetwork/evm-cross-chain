@@ -3,10 +3,14 @@ pragma solidity ^0.8.10;
 
 import "../contracts/CrossChainRelayUpgradeable.sol";
 import "../contracts/CrossChainRelayProxy.sol";
+import "../contracts/utils/OrderlyCrossChainMessage.sol";
 import "./BaseScript.s.sol";
 import "./OperationHelper.s.sol";
+import "./Utils.sol";
 
 contract RelayHelper is BaseScript, OperationHelper {
+    using StringUtils for string;
+
     function upgradeRelay(address proxyAddress) internal returns (address) {
         CrossChainRelayUpgradeable newRelay = new CrossChainRelayUpgradeable();
         CrossChainRelayUpgradeable proxy = CrossChainRelayUpgradeable(payable(proxyAddress));
@@ -52,5 +56,33 @@ contract RelayHelper is BaseScript, OperationHelper {
     function setRelayManager(address relayAddress, address manager) internal {
         CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(relayAddress));
         relay.setManagerAddress(manager);
+    }
+
+    function setCrossChainFee(address relayAddress, string memory method, uint256 fee) internal {
+        CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(relayAddress));
+        uint8 method_id = 0;
+        if (method.equal("deposit")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit);
+        } else if (method.equal("withdraw")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.Withdraw);
+        } else if (method.equal("withdrawFinish")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.WithdrawFinish);
+        } else if (method.equal("ping")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping);
+        } else if (method.equal("pingPong")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong);
+        } else {
+            revert("[setCrossChainFee] wrong method");
+        }
+
+        relay.addFlowGasLimitMapping(method_id, fee);
+    }
+
+    function sendPingPong(address relayAddress, string memory dstNetwork) internal {
+        CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(relayAddress));
+        uint256 chainId = getChainId(dstNetwork);
+        console.log("[sendPingPong] send ping pong: ");
+        console.log("[sendPingPong] chainId: ", chainId);
+        relay.pingPong(chainId);
     }
 }

@@ -7,3 +7,6 @@ import "./relayMsgTest";
 import "./setRelayTrustedRemote";
 import "./setupRelay";
 import "./transferNativeTokenToRelay";
+import "./setCrossChainFee";
+import "./sendPingPong";
+import "./setCrossChainFeeAll";

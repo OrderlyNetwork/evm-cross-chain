@@ -1,10 +1,12 @@
 // SPDX-LICENSE-Identifier: MIT
 pragma solidity ^0.8.17;
 
-
 library StringUtils {
-
     function compare(string memory a, string memory b) internal pure returns (bool) {
+        return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
+    }
+
+    function equal(string memory a, string memory b) internal pure returns (bool) {
         return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
     }
 
@@ -12,7 +14,7 @@ library StringUtils {
         // clone a, do not modify input
         bytes memory b = bytes(a);
         bytes memory c = new bytes(b.length);
-        for (uint i = 0; i < b.length; i++) {
+        for (uint256 i = 0; i < b.length; i++) {
             if ((b[i] >= 0x61) && (b[i] <= 0x7A)) {
                 c[i] = bytes1(uint8(b[i]) - 0x20);
             } else {
@@ -21,11 +23,12 @@ library StringUtils {
         }
         return string(c);
     }
+
     function toLowerCase(string memory a) internal pure returns (string memory) {
         // clone a, do not modify input
         bytes memory b = bytes(a);
         bytes memory c = new bytes(b.length);
-        for (uint i = 0; i < b.length; i++) {
+        for (uint256 i = 0; i < b.length; i++) {
             if ((b[i] >= 0x41) && (b[i] <= 0x5A)) {
                 c[i] = bytes1(uint8(b[i]) + 0x20);
             } else {

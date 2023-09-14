@@ -99,7 +99,7 @@ callingArgs += ", argv.simulate";
 console.log(`argument string: ${argumentString}`);
 
 let linesOfSettingEnvs = required_args.map((arg: any) => {
-    const value = arg.type === "boolean" ? `${arg.name}.toString()` : `${arg.name}`;
+    const value = (arg.type === "boolean" || arg.type === "number") ? `${arg.name}.toString()` : `${arg.name}`;
     return `set_env_var(method_name, "${arg.name}", ${value});`;
 }).join("\n    ");
 
