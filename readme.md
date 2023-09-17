@@ -228,6 +228,40 @@ here is a sample command line:
 ts-node foundry_ts/entry.ts --method setCrossChainFee --ccmethod pingPong --fee 500000 --env dev --network orderlyop --broadcast
 ```
 
+## 8. Generate Typescript Wrapper
+
+I implement a code generator for foundry script wrapper. Simply run:
+
+```shell
+ts-node foundry_ts/genCode.ts --role relay --sol foundry_scripts/relay/sendPingPong.s.sol
+```
+
+pass the role(relay or ccmanager) and the path of the foundry script, then the foundry wrapper script will be generated.
+
+make sure that you set your method name same with the foundry script file name. Which mean in the above example, you should read your arguments as `FS_sendPingPong_xxx` from env.
+
+## 10. verify contracts
+
+### verify contracts on blockscout
+
+to verify your contracts on blockscout, you should run the following command:
+
+```shell
+forge verify-contract 0x0e9453Ad2F87A351D58eefF40cC508038f8e0f61 contracts/CrossChainRelayUpgradeable.sol:CrossChainRelayUpgradeable --chain-id 4460 --verifier-url https://testnet-explorer.orderly.org/api\? --verifier blockscout
+```
+
+this example shows how you can verify the contract on orderly L2 chain. The reason for the `\?` suffix of the verifier-url is discussed on a github issue: https://github.com/foundry-rs/foundry/issues/5160.
+
+### verify on etherscan like explorers
+
+here is a sample command:
+
+```
+forge verify-contract <contract-address> contracts/CrossChainRelayUpgradeable.sol:CrossChainRelayUpgradeable --chain-id 421613 --verifier-url https://api-goerli.arbiscan.io/api -e <etherscan-api-key>
+```
+
+the example above shows how you can verify contract arbitrum goerli network, whose explorer api is: `https://api-goerli.arbiscan.io/api`. Because it uses infrastructure the same as etherscan, so we can use the same verification way to verify contracts on arbitrum goerli.
+
 ## License
 
 [MIT License](LICENSE)
