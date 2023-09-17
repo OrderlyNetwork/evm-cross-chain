@@ -1,7 +1,7 @@
 {
-    "withdraw": 450000,
-    "deposit": 350000,
-    "withdrawFinish": 350000,
+    "withdraw": 310000,
+    "deposit": 220000,
+    "withdrawFinish": 150000,
     "pingPong": 500000,
     "ping": 500000
 }
