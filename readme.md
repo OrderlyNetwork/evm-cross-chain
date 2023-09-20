@@ -228,6 +228,20 @@ here is a sample command line:
 ts-node foundry_ts/entry.ts --method setCrossChainFee --ccmethod pingPong --fee 500000 --env dev --network orderlyop --broadcast
 ```
 
+### Retry payload when PayloadStored event found
+
+```shell
+ts-node foundry_ts/entry.ts --method retryPayload --env staging --network arbitrumgoerli --data <0x> --broadcast
+```
+
+### Start an "auto PayloadStored event monitor and retry" service
+
+```shell
+ts-node foundry_ts/entry.ts --method monitorPayloadAndRetry --blockNumber 42313850 --data 0xA1A9C94BB24B09739AF80E6EFAB7CA0F576182BCF920A86C1EA7788933C188E7A3516807A18655D6 --network arbitrumgoerli
+```
+
+the data here is the packed encode bytes of src UA address and dst UA address.
+
 ## 8. Generate Typescript Wrapper
 
 I implement a code generator for foundry script wrapper. Simply run:
