@@ -28,7 +28,8 @@ async function main() {
         from: deployer.address,
         args: [],
         log: true,
-        gasPrice: manualGasPrice
+        // gasPrice: manualGasPrice,
+        deterministicDeployment: true,
     });
 
     // deploy proxy
@@ -37,16 +38,17 @@ async function main() {
         args: [relay.address, "0x"],
         log: true,
         // manaually set gas price to 10gwei
-        gasPrice: manualGasPrice,
+        // gasPrice: manualGasPrice,
+        deterministicDeployment: true,
     });
 
     const relayContract = await hre.ethers.getContractAt('CrossChainRelayUpgradeable', proxy.address);
 
-    const tx = await relayContract.initialize(endpointAddress,
-            {
-                gasPrice: manualGasPrice,
-            }
-        );
+    const relayOwner = await relayContract.owner();
+
+    console.log(relayOwner);
+
+    const tx = await relayContract.initialize(endpointAddress);
 
     // wait for tx
     tx.wait();

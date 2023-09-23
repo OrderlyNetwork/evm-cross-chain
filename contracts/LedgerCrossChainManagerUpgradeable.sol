@@ -101,7 +101,7 @@ contract LedgerCrossChainManagerUpgradeable is
     event TestWithdrawDone();
 
     /// @notice Initializes the contract.
-    function initialize() public initializer {
+    function initialize() public initializer onlyOwner{
         __Ownable_init();
         __UUPSUpgradeable_init();
     }

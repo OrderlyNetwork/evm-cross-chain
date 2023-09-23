@@ -35,7 +35,7 @@ contract VaultCrossChainManagerUpgradeable is
     VaultCrossChainManagerDatalayout
 {
     /// @notice Initializes the contract.
-    function initialize() public initializer {
+    function initialize() public initializer onlyOwner{
         __Ownable_init();
         __UUPSUpgradeable_init();
     }
