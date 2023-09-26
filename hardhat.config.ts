@@ -7,7 +7,7 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "hardhat-deploy-tenderly";
 import '@openzeppelin/hardhat-upgrades';
-// import "@nomicfoundation/hardhat-foundry";
+import "@nomicfoundation/hardhat-foundry";
 //import * as tdly from "./tenderly-hardhat/src";
 //tdly.setup();
 
@@ -18,6 +18,9 @@ import "./tasks/deployLock";
 import "./tasks/setupRelay";
 import "./tasks/sendPing";
 import "./tasks/mockCrossChain";
+import { getSingletonFactoryInfo } from "@safe-global/safe-singleton-factory";
+import { DeterministicDeploymentInfo } from "hardhat-deploy/types";
+import { BigNumber } from "@ethersproject/bignumber";
 
 function getAccount(networkName: string) {
   console.log('using network: ', networkName)
@@ -30,6 +33,27 @@ function getAccount(networkName: string) {
 
   return { mnemonic: 'test test test test test test test test test test test junk' }
 }
+
+const deterministicDeployment = (network: string): DeterministicDeploymentInfo => {
+  const info = getSingletonFactoryInfo(parseInt(network));
+  if (!info) {
+    throw new Error(`
+        Safe factory not found for network ${network}. You can request a new deployment at https://github.com/safe-global/safe-singleton-factory.
+        For more information, see https://github.com/safe-global/safe-contracts#replay-protection-eip-155
+      `);
+    }
+    console.log(`Using deterministic deployment for network ${network}`);
+    console.log(`Factory address: ${info.address}`);
+    console.log(`Deployer address: ${info.signerAddress}`);
+    console.log(`Funding: ${BigNumber.from(info.gasLimit).mul(BigNumber.from(info.gasPrice)).toString()}`);
+    console.log(`Signed tx: ${info.transaction}`);
+    return {
+        factory: info.address,
+        deployer: info.signerAddress,
+        funding: BigNumber.from(info.gasLimit).mul(BigNumber.from(info.gasPrice)).toString(),
+        signedTx: info.transaction,
+    };
+};
 
 function getRpcUrl(networkName: string) {
   if (networkName) {
@@ -85,6 +109,7 @@ const config: HardhatUserConfig = {
       accounts: getAccount('arbitrumgoerli'),
     }
   },
+  deterministicDeployment,
   tenderly: {
     project: 'project',
     username: 'Lulu',

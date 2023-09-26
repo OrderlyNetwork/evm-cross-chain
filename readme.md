@@ -281,6 +281,10 @@ the example above shows how you can verify contract arbitrum goerli network, who
 1. if you put urls like https://testnet-explorer.orderly.org/api\? into `.env` file. foundry script will have problem parsing `.env`. you need to use "" to enclose it and add `\` to escape the parsing. so it will be like:
    "https://testnet-explorer.orderly.org/api\\\\?"
 
+2. Oracle backoff
+
+In a certain situation, oracle could be backoff for a long time, which will block relayer for a long time. Then txs could be in pending. The cause of oracle backoff is Orderly chain stopping mining.
+
 ## License
 
 [MIT License](LICENSE)
