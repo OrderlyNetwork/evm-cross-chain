@@ -14,7 +14,7 @@ task("deployLock", "deploy lock using task", async (taskArgs, hre) => {
   const lock = await hre.deployments.deploy('Lock', {
     from: deployer.address,
     args: [],
-    deterministicDeployment: true,
+    deterministicDeployment: "0x11111",
   });
     
 

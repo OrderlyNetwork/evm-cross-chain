@@ -71,7 +71,7 @@ contract DecimalManager is LedgerCrossChainManagerDatalayout {
     /// @param srcChainId src chain id
     /// @param dstChainId dst chain id
     function convertDecimal(uint128 tokenAmount, bytes32 tokenHash, uint256 srcChainId, uint256 dstChainId)
-        internal
+        public
         view
         returns (uint128)
     {
@@ -101,7 +101,7 @@ contract LedgerCrossChainManagerUpgradeable is
     event TestWithdrawDone();
 
     /// @notice Initializes the contract.
-    function initialize() public initializer onlyOwner{
+    function initialize() public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
     }

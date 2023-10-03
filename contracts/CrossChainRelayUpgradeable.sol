@@ -167,6 +167,7 @@ contract CrossChainRelayUpgradeable is
         returns (uint256)
     {
         uint16 lzDstChainId = _chainIdMapping[data.dstChainId];
+        bytes memory lzPayload = data.encodeMessageV1AndPayload(payload);
         require(lzDstChainId != 0, "CrossChainRelay: invalid dst chain id");
         uint16 version = 1;
         uint256 gasLimit = _flowGasLimitMapping[data.method];
@@ -174,7 +175,7 @@ contract CrossChainRelayUpgradeable is
             gasLimit = 3000000;
         }
         bytes memory adapterParams = abi.encodePacked(version, gasLimit);
-        (uint256 nativeFee,) = lzEndpoint.estimateFees(lzDstChainId, address(this), payload, false, adapterParams);
+        (uint256 nativeFee,) = lzEndpoint.estimateFees(lzDstChainId, address(this), lzPayload, false, adapterParams);
         return nativeFee;
     }
 
