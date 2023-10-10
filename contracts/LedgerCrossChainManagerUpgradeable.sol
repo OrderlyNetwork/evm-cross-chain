@@ -36,7 +36,7 @@ contract DecimalManager is LedgerCrossChainManagerDatalayout {
     /// @param tokenHash token hash
     /// @param tokenChainId token chain id
     /// @param decimal decimal
-    function setTokenDecimal(bytes32 tokenHash, uint256 tokenChainId, uint128 decimal) external {
+    function _setTokenDecimal(bytes32 tokenHash, uint256 tokenChainId, uint128 decimal) internal {
         tokenDecimalMapping[tokenHash][tokenChainId] = decimal;
     }
 
@@ -141,6 +141,14 @@ contract LedgerCrossChainManagerUpgradeable is
     /// @param _vaultCrossChainManager vaultCrossChainManager address
     function setVaultCrossChainManager(uint256 _chainId, address _vaultCrossChainManager) external onlyOwner {
         vaultCrossChainManagers[_chainId] = _vaultCrossChainManager;
+    }
+
+    /// @notice set token decimal
+    /// @param tokenHash ERC20 token hash
+    /// @param tokenChainId token chain id
+    /// @param decimal token decimal
+    function setTokenDecimal(bytes32 tokenHash, uint256 tokenChainId, uint128 decimal) external onlyOwner {
+        _setTokenDecimal(tokenHash, tokenChainId, decimal);
     }
 
     /// @notice send a cross-chain deposit

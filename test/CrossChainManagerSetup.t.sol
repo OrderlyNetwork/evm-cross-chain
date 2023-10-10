@@ -38,3 +38,19 @@ contract CrossChainManagerSetup is Test, CrossChainRelaySetup {
         CrossChainRelayUpgradeable(payable(address(_dstRelayProxy))).setManagerAddress(address(_ledgerManagerProxy));
     }
 }
+
+contract CrossChainManagerFactory {
+    function newLedgerCrossChainManager() public returns (address) {
+        LedgerCrossChainManagerUpgradeable ledgerManager = new LedgerCrossChainManagerUpgradeable();
+        CrossChainManagerProxy ledgerManagerProxy = new CrossChainManagerProxy(address(ledgerManager), bytes(""));
+        LedgerCrossChainManagerUpgradeable(payable(address(ledgerManagerProxy))).initialize();
+        return address(ledgerManagerProxy);
+    }
+
+    function newVaultCrossChainManager() public returns (address) {
+        VaultCrossChainManagerUpgradeable vaultManager = new VaultCrossChainManagerUpgradeable();
+        CrossChainManagerProxy vaultManagerProxy = new CrossChainManagerProxy(address(vaultManager), bytes(""));
+        VaultCrossChainManagerUpgradeable(payable(address(vaultManagerProxy))).initialize();
+        return address(vaultManagerProxy);
+    }
+}
