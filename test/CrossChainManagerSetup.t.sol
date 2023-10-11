@@ -53,4 +53,8 @@ contract CrossChainManagerFactory {
         VaultCrossChainManagerUpgradeable(payable(address(vaultManagerProxy))).initialize();
         return address(vaultManagerProxy);
     }
+
+    function transferOwner(address manager, address newOwner) public {
+        OwnableUpgradeable(manager).transferOwnership(newOwner);
+    }
 }

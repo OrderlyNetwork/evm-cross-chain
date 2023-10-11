@@ -158,4 +158,33 @@ contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, Ba
         vaultManagerProxy.upgradeTo(newImplementation2);
         vm.stopBroadcast();
     }
+
+    function test_transferOwnership() public {
+        address vaultManagerProxy = factory.newVaultCrossChainManager();
+        address ledgerManagerProxy = factory.newLedgerCrossChainManager();
+
+        address newLedgerManager = address(new LedgerCrossChainManagerUpgradeable());
+        // upgrade to
+        vm.expectRevert();
+        LedgerCrossChainManagerUpgradeable(ledgerManagerProxy).upgradeTo(newLedgerManager);
+
+        // transfer ownership
+        factory.transferOwner(ledgerManagerProxy, address(this));
+        // upgrade to
+        LedgerCrossChainManagerUpgradeable(ledgerManagerProxy).upgradeTo(
+            address(new LedgerCrossChainManagerUpgradeable())
+        );
+
+        // now test vault manager
+
+        address newVaultManager = address(new VaultCrossChainManagerUpgradeable());
+        // upgrade to
+        vm.expectRevert();
+        VaultCrossChainManagerUpgradeable(vaultManagerProxy).upgradeTo(newVaultManager);
+
+        // transfer ownership
+        factory.transferOwner(vaultManagerProxy, address(this));
+        // upgrade to
+        VaultCrossChainManagerUpgradeable(vaultManagerProxy).upgradeTo(address(new VaultCrossChainManagerUpgradeable()));
+    }
 }
