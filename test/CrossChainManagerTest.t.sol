@@ -3,8 +3,11 @@ pragma solidity 0.8.19;
 import "forge-std/Test.sol";
 import "./CrossChainManagerSetup.t.sol";
 import "../contracts/interface/IOrderlyCrossChain.sol";
+import "../baseScripts/ConfigHelper.s.sol";
+import "../baseScripts/BaseScript.s.sol";
+import "../contracts/test/WrongImplementation.sol";
 
-contract CrossChainManagerTest is Test, CrossChainManagerSetup {
+contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, BaseScript {
     event MessageSent(OrderlyCrossChainMessage.MessageV1 message, bytes payload);
     event MessageReceived(OrderlyCrossChainMessage.MessageV1 message, bytes payload);
 
@@ -94,5 +97,65 @@ contract CrossChainManagerTest is Test, CrossChainManagerSetup {
 
         vm.expectRevert("Ownable: caller is not the owner");
         ledgerManagerProxy.setTokenDecimal(bytes32(0), 0, 0);
+    }
+
+    function test_upgradeCompatible() public {
+        string memory env = "dev";
+        string memory network1 = "orderlyop";
+        string memory network2 = "arbitrumgoerli";
+        CCManagerDeployData memory data1 = getCCManagerDeployData(env, network1);
+        assertEq(data1.role, "ledger");
+        CCManagerDeployData memory data2 = getCCManagerDeployData(env, network2);
+        assertEq(data2.role, "vault");
+        LedgerCrossChainManagerUpgradeable ledgerManagerProxy = LedgerCrossChainManagerUpgradeable(data1.proxy);
+        VaultCrossChainManagerUpgradeable vaultManagerProxy = VaultCrossChainManagerUpgradeable(data2.proxy);
+
+        string memory url1 = getRpcUrl(network1);
+        uint256 pk1 = getPrivateKey(network1);
+        vm.createSelectFork(url1);
+        vm.startBroadcast(pk1);
+        ledgerManagerProxy.upgradeTo(address(new LedgerCrossChainManagerUpgradeable()));
+        ledgerManagerProxy.upgradeTo(address(new LedgerCrossChainManagerUpgradeable()));
+        vm.stopBroadcast();
+
+        string memory url2 = getRpcUrl(network2);
+        uint256 pk2 = getPrivateKey(network2);
+        vm.createSelectFork(url2);
+        vm.startBroadcast(pk2);
+        vaultManagerProxy.upgradeTo(address(new VaultCrossChainManagerUpgradeable()));
+        vaultManagerProxy.upgradeTo(address(new VaultCrossChainManagerUpgradeable()));
+        vm.stopBroadcast();
+    }
+
+    function test_upgradeIncompatible() public {
+        string memory env = "dev";
+        string memory network1 = "orderlyop";
+        string memory network2 = "arbitrumgoerli";
+        CCManagerDeployData memory data1 = getCCManagerDeployData(env, network1);
+        assertEq(data1.role, "ledger");
+        CCManagerDeployData memory data2 = getCCManagerDeployData(env, network2);
+        assertEq(data2.role, "vault");
+        LedgerCrossChainManagerUpgradeable ledgerManagerProxy = LedgerCrossChainManagerUpgradeable(data1.proxy);
+        VaultCrossChainManagerUpgradeable vaultManagerProxy = VaultCrossChainManagerUpgradeable(data2.proxy);
+
+        string memory url1 = getRpcUrl(network1);
+        uint256 pk1 = getPrivateKey(network1);
+        vm.createSelectFork(url1);
+        vm.startBroadcast(pk1);
+        ledgerManagerProxy.upgradeTo(address(new WrongImplementation()));
+        address newImplementation1 = address(new LedgerCrossChainManagerUpgradeable());
+        vm.expectRevert();
+        ledgerManagerProxy.upgradeTo(newImplementation1);
+        vm.stopBroadcast();
+
+        string memory url2 = getRpcUrl(network2);
+        uint256 pk2 = getPrivateKey(network2);
+        vm.createSelectFork(url2);
+        vm.startBroadcast(pk2);
+        vaultManagerProxy.upgradeTo(address(new WrongImplementation()));
+        address newImplementation2 = address(new VaultCrossChainManagerUpgradeable());
+        vm.expectRevert();
+        vaultManagerProxy.upgradeTo(newImplementation2);
+        vm.stopBroadcast();
     }
 }

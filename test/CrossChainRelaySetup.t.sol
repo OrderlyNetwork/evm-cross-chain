@@ -46,4 +46,10 @@ contract CrossChainRelaySetup is Test {
         dstRelay.addChainIdMapping(_srcChainId, _srcLzChainId);
         dstRelay.addChainIdMapping(_dstChainId, _dstLzChainId);
     }
+
+    function newCrossChainRelay() public returns (CrossChainRelayProxy) {
+        CrossChainRelayProxy proxy = new CrossChainRelayProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
+        CrossChainRelayUpgradeable(payable(address(proxy))).initialize(address(_srcEndpoint));
+        return proxy;
+    }
 }
