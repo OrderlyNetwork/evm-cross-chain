@@ -1,9 +1,11 @@
-import { addOperation } from "../utils/config";
+import { addOperation, addArgvType } from "../utils/config";
 import { set_env_var, foundry_wrapper } from "../foundry";
 import { checkArgs } from "../helper";
 
 // current file name
 const method_name = "retryPayload";
+
+addArgvType("string", "data");
 
 export function retryPayloadWithArgv(argv: any) {
     const required_flags = ["network", "data"];
