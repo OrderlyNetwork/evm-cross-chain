@@ -99,10 +99,7 @@ contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, Ba
         ledgerManagerProxy.setTokenDecimal(bytes32(0), 0, 0);
     }
 
-    function test_upgradeCompatible() public {
-        string memory env = "dev";
-        string memory network1 = "orderlyop";
-        string memory network2 = "arbitrumgoerli";
+    function upgradeCompatible(string memory env, string memory network1, string memory network2) public {
         CCManagerDeployData memory data1 = getCCManagerDeployData(env, network1);
         assertEq(data1.role, "ledger");
         CCManagerDeployData memory data2 = getCCManagerDeployData(env, network2);
@@ -127,10 +124,18 @@ contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, Ba
         vm.stopBroadcast();
     }
 
-    function test_upgradeIncompatible() public {
+    function test_upgradeCompatible() public {
         string memory env = "dev";
         string memory network1 = "orderlyop";
         string memory network2 = "arbitrumgoerli";
+        upgradeCompatible(env, network1, network2);
+        env = "staging";
+        upgradeCompatible(env, network1, network2);
+        env = "qa";
+        upgradeCompatible(env, network1, network2);
+    }
+
+    function upgradeIncompatible(string memory env, string memory network1, string memory network2) public {
         CCManagerDeployData memory data1 = getCCManagerDeployData(env, network1);
         assertEq(data1.role, "ledger");
         CCManagerDeployData memory data2 = getCCManagerDeployData(env, network2);
@@ -157,6 +162,17 @@ contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, Ba
         vm.expectRevert();
         vaultManagerProxy.upgradeTo(newImplementation2);
         vm.stopBroadcast();
+    }
+
+    function test_upgradeIncompatible() public {
+        string memory env = "dev";
+        string memory network1 = "orderlyop";
+        string memory network2 = "arbitrumgoerli";
+        upgradeIncompatible(env, network1, network2);
+        env = "staging";
+        upgradeIncompatible(env, network1, network2);
+        env = "qa";
+        upgradeIncompatible(env, network1, network2);
     }
 
     function test_transferOwnership() public {
