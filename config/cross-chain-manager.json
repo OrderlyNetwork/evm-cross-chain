@@ -1,58 +1,58 @@
 {
-    "qa-mock": {
-        "fuji": {
-            "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
-            "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0xb3461f0e51E32bb77cB19D47bf8536E88CC884d2",
-            "role": "vault"
-        },
-        "orderly": {
-            "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
-            "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0x78398524Ab8500736B56eaAb1a590733c2B04144",
-            "role": "ledger"
-        }
+  "qa-mock": {
+    "fuji": {
+      "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xb3461f0e51E32bb77cB19D47bf8536E88CC884d2",
+      "role": "vault"
     },
-    "qa": {
-        "orderlyop": {
-            "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
-            "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
-            "role": "ledger"
-        },
-        "arbitrumgoerli": {
-            "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
-            "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
-            "role": "vault"
-        }
-    },
-    "staging": {
-        "orderlyop": {
-            "manager": "0xa6814dF691F6fDAD1573cCC5103A712056E1a27c",
-            "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0xb592011550a7E2a85c69EdF1788F460075b958fc",
-            "role": "ledger"
-        },
-        "arbitrumgoerli": {
-            "manager": "0x001d9d7714A852C69885C81C5b680aB1F00E9e7E",
-            "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0xFA59A70dD17Fb89F031A34e27728754e8B7f19fb",
-            "role": "vault"
-        }
-    },
-    "dev": {
-        "orderlyop": {
-            "manager": "0xdecdf6f646d5cfaf16abf12222ccc84febae5934",
-            "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0xdecdf6f646d5cfaf16abf12222ccc84febae5934",
-            "role": "ledger"
-        },
-        "arbitrumgoerli": {
-            "manager": "0xbc9c21d0986fb7b5ef70caeb16e0abb7c36f1595",
-            "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-            "proxy": "0xbc9c21d0986fb7b5ef70caeb16e0abb7c36f1595",
-            "role": "vault"
-        }
+    "orderly": {
+      "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x78398524Ab8500736B56eaAb1a590733c2B04144",
+      "role": "ledger"
     }
+  },
+  "qa": {
+    "orderlyop": {
+      "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
+      "role": "ledger"
+    },
+    "arbitrumgoerli": {
+      "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
+      "role": "vault"
+    }
+  },
+  "staging": {
+    "orderlyop": {
+      "manager": "0x88df62f145b0F132B94c7FF38A5202C2cAcb72B0",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xb592011550a7E2a85c69EdF1788F460075b958fc",
+      "role": "ledger"
+    },
+    "arbitrumgoerli": {
+      "manager": "0x001d9d7714A852C69885C81C5b680aB1F00E9e7E",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xFA59A70dD17Fb89F031A34e27728754e8B7f19fb",
+      "role": "vault"
+    }
+  },
+  "dev": {
+    "orderlyop": {
+      "manager": "0x0E504E0a638277A68Ce2817BB0f3251157E05961",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xdecdf6f646d5cfaf16abf12222ccc84febae5934",
+      "role": "ledger"
+    },
+    "arbitrumgoerli": {
+      "manager": "0x5D6AB49AB0964c6F81370d836e67B2cC09D8B455",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xbc9c21d0986fb7b5ef70caeb16e0abb7c36f1595",
+      "role": "vault"
+    }
+  }
 }
