@@ -5,3 +5,5 @@ import "./transferNativeToken";
 import "./relay";
 import "./ccmanager";
 import "./monitorPayloadAndRetry";
+import "./transferOwnership";
+import "./outputFunctionSelector";

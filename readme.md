@@ -242,6 +242,14 @@ ts-node foundry_ts/entry.ts --method monitorPayloadAndRetry --blockNumber 423138
 
 the data here is the packed encode bytes of src UA address and dst UA address.
 
+### Upgrade CC Manager
+
+```shell
+ts-node foundry_ts/entry.ts --method upgradeCCManager --env dev --network arbitrumgoerli --role vault --broadcast
+```
+
+change the `env` `network` `role` into the correct value according to your goal.
+
 ## 8. Generate Typescript Wrapper
 
 I implement a code generator for foundry script wrapper. Simply run:
