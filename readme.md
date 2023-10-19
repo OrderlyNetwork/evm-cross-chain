@@ -262,6 +262,36 @@ pass the role(relay or ccmanager) and the path of the foundry script, then the f
 
 make sure that you set your method name same with the foundry script file name. Which mean in the above example, you should read your arguments as `FS_sendPingPong_xxx` from env.
 
+## 9. Deploy and Setup Cross Chain Service
+
+### 9.1 Meta info setup
+
+before you start deployment, you should have several variables set up in `.env`:
+
+- network private key
+- network chain id
+- network rpc url
+- network layerzero chain id
+- network layerzero endpoint address
+
+### 9.2 vault ledger and operator address setup
+
+set vault ledger and operator address in `config/project-related.json`
+
+### 9.3 set token decimal information
+
+set token decimal information in `config/token-decimals.json`
+
+### 9.4 deploy and setup cross-chain service
+
+we have a integrated script for deploying cross-chain relay and cross-chain manager. you can run the following command to deploy and setup cross-chain service:
+
+```shell
+ts-node foundry_ts/entry.ts --method deployAndSetupAnEnv --env production --vaultNetwork arbitrum --ledgerNetwork orderlymain --initEther 1 --broadcast
+```
+
+`--initEther` has no effect right now. We require you manually transfer native later after this script.
+
 ## 10. verify contracts
 
 ### verify contracts on blockscout
@@ -284,7 +314,37 @@ forge verify-contract <contract-address> contracts/CrossChainRelayUpgradeable.so
 
 the example above shows how you can verify contract arbitrum goerli network, whose explorer api is: `https://api-goerli.arbiscan.io/api`. Because it uses infrastructure the same as etherscan, so we can use the same verification way to verify contracts on arbitrum goerli. arbitrum-goerli's etherscan api key is shared with arbitrum's mainnet. So, you can generate an api key using the mainnet explorer, cause' arbitrum-goerli's explorer has no where to do that.
 
-## Issues
+## 11. print necessary information of cross-chain service
+
+simple run the following command:
+
+print cross-chain relay information on chain:
+
+```shell
+ts-node foundry_ts/entry.ts --method printRelay --env production --network arbitrum --dstNetwork orderlymain
+```
+
+print cross-chain manager vault side information on chain:
+
+```shell
+ts-node foundry_ts/entry.ts --method printCCManagerVault --env production --network arbitru
+```
+
+print cross-chain manager ledger side information on chain:
+
+```shell
+ts-node foundry_ts/entry.ts --method printCCManagerLedger --env production --network orderlymain
+```
+
+print token decimal configuration on chain:
+
+```shell
+ts-node foundry_ts/entry.ts --method printCCManagerTokenDecimal --env production --network orderlymain
+```
+
+you need to change the parameters to suit your needs.
+
+# Issues
 
 1. if you put urls like https://testnet-explorer.orderly.org/api\? into `.env` file. foundry script will have problem parsing `.env`. you need to use "" to enclose it and add `\` to escape the parsing. so it will be like:
    "https://testnet-explorer.orderly.org/api\\\\?"
@@ -293,6 +353,6 @@ the example above shows how you can verify contract arbitrum goerli network, who
 
 In a certain situation, oracle could be backoff for a long time, which will block relayer for a long time. Then txs could be in pending. The cause of oracle backoff is Orderly chain stopping mining.
 
-## License
+# License
 
 [MIT License](LICENSE)

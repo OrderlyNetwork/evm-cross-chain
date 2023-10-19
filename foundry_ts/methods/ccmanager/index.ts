@@ -8,3 +8,4 @@ import "./setCCManagerTokenDecimal";
 import "./setCCManagerVault";
 import "./upgradeCCManager";
 import "./sendTestWithdraw";
+import "./printCCManagerTokenDecimal";
