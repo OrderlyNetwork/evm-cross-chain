@@ -16,6 +16,8 @@ contract SetCrossChainFee is BaseScript, ConfigHelper, RelayHelper {
 
         console.log("[setCrossChainFee]env: ", env);
         console.log("[setCrossChainFee]network: ", network);
+        console.log("[setCrossChainFee]method: ", method);
+        console.log("[setCrossChainFee]fee: ", fee);
 
         RelayDeployData memory relayData = getRelayDeployData(env, network);
         vmSelectRpcAndBroadcast(network);

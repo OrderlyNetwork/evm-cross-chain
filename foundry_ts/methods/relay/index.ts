@@ -10,3 +10,5 @@ import "./transferNativeTokenToRelay";
 import "./setCrossChainFee";
 import "./sendPingPong";
 import "./setCrossChainFeeAll";
+import "./printRelay";
+import "./addRelayLzChainMappingAll";

@@ -46,10 +46,18 @@ contract CCManagerHelper is BaseScript, OperationHelper {
     }
 
     function setVaultAddress(address vaultManagerProxy, address vaultAddress) internal {
+        // debug info
+        uint256 ledgerChainId = VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).ledgerChainId();
+        uint256 chainId = VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).chainId();
+        console.log("ledger Chain Id: ", ledgerChainId);
+        console.log("vault Chain Id: ", chainId);
         VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).setVault(vaultAddress);
     }
 
     function setLedgerAddress(address ledgerManagerProxy, address ledgerAddress) internal {
+        // debug info
+        uint256 chainId = LedgerCrossChainManagerUpgradeable(payable(ledgerManagerProxy)).chainId();
+        console.log("chainId: ", chainId);
         LedgerCrossChainManagerUpgradeable(payable(ledgerManagerProxy)).setLedger(ledgerAddress);
     }
 
@@ -73,5 +81,12 @@ contract CCManagerHelper is BaseScript, OperationHelper {
         LedgerCrossChainManagerUpgradeable(payable(ledgerManagerProxy)).setTokenDecimal(
             tokenHash, getChainId(network), decimal
         );
+    }
+
+    function sendTestWithdraw(address ledgerManagerProxy, string memory toNetwork) internal {
+        // debug info
+        address relay = address(LedgerCrossChainManagerUpgradeable(payable(ledgerManagerProxy)).crossChainRelay());
+        console.log("relay address: ", relay);
+        LedgerCrossChainManagerUpgradeable(payable(ledgerManagerProxy)).sendTestWithdraw(getChainId(toNetwork));
     }
 }

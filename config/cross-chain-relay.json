@@ -56,5 +56,17 @@
       "proxy": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
       "relay": "0x6a3da3CB0579a0f60BF0afdAaaaEf0c0A9bDe6A7"
     }
+  },
+  "production": {
+    "arbitrum": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
+      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+    },
+    "orderlymain": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
+      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+    }
   }
 }

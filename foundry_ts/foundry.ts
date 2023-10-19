@@ -1,5 +1,5 @@
 // Timestamp: 10/16/2019 7:50 PM
-import { exec } from "shelljs";
+import { exec, set } from "shelljs";
 import * as fs from "fs";
 import {foundry_script_folder} from "./utils/const";
 import { findFoundryScript } from "./utils/findFoundryScript";
@@ -12,7 +12,7 @@ export function foundry_wrapper(method_name: string, broadcast: boolean, simulat
         console.log(`Cannot find ${method_name} script in ${foundry_script_folder}`);
         process.exit(1);
     }
-    let command = `forge script ${foundryScriptPath} -vvvv ${broadcastFlag}`;
+    let command = `source .env && forge script ${foundryScriptPath} -vvvv ${broadcastFlag}`;
     console.log(`Running ${method_name} script: ${command}`);
 
     if (simulate) {return;}
@@ -53,5 +53,10 @@ export function set_env_var(method_name: string, var_name: string, value: string
     }
     // console.log(env_data);
     // save back to .env
+    fs.rmSync(env_file);
     fs.writeFileSync(env_file, env_data);
+
+    // sleep
+    setTimeout(() => {}, 5000);
+    exec(`source ${env_file}`)
 }

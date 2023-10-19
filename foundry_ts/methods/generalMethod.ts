@@ -20,3 +20,5 @@ export function generalMethod(method_name: string, env: string, network: string,
 addOperation("upgradeRelay", generalMethodWithArgv);
 addOperation("setRelayManager", generalMethodWithArgv);
 addOperation("setRelayChainId", generalMethodWithArgv);
+addOperation("printCCManagerLedger", generalMethodWithArgv);
+addOperation("printCCManagerVault", generalMethodWithArgv);

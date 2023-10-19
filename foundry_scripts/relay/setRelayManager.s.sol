@@ -17,6 +17,10 @@ contract SetRelayManager is BaseScript, ConfigHelper, RelayHelper {
 
         RelayDeployData memory relayData = getRelayDeployData(env, network);
         CCManagerDeployData memory managerData = getCCManagerDeployData(env, network);
+
+        console.log("[SetRelayManager]relay: ", relayData.proxy);
+        console.log("[SetRelayManager]manager: ", managerData.proxy);
+
         vmSelectRpcAndBroadcast(network);
 
         setRelayManager(relayData.proxy, managerData.proxy);
