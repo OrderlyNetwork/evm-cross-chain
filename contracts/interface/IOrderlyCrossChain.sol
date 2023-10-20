@@ -27,7 +27,7 @@ interface IOrderlyCrossChain {
     /// @notice send message with fee, so no estimate gas fee will not run
     /// @param message message
     /// @param payload payload
-    function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload, uint256 amount)
+    function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload)
         external
         payable;
 

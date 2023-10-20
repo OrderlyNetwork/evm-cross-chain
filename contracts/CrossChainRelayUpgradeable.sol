@@ -207,7 +207,7 @@ contract CrossChainRelayUpgradeable is
     /// @notice send cross-chain message with fee
     /// @param data the cross chain meta message
     /// @param payload the payload
-    function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload, uint256 feeAmount)
+    function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
         public
         payable
         override
@@ -224,7 +224,7 @@ contract CrossChainRelayUpgradeable is
         }
         bytes memory adapterParams = abi.encodePacked(version, gasLimit);
 
-        _lzSend(lzDstChainId, lzPayload, payable(address(this)), address(0), adapterParams, feeAmount);
+        _lzSend(lzDstChainId, lzPayload, payable(address(this)), address(0), adapterParams, msg.value);
     }
 
     /// @notice test function, send ping to another chain

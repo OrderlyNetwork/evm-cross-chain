@@ -145,10 +145,8 @@ contract VaultCrossChainManagerUpgradeable is
 
     /// @notice Initiates a deposit to the vault along with native fees.
     /// @param data Struct containing deposit data.
-    /// @param amount Amount of native fee.
-    function depositWithFee(VaultTypes.VaultDeposit memory data, uint256 amount) external payable override {
+    function depositWithFee(VaultTypes.VaultDeposit memory data) external payable override {
         require(msg.sender == address(vault), "only vault can call depositWithFee");
-        require(msg.value >= amount, "not enough fee");
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -161,7 +159,7 @@ contract VaultCrossChainManagerUpgradeable is
         // encode message
         bytes memory payload = abi.encode(data);
 
-        crossChainRelay.sendMessageWithFee{value: amount}(message, payload, amount);
+        crossChainRelay.sendMessageWithFee{value: msg.value}(message, payload);
     }
 
     /// @notice Approves a cross-chain withdrawal from the ledger to the vault.
