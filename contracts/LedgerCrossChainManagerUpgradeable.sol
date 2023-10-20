@@ -187,7 +187,7 @@ contract LedgerCrossChainManagerUpgradeable is
             VaultTypes.VaultWithdraw memory data = abi.decode(payload, (VaultTypes.VaultWithdraw));
 
             // handle test withdraw
-            if (data.tokenHash == Utils.getBrokerHash("CrossChainManagerTest")) {
+            if (data.tokenHash == Utils.calculateStringHash("CrossChainManagerTest")) {
                 emit TestWithdrawDone();
                 return;
             }
@@ -231,8 +231,9 @@ contract LedgerCrossChainManagerUpgradeable is
 
         // convert token amount to dst chain decimal
         uint128 cvtTokenAmount =
-            convertDecimal(data.tokenAmount, Utils.getTokenHash(data.tokenSymbol), chainId, data.chainId);
-        uint128 cvtFeeAmount = convertDecimal(data.fee, Utils.getTokenHash(data.tokenSymbol), chainId, data.chainId);
+            convertDecimal(data.tokenAmount, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
+        uint128 cvtFeeAmount =
+            convertDecimal(data.fee, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
         data.tokenAmount = cvtTokenAmount;
         data.fee = cvtFeeAmount;
 
@@ -271,8 +272,9 @@ contract LedgerCrossChainManagerUpgradeable is
 
         // convert token amount to dst chain decimal
         uint128 cvtTokenAmount =
-            convertDecimal(data.tokenAmount, Utils.getTokenHash(data.tokenSymbol), chainId, data.chainId);
-        uint128 cvtFeeAmount = convertDecimal(data.fee, Utils.getTokenHash(data.tokenSymbol), chainId, data.chainId);
+            convertDecimal(data.tokenAmount, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
+        uint128 cvtFeeAmount =
+            convertDecimal(data.fee, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
         data.tokenAmount = cvtTokenAmount;
         data.fee = cvtFeeAmount;
 

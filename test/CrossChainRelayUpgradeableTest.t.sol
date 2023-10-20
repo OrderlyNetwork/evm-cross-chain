@@ -48,9 +48,8 @@ contract CrossChainRelayUpgradeableTest is Test, CrossChainRelaySetup {
     }
 
     // upgrade should fail because random implementation is not UUPS
-    function testFail_upgradeTo(address newImplementation) public {
-        vm.assume(newImplementation != address(_srcRelayProxy));
-        vm.assume(newImplementation != address(_dstRelayProxy));
+    function testFail_upgradeTo() public {
+        address newImplementation = 0x1234567890123456789012345678901234567890;
         CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(address(_srcRelayProxy)));
         relay.upgradeTo(newImplementation);
     }

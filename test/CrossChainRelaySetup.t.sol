@@ -12,6 +12,8 @@ contract CrossChainRelaySetup is Test {
     uint16 constant _dstChainId = 2;
     CrossChainRelayProxy _srcRelayProxy;
     CrossChainRelayProxy _dstRelayProxy;
+    CrossChainRelayUpgradeable _srcRelayImpl;
+    CrossChainRelayUpgradeable _dstRelayImpl;
     LZEndpointMock _srcEndpoint;
     LZEndpointMock _dstEndpoint;
 

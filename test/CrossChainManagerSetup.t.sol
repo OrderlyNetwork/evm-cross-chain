@@ -10,12 +10,14 @@ import "../contracts/CrossChainManagerProxy.sol";
 contract CrossChainManagerSetup is Test, CrossChainRelaySetup {
     LedgerCrossChainManagerUpgradeable _ledgerManagerProxy;
     VaultCrossChainManagerUpgradeable _vaultManagerProxy;
+    LedgerCrossChainManagerUpgradeable _ledgerManagerImpl;
+    VaultCrossChainManagerUpgradeable _vaultManagerImpl;
 
     function deployCrossChainManager() public {
-        CrossChainManagerProxy ledgerManagerProxy =
-            new CrossChainManagerProxy(address(new LedgerCrossChainManagerUpgradeable()), bytes(""));
-        CrossChainManagerProxy vaultManagerProxy =
-            new CrossChainManagerProxy(address(new VaultCrossChainManagerUpgradeable()), bytes(""));
+        _ledgerManagerImpl = new LedgerCrossChainManagerUpgradeable();
+        _vaultManagerImpl = new VaultCrossChainManagerUpgradeable();
+        CrossChainManagerProxy ledgerManagerProxy = new CrossChainManagerProxy(address(_ledgerManagerImpl), bytes(""));
+        CrossChainManagerProxy vaultManagerProxy = new CrossChainManagerProxy(address(_vaultManagerImpl), bytes(""));
 
         _ledgerManagerProxy = LedgerCrossChainManagerUpgradeable(address(ledgerManagerProxy));
         _vaultManagerProxy = VaultCrossChainManagerUpgradeable(address(vaultManagerProxy));

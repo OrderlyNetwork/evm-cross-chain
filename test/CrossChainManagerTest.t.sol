@@ -49,11 +49,13 @@ contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, Ba
         _ledgerManagerProxy.sendTestWithdraw(_srcChainId);
     }
 
-    function testFail_vaultUpgradeTo(address newImplementation) public {
+    function testFail_vaultUpgradeTo() public {
+        address newImplementation = 0x1234567890123456789012345678901234567890;
         _vaultManagerProxy.upgradeTo(newImplementation);
     }
 
-    function testFail_ledgerUpgradeTo(address newImplementation) public {
+    function testFail_ledgerUpgradeTo() public {
+        address newImplementation = 0x1234567890123456789012345678901234567890;
         _ledgerManagerProxy.upgradeTo(newImplementation);
     }
 

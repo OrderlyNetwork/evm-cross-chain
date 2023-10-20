@@ -91,8 +91,8 @@ contract VaultCrossChainManagerUpgradeable is
                 accountId: data.accountId,
                 sender: data.sender,
                 receiver: data.receiver,
-                brokerHash: Utils.getBrokerHash(data.brokerId),
-                tokenHash: Utils.getTokenHash(data.tokenSymbol),
+                brokerHash: Utils.calculateStringHash(data.brokerId),
+                tokenHash: Utils.calculateStringHash(data.tokenSymbol),
                 tokenAmount: data.tokenAmount,
                 fee: data.fee,
                 withdrawNonce: data.withdrawNonce
@@ -188,7 +188,7 @@ contract VaultCrossChainManagerUpgradeable is
             sender: address(0),
             receiver: address(0),
             brokerHash: bytes32(0),
-            tokenHash: Utils.getTokenHash("CrossChainManagerTest"),
+            tokenHash: Utils.calculateStringHash("CrossChainManagerTest"),
             tokenAmount: 0,
             fee: 0,
             withdrawNonce: 0
