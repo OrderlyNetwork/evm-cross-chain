@@ -19,8 +19,7 @@ interface IVaultCrossChainManager {
 
     /// @notice Initiates a deposit to the vault along with native fees.
     /// @param _data Struct containing deposit data.
-    /// @param _amount Amount of native fee.
-    function depositWithFee(VaultTypes.VaultDeposit memory _data, uint256 _amount) external payable;
+    function depositWithFee(VaultTypes.VaultDeposit memory _data) external payable;
 
     /// @notice Fetches the deposit fee based on deposit data.
     /// @param _data Struct containing deposit data.

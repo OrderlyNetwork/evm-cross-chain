@@ -115,6 +115,6 @@ contract CrossChainRelayUpgradeableTest is Test, CrossChainRelaySetup {
         emit Ping();
         vm.expectEmit(true, true, true, true);
         emit Pong();
-        srcRelay.sendMessageWithFee{value: fee}(data, bytes(""), fee);
+        srcRelay.sendMessageWithFee{value: fee}(data, bytes(""));
     }
 }
