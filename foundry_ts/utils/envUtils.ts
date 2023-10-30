@@ -6,6 +6,18 @@ export function getRpcUrl(network: string): string {
     return process.env["RPC_URL_" + network.toUpperCase()] as string;
 }
 
+export function getExplorerApiUrl(network: string): string {
+    return process.env[ network.toUpperCase() + "_EXPLORER_API_URL" ] as string;
+}
+
+export function getChainId(network: string): number {
+    return parseInt(process.env[network.toUpperCase() + "_CHAIN_ID"] as string);
+}
+
+export function getEtherscanApiKey(network: string): string {
+    return process.env[network.toUpperCase() + "_ETHERSCAN_API_KEY"] as string;
+}
+
 export function getPk(network: string): string {
     return process.env[network.toUpperCase() + "_PRIVATE_KEY"] as string;
 }

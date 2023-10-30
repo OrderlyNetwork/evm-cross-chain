@@ -7,3 +7,4 @@ import "./ccmanager";
 import "./monitorPayloadAndRetry";
 import "./transferOwnership";
 import "./outputFunctionSelector";
+import "./verifyContract";
