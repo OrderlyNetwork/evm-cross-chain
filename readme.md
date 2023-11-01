@@ -302,14 +302,28 @@ to verify your contracts on blockscout, you should run the following command:
 forge verify-contract 0x0e9453Ad2F87A351D58eefF40cC508038f8e0f61 contracts/CrossChainRelayUpgradeable.sol:CrossChainRelayUpgradeable --chain-id 4460 --verifier-url https://testnet-explorer.orderly.org/api\? --verifier blockscout
 ```
 
+or you can verify using the following script. It will automatically find the address of contract and verify it on blockscout.
+
+````shell:
+
+```shell
+ts-node foundry_ts/entry.ts --method verifyContract --contract CCRelay --network orderlymain --env production
+````
+
 this example shows how you can verify the contract on orderly L2 chain. The reason for the `\?` suffix of the verifier-url is discussed on a github issue: https://github.com/foundry-rs/foundry/issues/5160.
 
 ### verify on etherscan like explorers
 
 here is a sample command:
 
-```
+```shell
 forge verify-contract <contract-address> contracts/CrossChainRelayUpgradeable.sol:CrossChainRelayUpgradeable --chain-id 421613 --verifier-url https://api-goerli.arbiscan.io/api -e <etherscan-api-key>
+```
+
+or you can verify using the following script. It will automatically find the address of contract and verify it on etherscan like explorers:
+
+```shell
+ts-node foundry_ts/entry.ts --method verifyContract --contract VaultCCManager  --network arbitrum --env production
 ```
 
 the example above shows how you can verify contract arbitrum goerli network, whose explorer api is: `https://api-goerli.arbiscan.io/api`. Because it uses infrastructure the same as etherscan, so we can use the same verification way to verify contracts on arbitrum goerli. arbitrum-goerli's etherscan api key is shared with arbitrum's mainnet. So, you can generate an api key using the mainnet explorer, cause' arbitrum-goerli's explorer has no where to do that.
