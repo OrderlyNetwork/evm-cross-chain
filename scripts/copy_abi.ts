@@ -20,17 +20,20 @@ function extractAbi(inputPath: string, outputPath: string): void {
 
 // Read file paths from command-line arguments
 const args = process.argv.slice(2); // The first two elements are the node executable and script path
-if (args.length !== 1) {
-  console.error('Usage: node extract-abi.js <input JSON file path> ');
+if (args.length !== 2) {
+  console.error('Usage: node extract-abi.js <env> <input JSON file path> ');
   process.exit(1);
 }
 
-const inputPath = args[0];
 // get the input file name
-const inputFileName = path.basename(inputPath);
+const inputPath = args[1];
 // get the output file name
+const inputFileName = path.basename(inputPath);
+// get env value
+const env = args[0]
 // put under abi folder
-const outputPath = path.join('./abi', inputFileName);
+const outputPath = path.join(`./abi/${env}`, inputFileName);
+
 
 // logging
 console.log(`Extracting ABI data from ${inputPath}`);
