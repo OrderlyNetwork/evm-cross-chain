@@ -95,11 +95,12 @@ contract VaultCrossChainManagerUpgradeable is
         require(message.dstChainId == chainId, "VaultCrossChainManager: dstChainId not match");
 
 
-        // if token is CrossChainManagerTest
-        if (keccak256(bytes(data.tokenSymbol)) == keccak256(bytes("CrossChainManagerTest"))) {
-            _sendTestWithdrawBack();
-        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdrawData)){
+        if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdrawData)){
             EventTypes.WithdrawData memory data = abi.decode(payload, (EventTypes.WithdrawData));
+            // if token is CrossChainManagerTest
+            if (keccak256(bytes(data.tokenSymbol)) == keccak256(bytes("CrossChainManagerTest"))) {
+                _sendTestWithdrawBack();
+            }
             VaultTypes.VaultWithdraw memory withdrawData = VaultTypes.VaultWithdraw({
                 accountId: data.accountId,
                 sender: data.sender,

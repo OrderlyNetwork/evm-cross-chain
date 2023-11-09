@@ -223,16 +223,16 @@ contract LedgerCrossChainManagerUpgradeable is
         {
             RebalanceTypes.RebalanceBurnCCFinishData memory data =
                 abi.decode(payload, (RebalanceTypes.RebalanceBurnCCFinishData));
-            uint256 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
-            data.tokenAmount = cvtTokenAmount;
+            uint128 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
+            data.amount = cvtTokenAmount;
 
             // @Rubick process burn finish
         } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCFinishData))
         {
             RebalanceTypes.RebalanceMintCCFinishData memory data =
                 abi.decode(payload, (RebalanceTypes.RebalanceMintCCFinishData));
-            uint256 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
-            data.tokenAmount = cvtTokenAmount;
+            uint128 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
+            data.amount = cvtTokenAmount;
             // @Rubick process mint finish
         } else {
             revert("LedgerCrossChainManager: payloadDataType not match");
@@ -269,7 +269,7 @@ contract LedgerCrossChainManagerUpgradeable is
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurn),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
-            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceTypesRebalanceBurnCCData),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCData),
             srcCrossChainManager: address(this),
             dstCrossChainManager: vaultCrossChainManagers[burnData.dstChainId],
             srcChainId: chainId,
@@ -281,7 +281,7 @@ contract LedgerCrossChainManagerUpgradeable is
             convertDecimal(burnData.amount, burnData.tokenHash, burnData.srcChainId, burnData.dstChainId);
         burnData.amount = cvtTokenAmount;
 
-        bytes memory payload = abi.encode(data);
+        bytes memory payload = abi.encode(burnData);
 
         crossChainRelay.sendMessage(message, payload);
     }
@@ -290,7 +290,7 @@ contract LedgerCrossChainManagerUpgradeable is
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMint),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
-            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceTypesRebalanceMintCCData),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCData),
             srcCrossChainManager: address(this),
             dstCrossChainManager: vaultCrossChainManagers[mintData.dstChainId],
             srcChainId: chainId,
@@ -302,7 +302,7 @@ contract LedgerCrossChainManagerUpgradeable is
             convertDecimal(mintData.amount, mintData.tokenHash, mintData.srcChainId, mintData.dstChainId);
         mintData.amount = cvtTokenAmount;
 
-        bytes memory payload = abi.encode(data);
+        bytes memory payload = abi.encode(mintData);
 
         crossChainRelay.sendMessage(message, payload);
     }
