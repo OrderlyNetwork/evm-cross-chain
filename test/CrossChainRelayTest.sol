@@ -7,7 +7,7 @@ import "../contracts/utils/OrderlyCrossChainMessage.sol";
 import "../contracts/layerzero/mocks/LZEndpointMock.sol";
 import "./CrossChainRelaySetup.t.sol";
 
-contract CrossChainRelayUpgradeableTest is Test, CrossChainRelaySetup {
+contract CrossChainRelayTest is Test, CrossChainRelaySetup {
     event MsgReceived(uint8);
     event Ping();
     event Pong();
@@ -85,12 +85,12 @@ contract CrossChainRelayUpgradeableTest is Test, CrossChainRelaySetup {
         vm.expectEmit(true, true, true, true);
         emit Pong();
 
-        srcRelay.pingPong(_dstChainId);
+        srcRelay.pingPong(_ledgerChainId);
     }
 
     function testFail_sendPingPongWrongChainId() public {
         CrossChainRelayUpgradeable srcRelay = CrossChainRelayUpgradeable(payable(address(_srcRelayProxy)));
-        srcRelay.pingPong(_dstChainId + 1);
+        srcRelay.pingPong(_ledgerChainId + 1);
     }
 
     function test_sendMessageWithFee() public {
@@ -100,8 +100,8 @@ contract CrossChainRelayUpgradeableTest is Test, CrossChainRelaySetup {
             payloadDataType: 0,
             srcCrossChainManager: address(0),
             dstCrossChainManager: address(0),
-            srcChainId: _srcChainId,
-            dstChainId: _dstChainId
+            srcChainId: _vaultChainId,
+            dstChainId: _ledgerChainId
         });
         CrossChainRelayUpgradeable srcRelay = CrossChainRelayUpgradeable(payable(address(_srcRelayProxy)));
         (bool success,) = payable(_dstRelayProxy).call{value: 1 ether}("");

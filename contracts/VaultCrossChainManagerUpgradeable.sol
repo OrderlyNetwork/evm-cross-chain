@@ -116,10 +116,12 @@ contract VaultCrossChainManagerUpgradeable is
             RebalanceTypes.RebalanceBurnCCData memory data = abi.decode(payload, (RebalanceTypes.RebalanceBurnCCData));
             // call vault burn
             // TODO @zion
+            vault.rebalanceBurn(data);
         } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCData)){
             RebalanceTypes.RebalanceMintCCData memory data = abi.decode(payload, (RebalanceTypes.RebalanceMintCCData));
             // call vault mint
             // TODO @zion
+            vault.rebalanceMint(data);
         } else {
             revert("VaultCrossChainManager: payloadDataType not match");
         }
