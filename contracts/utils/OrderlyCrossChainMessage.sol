@@ -11,7 +11,11 @@ library OrderlyCrossChainMessage {
         Withdraw, // from ledger to vault
         WithdrawFinish, // from vault to ledger
         Ping, // for message testing
-        PingPong // ABA message testing
+        PingPong, // ABA message testing
+        RebalanceBurn, // burn request from ledger to vault
+        RebalanceBurnFinish, // burn request finish from vault to ledger
+        RebalanceMint, // mint request from ledger to vault
+        RebalanceMintFinish //  mint request finish from vault to ledger
     }
 
     enum PayloadDataType {
@@ -19,7 +23,11 @@ library OrderlyCrossChainMessage {
         AccountTypesAccountDeposit,
         AccountTypesAccountWithdraw,
         VaultTypesVaultDeposit,
-        VaultTypesVaultWithdraw
+        VaultTypesVaultWithdraw,
+        RebalanceBurnCCData,
+        RebalanceBurnCCFinishData,
+        RebalanceMintCCData,
+        RebalanceMintCCFinishData
     }
 
     // The structure of the message

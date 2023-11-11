@@ -30,10 +30,10 @@ contract CrossChainManagerSetup is Test, CrossChainRelaySetup {
         deployCrossChainRelay();
         setupCrossChainRelay();
 
-        _vaultManagerProxy.setChainId(_srcChainId);
+        _vaultManagerProxy.setChainId(_vaultChainId);
         _vaultManagerProxy.setCrossChainRelay(address(_srcRelayProxy));
-        _vaultManagerProxy.setLedgerCrossChainManager(_dstChainId, address(_ledgerManagerProxy));
-        _ledgerManagerProxy.setChainId(_dstChainId);
+        _vaultManagerProxy.setLedgerCrossChainManager(_ledgerChainId, address(_ledgerManagerProxy));
+        _ledgerManagerProxy.setChainId(_ledgerChainId);
         _ledgerManagerProxy.setCrossChainRelay(address(_dstRelayProxy));
 
         CrossChainRelayUpgradeable(payable(address(_srcRelayProxy))).setManagerAddress(address(_vaultManagerProxy));

@@ -30,8 +30,8 @@ contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, Ba
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdrawData),
             srcCrossChainManager: address(_ledgerManagerProxy),
             dstCrossChainManager: address(_vaultManagerProxy),
-            srcChainId: _dstChainId,
-            dstChainId: _srcChainId
+            srcChainId: _ledgerChainId,
+            dstChainId: _vaultChainId
         });
 
         vm.expectEmit(true, false, false, false);
@@ -46,7 +46,7 @@ contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, Ba
         vm.expectEmit(true, false, false, false);
         emit MessageSent(message, bytes(""));
 
-        _ledgerManagerProxy.sendTestWithdraw(_srcChainId);
+        _ledgerManagerProxy.sendTestWithdraw(_vaultChainId);
     }
 
     function testFail_vaultUpgradeTo() public {
