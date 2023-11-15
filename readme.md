@@ -62,8 +62,19 @@ Here's an overview of the main folders in this project and what they contain:
 - `config/`: A general folder for storing project-related informations like contract address.
 
 ## 5. Deployment and Setup
-
 In this section, I will introduce how to deploy evm-cross-chain service for orderly v2, and how to setup every contracts. Scripts organization and related file format will also be introduced.
+
+### 5.0 Preparation
+You need prepare your .env file first. You can copy the .env.example file and rename it to .env. Then you need to fill in the necessary information in .env file. 
+
+* SOP for adding new support for a network named as XXX
+1. set XXX_PRIVATE_KEY in .env
+2. set etherscan key(if needed) and explorer api url in .env (for contract verification)
+3. set XXX_CHAIN_ID in .env
+4. set XXX_RPC_URL in .env
+5. set XXX_LZ_CHAIN_ID in .env (for layerzero cross-chain support)
+6. set XXX_ENDPOINT in .env (for layerzero cross-chain support)
+
 
 ### 5.1 Json File Format under `config`
 
@@ -312,7 +323,7 @@ ts-node foundry_ts/entry.ts --method verifyContract --contract CCRelay --network
 
 this example shows how you can verify the contract on orderly L2 chain. The reason for the `\?` suffix of the verifier-url is discussed on a github issue: https://github.com/foundry-rs/foundry/issues/5160.
 
-### verify on etherscan like explorers
+### verify on etherscan explorer
 
 here is a sample command:
 
@@ -327,6 +338,20 @@ ts-node foundry_ts/entry.ts --method verifyContract --contract VaultCCManager  -
 ```
 
 the example above shows how you can verify contract arbitrum goerli network, whose explorer api is: `https://api-goerli.arbiscan.io/api`. Because it uses infrastructure the same as etherscan, so we can use the same verification way to verify contracts on arbitrum goerli. arbitrum-goerli's etherscan api key is shared with arbitrum's mainnet. So, you can generate an api key using the mainnet explorer, cause' arbitrum-goerli's explorer has no where to do that.
+
+for proxy contracts, some etherscan may not provide constructor arguments data correctly. So you may face some problem when verifying proxy contracts(bytecode cannot match, or other problems). You may need to verify proxy contracts manually. You can verify it on etherscan using single solidity file or standard json input, which can be generated using the following command:
+
+* generate standard json input
+```shell
+forge verify-contract --chain-id <id> --verifier-url <url> -e <key> --show-standard-json-input <address> <contract> > standard.json
+```
+* generate flattened solidity file
+```shell
+forge flatten <contract> > flattened.sol
+```
+
+then you can verify it on etherscan using the generated standard json input or flattened solidity file. Make sure you set the constructor arguments correctly. You can goto `https://abi.hashex.org/` to get the abi encoded constructor arguments.
+
 
 ## 11. print necessary information of cross-chain service
 
