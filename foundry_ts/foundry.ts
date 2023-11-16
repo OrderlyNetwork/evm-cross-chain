@@ -17,18 +17,34 @@ export function foundry_wrapper(method_name: string, broadcast: boolean, simulat
 
     if (simulate) {return;}
 
+    const max_retry = 5;
+    let success = false;
+    let try_cnt = 0;
     // run the command
-    let result = exec(command);
+    while (try_cnt++ < max_retry) {
+        let result = exec(command);
+        if (result.code == 0) {
+            // command success
+            success = true;
+            break;
+        }
+        // if the command is not successful, print the error message
+        if (result.code != 0) {
+            // command failure
+            console.log(`Error running ${method_name} script: ${command}`)
+            // print the error message
+            console.log(result.stderr);
+            console.log("Retrying...");
+        }
+    }
 
-    // if the command is not successful, print the error message
-    if (result.code != 0) {
-        // command failure
+    if (!success) {
         console.log(`Error running ${method_name} script: ${command}`)
-        // print the error message
-        console.log(result.stderr);
-        // exit the program
+        console.log(`Failed after ${max_retry} retries`)
+        console.log("Exiting...");
         process.exit(1);
     }
+
 }
 
 export function set_env_var(method_name: string, var_name: string, value: string) {

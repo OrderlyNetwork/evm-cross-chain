@@ -100,18 +100,19 @@ contract VaultCrossChainManagerUpgradeable is
             // if token is CrossChainManagerTest
             if (keccak256(bytes(data.tokenSymbol)) == keccak256(bytes("CrossChainManagerTest"))) {
                 _sendTestWithdrawBack();
+            } else {
+                VaultTypes.VaultWithdraw memory withdrawData = VaultTypes.VaultWithdraw({
+                    accountId: data.accountId,
+                    sender: data.sender,
+                    receiver: data.receiver,
+                    brokerHash: Utils.calculateStringHash(data.brokerId),
+                    tokenHash: Utils.calculateStringHash(data.tokenSymbol),
+                    tokenAmount: data.tokenAmount,
+                    fee: data.fee,
+                    withdrawNonce: data.withdrawNonce
+                });
+                _sendWithdrawToVault(withdrawData);
             }
-            VaultTypes.VaultWithdraw memory withdrawData = VaultTypes.VaultWithdraw({
-                accountId: data.accountId,
-                sender: data.sender,
-                receiver: data.receiver,
-                brokerHash: Utils.calculateStringHash(data.brokerId),
-                tokenHash: Utils.calculateStringHash(data.tokenSymbol),
-                tokenAmount: data.tokenAmount,
-                fee: data.fee,
-                withdrawNonce: data.withdrawNonce
-            });
-            _sendWithdrawToVault(withdrawData);
         } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCData)){
             RebalanceTypes.RebalanceBurnCCData memory data = abi.decode(payload, (RebalanceTypes.RebalanceBurnCCData));
             // call vault burn

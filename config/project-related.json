@@ -17,13 +17,16 @@
             "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
         }
     },
-    "test": {
+    "dev": {
+        "opgoerli": {
+            "vault": "0xe014a38501cF2B8139dED0b60Ed4FbD02C113b59"
+        },
         "arbitrumgoerli": {
-            "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
+            "vault": "0x0C554dDb6a9010Ed1FD7e50d92559A06655dA482"
         },
         "orderlyop": {
-            "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
-            "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
+            "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",
+            "operator-manager": "0xe34614EB781C5838C78B7f913b89A05e7a5b97e2"
         }
     },
     "production": {

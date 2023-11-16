@@ -8,3 +8,4 @@ import "./monitorPayloadAndRetry";
 import "./transferOwnership";
 import "./outputFunctionSelector";
 import "./verifyContract";
+import "./addVaultCCService";

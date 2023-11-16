@@ -225,6 +225,7 @@ contract CrossChainRelayUpgradeable is
         bytes memory adapterParams = abi.encodePacked(version, gasLimit);
 
         _lzSend(lzDstChainId, lzPayload, payable(address(this)), address(0), adapterParams, msg.value);
+        emit MessageSent(data, payload);
     }
 
     /// @notice test function, send ping to another chain

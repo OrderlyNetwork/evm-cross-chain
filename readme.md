@@ -150,6 +150,21 @@ for vault cross-chain-manager, the setup procedure is like:
 
 Some components relies on other components, so you'd better deploy all of them so before your setup starts.
 
+### 5.4 Add a new cross-chain service on the new added vault chain
+There are some times we need to add new vault chains. So we need to deploy cross-chain-relay and cross-chain-manager on the new added vault chain. And update settings of contracts on the ledger side. The following steps are the procedures of adding a new vault chain.
+
+1. update token decimal in `config/token-decimals.json`
+2. update project related infos in `config/project-related.json` (or you can update it later)
+3. run a script to add a new cross-chain service on the new added vault chain and setup it and update ledger side contracts settings
+```shell
+ts-node foundry_ts/entry.ts --method addVaultCCService --env dev --vaultNetwork opgoerli --ledgerNetwork orderlyop --initEther 0.01 --broadcast
+```
+
+if you didn't transfer enough token to the proxy address, you can run the following script to transfer more token to the proxy address:
+```shell
+ts-node foundry_ts/entry.ts --method transferNativeToken --network <network> --to <address> --ether <amount> --broadcast
+```
+
 ## 6 Operation Scripts
 
 To better manage the complex procedures of cross-chain-relay and cross-chain-manager, we define the single operation of each step in above procedures as `operation`. Each operation is realized using a foundry script and a typescript wrapper. And some useful composite operations(includes several operations together) can be built using typescript wrapper (call several operations in one invocation).
@@ -382,6 +397,14 @@ ts-node foundry_ts/entry.ts --method printCCManagerTokenDecimal --env production
 ```
 
 you need to change the parameters to suit your needs.
+
+## 12. release new version
+To release a new version on dev, qa, staging or production, you need to follow the following steps:
+1. make sure features are all complete
+2. make sure you write tests on those features, and tests passed
+3. copy the new abi to abi folder
+4. deploy and setup the new version on dev, qa, staging or production
+5. add git tag and push to github
 
 # Issues
 
