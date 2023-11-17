@@ -71,6 +71,14 @@ contract RelayHelper is BaseScript, OperationHelper {
             method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping);
         } else if (method.equal("pingPong")) {
             method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong);
+        } else if (method.equal("burn")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurn);
+        } else if (method.equal("burnFinish")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurnFinish);
+        } else if (method.equal("mint")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMint);
+        } else if (method.equal("mintFinish")) {
+            method_id = uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMintFinish);
         } else {
             revert("[setCrossChainFee] wrong method");
         }

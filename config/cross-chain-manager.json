@@ -43,7 +43,7 @@
   },
   "dev": {
     "orderlyop": {
-      "manager": "0xd2224cAa8544696535184b2Bd2C35C1b15Ef5477",
+      "manager": "0x6AC27AeD9ebCEa70da46b54E127F7d689c31faEe",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xdecdf6f646d5cfaf16abf12222ccc84febae5934",
       "role": "ledger"

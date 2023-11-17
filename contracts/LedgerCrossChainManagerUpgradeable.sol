@@ -226,14 +226,15 @@ contract LedgerCrossChainManagerUpgradeable is
             uint128 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
             data.amount = cvtTokenAmount;
 
-            // @Rubick process burn finish
+            ledger.rebalanceBurnFinish(data);
         } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCFinishData))
         {
             RebalanceTypes.RebalanceMintCCFinishData memory data =
                 abi.decode(payload, (RebalanceTypes.RebalanceMintCCFinishData));
             uint128 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
             data.amount = cvtTokenAmount;
-            // @Rubick process mint finish
+
+            ledger.rebalanceMintFinish(data);
         } else {
             revert("LedgerCrossChainManager: payloadDataType not match");
         }
@@ -271,14 +272,14 @@ contract LedgerCrossChainManagerUpgradeable is
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCData),
             srcCrossChainManager: address(this),
-            dstCrossChainManager: vaultCrossChainManagers[burnData.dstChainId],
+            dstCrossChainManager: vaultCrossChainManagers[burnData.burnChainId],
             srcChainId: chainId,
-            dstChainId: burnData.dstChainId
+            dstChainId: burnData.burnChainId
         });
 
         // convert token amount to dst chain decimal
         uint128 cvtTokenAmount =
-            convertDecimal(burnData.amount, burnData.tokenHash, burnData.srcChainId, burnData.dstChainId);
+            convertDecimal(burnData.amount, burnData.tokenHash, chainId, burnData.burnChainId);
         burnData.amount = cvtTokenAmount;
 
         bytes memory payload = abi.encode(burnData);
@@ -292,14 +293,14 @@ contract LedgerCrossChainManagerUpgradeable is
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCData),
             srcCrossChainManager: address(this),
-            dstCrossChainManager: vaultCrossChainManagers[mintData.dstChainId],
+            dstCrossChainManager: vaultCrossChainManagers[mintData.mintChainId],
             srcChainId: chainId,
-            dstChainId: mintData.dstChainId
+            dstChainId: mintData.mintChainId
         });
 
         // convert token amount to dst chain decimal
         uint128 cvtTokenAmount =
-            convertDecimal(mintData.amount, mintData.tokenHash, mintData.srcChainId, mintData.dstChainId);
+            convertDecimal(mintData.amount, mintData.tokenHash, chainId, mintData.mintChainId);
         mintData.amount = cvtTokenAmount;
 
         bytes memory payload = abi.encode(mintData);

@@ -5,7 +5,7 @@ import {foundry_script_folder} from "./utils/const";
 import { findFoundryScript } from "./utils/findFoundryScript";
 
 // foundry wrapper function, send an operation method name to the function and run a command
-export function foundry_wrapper(method_name: string, broadcast: boolean, simulate: boolean) {
+export function foundry_wrapper(method_name: string, broadcast: boolean, simulate: boolean, deploy: boolean = false, network: string = "none") {
     let broadcastFlag = broadcast ? "--broadcast" : "";
     const foundryScriptPath = findFoundryScript(foundry_script_folder, method_name);
     if (!foundryScriptPath) {

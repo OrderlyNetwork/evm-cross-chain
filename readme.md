@@ -160,10 +160,20 @@ There are some times we need to add new vault chains. So we need to deploy cross
 ts-node foundry_ts/entry.ts --method addVaultCCService --env dev --vaultNetwork opgoerli --ledgerNetwork orderlyop --initEther 0.01 --broadcast
 ```
 
-if you didn't transfer enough token to the proxy address, you can run the following script to transfer more token to the proxy address:
+If you didn't transfer enough token to the proxy address, you can run the following script to transfer more token to the proxy address:
 ```shell
 ts-node foundry_ts/entry.ts --method transferNativeToken --network <network> --to <address> --ether <amount> --broadcast
 ```
+if you didn't connect vault cross-chain-manager to vault in the above script, you can run the following script to connect them:
+```shell
+ts-node foundry_ts/entry.ts --method setCCManagerVault --env <env> --network <network> --broadcast
+```
+
+4. generate new contract abi if necessary (if contract changed)
+5. add git tag and push to github
+6. update abi json file in [contract-abi](https://gitlab.com/orderlynetwork/orderly-v2/contract-abi)
+7. fill the information on confluence [Orderly V2 Contract Information Board](https://wootraders.atlassian.net/wiki/spaces/ORDER/pages/343441906/Orderly+V2+Contract+Information+Board#Orderly-V2-Settlement-Layer) 
+8. fill the balance monitor information to make sure enough balance on the new added vault cross-chain relay.
 
 ## 6 Operation Scripts
 

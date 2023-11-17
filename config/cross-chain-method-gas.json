@@ -3,5 +3,9 @@
     "deposit": 250000,
     "withdrawFinish": 200000,
     "pingPong": 500000,
-    "ping": 500000
+    "ping": 500000,
+    "burn": 420000,
+    "burnFinish": 280000,
+    "mint": 420000,
+    "mintFinish": 280000
 }
