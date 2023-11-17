@@ -43,20 +43,20 @@
   },
   "dev": {
     "orderlyop": {
-      "manager": "0x6AC27AeD9ebCEa70da46b54E127F7d689c31faEe",
+      "manager": "0x69ecc12bD2D04770b837FF9543D7BB52970807E5",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xdecdf6f646d5cfaf16abf12222ccc84febae5934",
       "role": "ledger"
     },
     "arbitrumgoerli": {
-      "manager": "0xA53BadfBC5D51B79B94a5a0d12320335Bf9EE175",
+      "manager": "0x00d54b0755E057Fc8DbB1beDebbc3F64F5BbAFac",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xbc9c21d0986fb7b5ef70caeb16e0abb7c36f1595",
       "role": "vault"
     },
     "opgoerli": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "manager": "0xED0294bDE7f5aEBC1eBe4Ed16940d684D3276C89",
+      "manager": "0x94843406ac2b468C54c527853246614D5B5753Ab",
       "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
       "role": "vault"
     }

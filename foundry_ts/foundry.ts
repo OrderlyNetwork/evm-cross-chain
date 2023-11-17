@@ -65,7 +65,7 @@ export function set_env_var(method_name: string, var_name: string, value: string
         env_data = env_data.replace(new RegExp(`^${var_name}=.*`, "gm"), `${var_name}=${value}`);
     } else {
         // if the variable is not in the .env file, add the variable and value
-        env_data += `\n${var_name}=${value}`;
+        env_data = `${var_name}=${value}\n` + env_data;
     }
     // console.log(env_data);
     // save back to .env
@@ -73,6 +73,6 @@ export function set_env_var(method_name: string, var_name: string, value: string
     fs.writeFileSync(env_file, env_data);
 
     // sleep
-    setTimeout(() => {}, 5000);
+    // setTimeout(() => {}, 5000);
     exec(`source ${env_file}`)
 }

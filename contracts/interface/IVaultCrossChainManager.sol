@@ -20,7 +20,7 @@ interface IVaultCrossChainManager {
 
     /// @notice Triggers a finish msg from vault to ledger to inform the status of mint
     /// @param data Struct containing mint data.
-    function mintFinish(RebalanceTypes.RebalanceMintCCData memory data) external;
+    function mintFinish(RebalanceTypes.RebalanceMintCCFinishData memory data) external;
 
     /// @notice Initiates a deposit to the vault.
     /// @param data Struct containing deposit data.

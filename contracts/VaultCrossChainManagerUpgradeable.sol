@@ -225,11 +225,11 @@ contract VaultCrossChainManagerUpgradeable is
 
     /// @notice send mint finish back to ledger
     /// @param data Struct containing mint data.
-    function mintFinish(RebalanceTypes.RebalanceMintCCData memory data) external override onlyVault {
+    function mintFinish(RebalanceTypes.RebalanceMintCCFinishData memory data) external override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMintFinish),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
-            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCData),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCFinishData),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
             srcChainId: chainId,

@@ -102,12 +102,12 @@
           },
           {
             "internalType": "uint256",
-            "name": "srcChainId",
+            "name": "burnChainId",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "dstChainId",
+            "name": "mintChainId",
             "type": "uint256"
           }
         ],
@@ -345,6 +345,11 @@
       {
         "components": [
           {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
             "internalType": "uint64",
             "name": "rebalanceId",
             "type": "uint64"
@@ -361,26 +366,16 @@
           },
           {
             "internalType": "uint256",
-            "name": "srcChainId",
+            "name": "burnChainId",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "dstChainId",
+            "name": "mintChainId",
             "type": "uint256"
-          },
-          {
-            "internalType": "bytes",
-            "name": "messageBytes",
-            "type": "bytes"
-          },
-          {
-            "internalType": "bytes",
-            "name": "messageSignature",
-            "type": "bytes"
           }
         ],
-        "internalType": "struct RebalanceTypes.RebalanceMintCCData",
+        "internalType": "struct RebalanceTypes.RebalanceMintCCFinishData",
         "name": "data",
         "type": "tuple"
       }
