@@ -15,15 +15,21 @@
   },
   "qa": {
     "orderlyop": {
-      "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "manager": "0xBE404b97de8A6B1304F3dbC17F565034721A40b7",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
       "role": "ledger"
     },
     "arbitrumgoerli": {
-      "manager": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "manager": "0xeAbA3DbD466B4691F17beE97477966da29268CFf",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
+      "role": "vault"
+    },
+    "opgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x8FBBFD00D630B63F6924Fe85D880993e47709c06",
+      "proxy": "0x748e2F48d0a8Ac9174CdCBD344478295994Aae04",
       "role": "vault"
     }
   },

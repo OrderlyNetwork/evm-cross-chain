@@ -4,8 +4,8 @@
     "withdrawFinish": 200000,
     "pingPong": 500000,
     "ping": 500000,
-    "burn": 420000,
+    "burn": 450000,
     "burnFinish": 280000,
-    "mint": 420000,
+    "mint": 480000,
     "mintFinish": 280000
 }

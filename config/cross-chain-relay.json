@@ -25,12 +25,17 @@
     "orderlyop": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
-      "relay": "0xe0B0b683aa7d2745118B1F7D893fB20924dCEdcF"
+      "relay": "0x4457f4d8c4879f6BD5260ce37c493113c79306BE"
     },
     "arbitrumgoerli": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
-      "relay": "0xe0B0b683aa7d2745118B1F7D893fB20924dCEdcF"
+      "relay": "0x412211b39beCc0A3AB233B9520742511D373B703"
+    },
+    "opgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xF2a96DDd9585386Db5352326E02909C7EcEDa299",
+      "relay": "0x9D1f32Fe70578a59D562235547153539C23Fa498"
     }
   },
   "staging": {

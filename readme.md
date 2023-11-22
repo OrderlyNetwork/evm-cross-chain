@@ -61,22 +61,9 @@ Here's an overview of the main folders in this project and what they contain:
 
 - `config/`: A general folder for storing project-related informations like contract address.
 
-## 5. Deployment and Setup
-In this section, I will introduce how to deploy evm-cross-chain service for orderly v2, and how to setup every contracts. Scripts organization and related file format will also be introduced.
+### 4.1 Project configuration
 
-### 5.0 Preparation
-You need prepare your .env file first. You can copy the .env.example file and rename it to .env. Then you need to fill in the necessary information in .env file. 
-
-* SOP for adding new support for a network named as XXX
-1. set XXX_PRIVATE_KEY in .env
-2. set etherscan key(if needed) and explorer api url in .env (for contract verification)
-3. set XXX_CHAIN_ID in .env
-4. set XXX_RPC_URL in .env
-5. set XXX_LZ_CHAIN_ID in .env (for layerzero cross-chain support)
-6. set XXX_ENDPOINT in .env (for layerzero cross-chain support)
-
-
-### 5.1 Json File Format under `config`
+#### json config files `config/*.json`
 
 first of all, I will introduce the role of json files under `config`. Foundry scripts are not like javascript or ts. It is not that convenient to save deployment infos and projecte related infos into files. So we usually copy and paste the info into some place(confluence, or readme). But copy paste isn't a good habit. So I decide to put everything into json files automatically. So I write a helper base class for foundry scripts so that it can help users better read from and write to json files.
 
@@ -101,7 +88,7 @@ The above example stores cross-chain-relay service's deployment address and owne
 
 Other project related json files are oragized by the same way. The json file read and write helper foundry script is `baseScripts/ConfigHelper.s.sol` it wraps the read and write of cross-chain-relay infos and cross-chain-manager infos, and other useful helper functions.
 
-#### 5.2 Infos in .env
+#### `.env` file
 
 Beside json files under `config`, other public informations are stored in `.env`, and the example is `.env.example`.
 
@@ -113,9 +100,34 @@ in `.env` you can set your private keys, chain RPC URLs, chain Ids and other pub
 
 3. Setup Layerzero Endpoins addresses
 
+## 5. Deployment and Setup
+In this section, I will introduce how to deploy evm-cross-chain service for orderly v2, and how to setup every contracts. Scripts organization and related file format will also be introduced.
+
+### 5.0 Preparation
+You need prepare your `.env` file first. You can copy the `.env.example file and rename it to `.env`. For every network you want to deploy, you need to set the following variables in `.env`.
+
+#### SOP for adding new support for a network named as `XXX`
+
+**for private key configuration**
+
+1. set XXX_PRIVATE_KEY in .env
+
+**for contract verification**
+
+2. set etherscan key(if needed) and explorer api url in `.env` (for contract verification)
+
+**for basic network configuration**
+
+3. set XXX_CHAIN_ID in .env
+4. set XXX_RPC_URL in .env
+5. set XXX_LZ_CHAIN_ID in `.env` (for layerzero cross-chain support)
+6. set XXX_ENDPOINT in `.env` (for layerzero cross-chain support)
+
+
+
 ### 5.3 Deployment and Setup
 
-Before you start deployment and setup, please make sure you setup your .env correctly.
+Before you start deployment and setup, please make sure you setup your `.env` correctly.
 
 In this repo `evm-cross-chain`, which provids cross-chain-service for orderly v2 between vault and ledger. It has two main components, `cross-chain-relay` and `cross-chain-manager`. I won't elaborate the role and responsibility of the two componenets here, but I will introduce the procedures of deployment and setup of both.
 
@@ -138,8 +150,7 @@ for ledger cross-chain-manager, the setup procedure is like:
 1. set the the current chain Id
 2. set the cross-chain-relay's address
 3. set Ledger address
-4. set operator manager address
-5. set token decimal information for different chains
+4. set token decimal information for different chains
 
 for vault cross-chain-manager, the setup procedure is like:
 
@@ -153,20 +164,24 @@ Some components relies on other components, so you'd better deploy all of them s
 ### 5.4 Add a new cross-chain service on the new added vault chain
 There are some times we need to add new vault chains. So we need to deploy cross-chain-relay and cross-chain-manager on the new added vault chain. And update settings of contracts on the ledger side. The following steps are the procedures of adding a new vault chain.
 
-1. update token decimal in `config/token-decimals.json`
-2. update project related infos in `config/project-related.json` (or you can update it later)
+1. update token decimal in `config/token-decimals.json`, make sure the new added vault chain's token decimal is set correctly.
+2. update project related infos in `config/project-related.json` (or you can update it later, if you choose to setup vault later, you should drop the --connectVault flag in the following script)
 3. run a script to add a new cross-chain service on the new added vault chain and setup it and update ledger side contracts settings
 ```shell
-ts-node foundry_ts/entry.ts --method addVaultCCService --env dev --vaultNetwork opgoerli --ledgerNetwork orderlyop --initEther 0.01 --broadcast
+ts-node foundry_ts/entry.ts --method addVaultCCService --env dev --vaultNetwork opgoerli --ledgerNetwork orderlyop --initEther 0.01 --broadcast --connectVault
 ```
 
 If you didn't transfer enough token to the proxy address, you can run the following script to transfer more token to the proxy address:
 ```shell
 ts-node foundry_ts/entry.ts --method transferNativeToken --network <network> --to <address> --ether <amount> --broadcast
 ```
-if you didn't connect vault cross-chain-manager to vault in the above script, you can run the following script to connect them:
+If you didn't connect vault cross-chain-manager to vault in the above script, you can run the following script to connect them:
 ```shell
 ts-node foundry_ts/entry.ts --method setCCManagerVault --env <env> --network <network> --broadcast
+```
+If you add new operations in cross-chain-relay or cross-chain-manager, you should also setup `config/cross-chain-method-gas.json`, and call the following script on every chain:
+```shell
+ ts-node foundry_ts/entry.ts --method setCrossChainFeeAll --env <env> --network <network> --broadcast
 ```
 
 4. generate new contract abi if necessary (if contract changed)
