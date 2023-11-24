@@ -12,3 +12,4 @@ import "./sendPingPong";
 import "./setCrossChainFeeAll";
 import "./printRelay";
 import "./addRelayLzChainMappingAll";
+import "./forceResume";

@@ -58,6 +58,11 @@ contract RelayHelper is BaseScript, OperationHelper {
         relay.setManagerAddress(manager);
     }
 
+    function forceResume(address relayAddress, uint16 chainId, bytes memory path) internal {
+        CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(relayAddress));
+        relay.forceResumeReceive(chainId, path);
+    }
+
     function setCrossChainFee(address relayAddress, string memory method, uint256 fee) internal {
         CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(relayAddress));
         uint8 method_id = 0;

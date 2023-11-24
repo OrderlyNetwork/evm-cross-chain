@@ -49,11 +49,15 @@ function getArgType(arg: string) : string {
     const solType = arg.split("(")[0].replace("vm.env", "").toLowerCase();
     // convert sol type to typescript type
     switch (solType) {
+        case "bytes":
+            return "string";
         case "string":
             return "string";
-        case "sddress":
+        case "address":
             return "string";
         case "uint256":
+            return "number";
+        case "uint":
             return "number";
         case "bool":
             return "boolean";
