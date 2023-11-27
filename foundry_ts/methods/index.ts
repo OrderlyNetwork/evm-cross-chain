@@ -9,3 +9,4 @@ import "./transferOwnership";
 import "./outputFunctionSelector";
 import "./verifyContract";
 import "./addVaultCCService";
+import "./upgradeContracts";

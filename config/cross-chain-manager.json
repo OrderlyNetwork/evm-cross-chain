@@ -35,15 +35,21 @@
   },
   "staging": {
     "orderlyop": {
-      "manager": "0x88df62f145b0F132B94c7FF38A5202C2cAcb72B0",
+      "manager": "0x7e05B86B8644758156E52e5E246A5223Fc578869",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xb592011550a7E2a85c69EdF1788F460075b958fc",
       "role": "ledger"
     },
     "arbitrumgoerli": {
-      "manager": "0x001d9d7714A852C69885C81C5b680aB1F00E9e7E",
+      "manager": "0x2b42A45729a59b2D210fA201e4c4F8158B8Ad25C",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xFA59A70dD17Fb89F031A34e27728754e8B7f19fb",
+      "role": "vault"
+    },
+    "opgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0xFA59A70dD17Fb89F031A34e27728754e8B7f19fb",
+      "proxy": "0x2a08870fa26745032fdb4ecf0B2B91a4c1a260eD",
       "role": "vault"
     }
   },

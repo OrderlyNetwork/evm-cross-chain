@@ -3,6 +3,7 @@ import { relay_deploy_json } from "../../utils/const";
 import { set_env_var, foundry_wrapper } from "../../foundry";
 import { checkArgs } from "../../helper";
 import { setupDeployJson } from "../../utils/setupDeployJson";
+import { getExporerType } from "../../utils/envUtils";
 
 // current file name
 const method_name = "deployRelay";
@@ -18,7 +19,9 @@ export function deployRelay(env: string, network: string, broadcast: boolean, si
     set_env_var(method_name, "env", env);
     set_env_var(method_name, "network", network);
     set_env_var(method_name, "broadcast", broadcast.toString());
-    foundry_wrapper(method_name, broadcast, simulate);
+
+    const explorerType = getExporerType(network);
+    foundry_wrapper(method_name, broadcast, simulate, true, explorerType, network);
 
 }
 

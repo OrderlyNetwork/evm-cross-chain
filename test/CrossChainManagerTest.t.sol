@@ -3,8 +3,8 @@ pragma solidity 0.8.19;
 import "forge-std/Test.sol";
 import "./CrossChainManagerSetup.t.sol";
 import "../contracts/interface/IOrderlyCrossChain.sol";
-import "../baseScripts/ConfigHelper.s.sol";
-import "../baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/script/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/script/baseScripts/BaseScript.s.sol";
 import "../contracts/test/WrongImplementation.sol";
 
 contract CrossChainManagerTest is Test, CrossChainManagerSetup, ConfigHelper, BaseScript {

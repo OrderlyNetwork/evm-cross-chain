@@ -25,3 +25,7 @@ export function getPk(network: string): string {
 export function getEndpoint(network: string): string {
     return process.env[network.toUpperCase() + "_ENDPOINT"] as string;
 }
+
+export function getExporerType(network: string): "etherscan" | "blockscout" | undefined {
+    return process.env[network.toUpperCase() + "_EXPLORER_TYPE"] as "etherscan" | "blockscout" | undefined;
+}

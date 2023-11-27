@@ -26,7 +26,7 @@ import "../interface/ILedgerCrossChainManager.sol";
     // function executeRebalanceBurnResult(
     //     uint64 rebalanceId,
     //     bytes32 tokenHash,
-    //     uint256 srcChainId,
+    //     uint256 burnChainId,
     //     uint128 amount,
     //     bool success
     // ) external;
@@ -34,7 +34,7 @@ import "../interface/ILedgerCrossChainManager.sol";
     // function executeRebalanceMintResult(
     //     uint64 rebalanceId,
     //     bytes32 tokenHash,
-    //     uint256 dstChainId,
+    //     uint256 mintChainId,
     //     uint128 amount,
     //     bool success
     // ) external;
@@ -146,16 +146,6 @@ contract LedgerMock is ILedger, LedgerDataLayout{
        
     }
 
-    function executeRebalanceBurnResult(
-        uint64 rebalanceId,
-        bytes32 tokenHash,
-        uint256 srcChainId,
-        uint128 amount,
-        bool success
-    ) external override  {
-    
-    }
-
     function executeRebalanceMint(RebalanceTypes.RebalanceMintUploadData calldata data)
         external
         override
@@ -166,16 +156,16 @@ contract LedgerMock is ILedger, LedgerDataLayout{
     function executeRebalanceMintResult(
         uint64 rebalanceId,
         bytes32 tokenHash,
-        uint256 dstChainId,
+        uint256 mintChainId,
         uint128 amount,
         bool success
-    ) external override  {
+    ) external {
     }
 
     function getRebalanceStatus(uint64 rebalanceId)
         external
         view
-        override
+        
         returns (RebalanceTypes.RebalanceStatus memory)
     {
         RebalanceTypes.RebalanceStatus memory status = RebalanceTypes.RebalanceStatus({
@@ -215,41 +205,41 @@ contract LedgerMock is ILedger, LedgerDataLayout{
 
 
 
-    function sendTestRebalanceBurn(uint256 srcChainId, uint256 dstChainId) external {
+    function sendTestRebalanceBurn(uint256 burnChainId, uint256 mintChainId) external {
         // uint32 dstDomain;
         // uint64 rebalanceId;
         // uint128 amount;
         // bytes32 tokenHash;
-        // uint256 srcChainId;
-        // uint256 dstChainId;
+        // uint256 burnChainId;
+        // uint256 mintChainId;
         // address dstVaultAddress;
         RebalanceTypes.RebalanceBurnCCData memory data = RebalanceTypes.RebalanceBurnCCData({
             dstDomain: 0,
             rebalanceId: 0,
             amount: 0,
             tokenHash: 0,
-            srcChainId:srcChainId, 
-            dstChainId: dstChainId,
+            burnChainId:burnChainId, 
+            mintChainId: mintChainId,
             dstVaultAddress: address(0)
         });
         ILedgerCrossChainManager crossChainManager = ILedgerCrossChainManager(crossChainManagerAddress);
         crossChainManager.burn(data);
     }
 
-    function sendTestRebalanceMint(uint256 srcChainId, uint256 dstChainId) external {
+    function sendTestRebalanceMint(uint256 burnChainId, uint256 mintChainId) external {
         // uint64 rebalanceId;
         // uint128 amount;
         // bytes32 tokenHash;
-        // uint256 srcChainId;
-        // uint256 dstChainId;
+        // uint256 burnChainId;
+        // uint256 mintChainId;
         // bytes messageBytes;
         // bytes messageSignature;
         RebalanceTypes.RebalanceMintCCData memory data = RebalanceTypes.RebalanceMintCCData({
             rebalanceId: 0,
             amount: 0,
             tokenHash: 0,
-            srcChainId:srcChainId, 
-            dstChainId: dstChainId,
+            burnChainId:burnChainId, 
+            mintChainId: mintChainId,
             messageBytes: new bytes(0),
             messageSignature: new bytes(0)
         });

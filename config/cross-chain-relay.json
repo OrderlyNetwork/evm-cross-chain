@@ -12,13 +12,13 @@
     },
     "orderlyop": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "proxy": "0xB2Cdb80AB3133a831Aee18a625e0281fCF1969DE",
-      "relay": "0x0e9453Ad2F87A351D58eefF40cC508038f8e0f61"
+      "proxy": "0x80Ea0CA3E06141Fc66538F8134bAA30A5F1F2a8E",
+      "relay": "0xb3d4a6119B7B4408Be5F0Ea6c9e5CE9f80245b0c"
     },
     "arbitrumgoerli": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "proxy": "0xC0031c46DB3A30245400cf3095FdFbac064063DD",
-      "relay": "0x713bf90DE114521a038E8262421c40380770D894"
+      "proxy": "0xFDbb917FF2aFa1DFb8400c0F48A77c40EE07c01c",
+      "relay": "0x832e72eF95Cc2b078c0Df027007E53498F1Be4A8"
     }
   },
   "qa": {
@@ -42,12 +42,17 @@
     "orderlyop": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xa1a9C94bb24B09739Af80E6EfaB7ca0F576182bc",
-      "relay": "0x0e0D384D1d5f9968574a83814572749158108aa2"
+      "relay": "0x718f4EfAE9BD385E88aB833d9DDe3cABEb5F098a"
     },
     "arbitrumgoerli": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xF920a86c1ea7788933c188e7A3516807A18655d6",
-      "relay": "0x4CcC2d2271e6cf4c8491C6dA99F819528a644E9d"
+      "relay": "0xf91bbF1c3542b7066791D7f9C64cAEe6cDc91039"
+    },
+    "opgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xC469eB33daFdE05CC0f05dDFca4fF793f680F02E",
+      "relay": "0x6C14bf583C142B66EC59F8fc725B255e3a94BAA3"
     }
   },
   "dev": {

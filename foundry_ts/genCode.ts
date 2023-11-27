@@ -150,11 +150,11 @@ const indexFile = argv.role === "manager" ? "foundry_ts/methods/ccmanager/index.
 
 const indexContent = fs.readFileSync(indexFile, 'utf8');
 
-const importLine = `import "./${outFileName}";`;
+const importLine = `\nimport "./${outFileName}";`;
 
 // check if import line already exists
 if (indexContent.indexOf(importLine) === -1) {
-    fs.appendFileSync(indexFile, importLine + "\n");
+    fs.appendFileSync(indexFile, importLine);
 }
 console.log(`code generated to ${outPath}`);
 console.log(`import line added to ${indexFile}`);

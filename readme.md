@@ -1,5 +1,41 @@
 # Orderly Cross-Chain Service
 
+## Table of Contents
+
+- [1. Introduction](#1-introduction)
+  - [Role And Responsiblility](#role-and-responsiblility)
+- [2. Diagram](#2-diagram)
+- [3. An simple example: deposit](#3-an-simple-example-deposit)
+- [4. File Structure](#4-file-structure)
+  - [4.1 Project configuration](#41-project-configuration)
+  - [`.env` file](#env-file)
+- [5. Deployment and Setup](#5-deployment-and-setup)
+  - [5.0 Preparation](#50-preparation)
+  - [5.3 Deployment and Setup](#53-deployment-and-setup)
+  - [5.4 Add a new cross-chain service on the new added vault chain](#54-add-a-new-cross-chain-service-on-the-new-added-vault-chain)
+- [6 Operation Scripts](#6-operation-scripts)
+  - [6.1 The design of operation scripts](#61-the-design-of-operation-scripts)
+  - [6.2 Script Sum Up](#62-script-sum-up)
+- [7. Useful Commands during Your Development and Maintainance](#7-useful-commands-during-your-development-and-maintainance)
+  - [change layerzero cross-chain airdrop gas](#change-layerzero-cross-chain-airdrop-gas)
+  - [Retry payload when PayloadStored event found](#retry-payload-when-payloadstored-event-found)
+  - [Start an "auto PayloadStored event monitor and retry" service](#start-an-auto-payloadstored-event-monitor-and-retry-service)
+  - [Upgrade CC Manager](#upgrade-cc-manager)
+- [8. Generate Typescript Wrapper](#8-generate-typescript-wrapper)
+- [9. Deploy and Setup Cross Chain Service](#9-deploy-and-setup-cross-chain-service)
+  - [9.1 Meta info setup](#91-meta-info-setup)
+  - [9.2 vault ledger and operator address setup](#92-vault-ledger-and-operator-address-setup)
+  - [9.3 set token decimal information](#93-set-token-decimal-information)
+  - [9.4 deploy and setup cross-chain service](#94-deploy-and-setup-cross-chain-service)
+- [10. verify contracts](#10-verify-contracts)
+  - [verify contracts on blockscout](#verify-contracts-on-blockscout)
+  - [verify on etherscan explorer](#verify-on-etherscan-explorer)
+  - [possible issues with `forge verify-contract`](#possible-issues-with-forge-verify-contract)
+- [11. print necessary information of cross-chain service](#11-print-necessary-information-of-cross-chain-service)
+- [12. release new version](#12-release-new-version)
+- [Issues](#issues)
+- [License](#license)
+
 ## 1. Introduction
 
 This project is built for providing cross-chain service for Orderly V2, which has components including multiple vaults, a dedicated ledger, cross-chain managers for both the vaults and the ledger, and cross-relay for each chain with our services. These components are deployed across blockchains, such as Ethereum, Arbitrum, and Avalanche. The vaults serve as secure repositories for user funds, while the ledger acts as a comprehensive database for all user-related information. To facilitate seamless communication between the vaults and the ledger—each residing on different blockchains—we have implemented dedicated cross-chain managers. These managers are tasked with converting messages into cross-chain payloads, enabling fluid inter-blockchain communication. Recognizing the variety of existing cross-chain solutions, a relay is positioned on each blockchain to encapsulate multiple cross-chain options. This relay plays a key role in transmitting messages from the cross-chain managers, thereby ensuring robust and flexible cross-chain interactions
@@ -350,15 +386,13 @@ ts-node foundry_ts/entry.ts --method deployAndSetupAnEnv --env production --vaul
 to verify your contracts on blockscout, you should run the following command:
 
 ```shell
-forge verify-contract 0x0e9453Ad2F87A351D58eefF40cC508038f8e0f61 contracts/CrossChainRelayUpgradeable.sol:CrossChainRelayUpgradeable --chain-id 4460 --verifier-url https://testnet-explorer.orderly.org/api\? --verifier blockscout
+forge verify-contract <address> <contract-path>:<contract-name> --chain-id <chain-id> --verifier-url https://testnet-explorer.orderly.org/api\? --verifier blockscout
 ```
 
 or you can verify using the following script. It will automatically find the address of contract and verify it on blockscout.
 
-````shell:
-
 ```shell
-ts-node foundry_ts/entry.ts --method verifyContract --contract CCRelay --network orderlymain --env production
+ts-node foundry_ts/entry.ts --method verifyContract --contract <CCRelay|VaultCCManager|LedgerCCManager> --network <network> --env <env> 
 ````
 
 this example shows how you can verify the contract on orderly L2 chain. The reason for the `\?` suffix of the verifier-url is discussed on a github issue: https://github.com/foundry-rs/foundry/issues/5160.
@@ -379,7 +413,9 @@ ts-node foundry_ts/entry.ts --method verifyContract --contract VaultCCManager  -
 
 the example above shows how you can verify contract arbitrum goerli network, whose explorer api is: `https://api-goerli.arbiscan.io/api`. Because it uses infrastructure the same as etherscan, so we can use the same verification way to verify contracts on arbitrum goerli. arbitrum-goerli's etherscan api key is shared with arbitrum's mainnet. So, you can generate an api key using the mainnet explorer, cause' arbitrum-goerli's explorer has no where to do that.
 
-for proxy contracts, some etherscan may not provide constructor arguments data correctly. So you may face some problem when verifying proxy contracts(bytecode cannot match, or other problems). You may need to verify proxy contracts manually. You can verify it on etherscan using single solidity file or standard json input, which can be generated using the following command:
+### possible issues with `forge verify-contract`
+
+verifing contracts using `forge verfiy-contract` sometimes may not work. It will print `OK`, but if you check the explorer, you will find the contract is not verified. It could possibly be the wrong constructor arguments or the compiler version. So you have to pass `--constructor-args` with abi encoded constructor arguments and `--compiler-version` with the compiler version used to compile the contract. Or you can output the standard json input or the flattened contract souce and verify it on explorer manually.
 
 * generate standard json input
 ```shell
@@ -390,7 +426,7 @@ forge verify-contract --chain-id <id> --verifier-url <url> -e <key> --show-stand
 forge flatten <contract> > flattened.sol
 ```
 
-then you can verify it on etherscan using the generated standard json input or flattened solidity file. Make sure you set the constructor arguments correctly. You can goto `https://abi.hashex.org/` to get the abi encoded constructor arguments.
+then you can verify it on explorer using the generated standard json input or flattened solidity file. Make sure you set the constructor arguments correctly. You can goto `https://abi.hashex.org/` to get the abi encoded constructor arguments.
 
 
 ## 11. print necessary information of cross-chain service

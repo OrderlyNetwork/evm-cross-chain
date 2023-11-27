@@ -20,6 +20,7 @@ import { setCCManagerLedgerManager } from "./ccmanager/setCCManagerLedgerManager
 import { setCCManagerOperator } from "./ccmanager/setCCManagerOperator";
 import { getDeployData } from "@openzeppelin/hardhat-upgrades/dist/utils/deploy-impl";
 import { getContractAddress } from "../utils/getDeployData";
+import { verifyContract } from "./verifyContract";
 
 // current file name
 const method_name = "addVaultCCService";
@@ -29,59 +30,122 @@ export function addVaultCCServiceWithArgv(argv: any) {
     checkArgs(method_name, argv, required_flags);
     // print all args
     console.log("argv: ", argv);
-    addVaultCCService(argv.env, argv.vaultNetwork, argv.ledgerNetwork, argv.connectVault, argv.initEther, argv.broadcast, argv.simulate);
+    addVaultCCService(argv.env, argv.vaultNetwork, argv.ledgerNetwork, argv.connectVault, argv.initEther, argv.broadcast, argv.simulate, argv.skip);
 }
 
 /// TODO
-export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwork: string, connectVault: boolean, initEther: number, broadcast: boolean, simulate: boolean) {
+export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwork: string, connectVault: boolean, initEther: number, broadcast: boolean, simulate: boolean, skip: number) {
+
+    // default compiler version
+    const compilerVersion = "0.8.19";
+    if (!skip) {
+        skip = -1;
+    }
+    let operationCnt = 0;
 
     // 1. deploy relay
-    deployRelay(env, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 0
+        deployRelay(env, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
 
     // 2. deploy cc manager
-    deployCCManager(env, vaultNetwork, "vault", broadcast, simulate);
+    if (operationCnt > skip) { // 1
+        deployCCManager(env, vaultNetwork, "vault", broadcast, simulate);
+    }
+    operationCnt++;
 
     // 3. setup relay
     // 3.1 set chain id
-    generalMethod("setRelayChainId", env, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 2
+        generalMethod("setRelayChainId", env, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
     // 3.2 chain id mapping
-    addRelayLzChainMapping(env, vaultNetwork, vaultNetwork, broadcast, simulate);
-    addRelayLzChainMapping(env, vaultNetwork, ledgerNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 3
+        addRelayLzChainMapping(env, vaultNetwork, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
+    if (operationCnt > skip) { // 4
+        addRelayLzChainMapping(env, vaultNetwork, ledgerNetwork, broadcast, simulate);
+    }
+    operationCnt++;
 
     // 3.3 layerzero fee
-    setCrossChainFeeAll(env, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 5
+        setCrossChainFeeAll(env, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
 
     // 3.4 layerzero trusted remote
-    setRelayTrustedRemote(env, vaultNetwork, ledgerNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 6
+        setRelayTrustedRemote(env, vaultNetwork, ledgerNetwork, broadcast, simulate);
+    }
+    operationCnt++;
 
     // 3.5 configure cross-chain manager
-    generalMethod("setRelayManager", env, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 7
+        generalMethod("setRelayManager", env, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
 
     // 3.6 transfer native token to relay(later, a lot of token required)
     const vaultRelayAddress = getContractAddress(env, vaultNetwork, "CCRelay", true);
-    transferNativeToken(vaultNetwork, vaultRelayAddress, initEther, broadcast, simulate);
+    if (operationCnt > skip) { // 8
+        transferNativeToken(vaultNetwork, vaultRelayAddress, initEther, broadcast, simulate);
+    }
+    operationCnt++;
 
     // 4. setup cc manager
     // 4.1 set chain id
-    setCCManagerChainId(env, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 9
+        setCCManagerChainId(env, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
     // 4.2 set vault 
     if (connectVault) {
-        setCCManagerVault(env, vaultNetwork, broadcast, simulate);
+        if (operationCnt > skip) { // 10
+            setCCManagerVault(env, vaultNetwork, broadcast, simulate);
+        }
     }
+    operationCnt++;
     // 4.3 set relay
-    setCCManagerRelay(env, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 11
+        setCCManagerRelay(env, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
 
     // 4.4 set ledger manager
-    setCCManagerLedgerManager(env, vaultNetwork, ledgerNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 12
+        setCCManagerLedgerManager(env, vaultNetwork, ledgerNetwork, broadcast, simulate);
+    }
+    operationCnt++;
 
 
     // 5. update settings on ledger side
     // 5.1 set token decimal
-    setCCManagerTokenDecimal(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 13
+        setCCManagerTokenDecimal(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
     // 5.2 set trusted remote
-    setRelayTrustedRemote(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 14
+        setRelayTrustedRemote(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
     // 5.3 add lz chain mapping
-    addRelayLzChainMapping(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+    if (operationCnt > skip) { // 15
+        addRelayLzChainMapping(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+    }
+    operationCnt++;
+
+    // 6. verify contracts
+    if (operationCnt > skip) { // 16
+        verifyContract(env, vaultNetwork, "CCRelay", true, undefined, compilerVersion, simulate);
+        verifyContract(env, vaultNetwork, "VaultCCManager", true, undefined, compilerVersion, simulate);
+        verifyContract(env, vaultNetwork, "CCRelay", false, undefined, compilerVersion, simulate);
+        verifyContract(env, vaultNetwork, "VaultCCManager", false, undefined, compilerVersion, simulate);
+    }
 
 }
 

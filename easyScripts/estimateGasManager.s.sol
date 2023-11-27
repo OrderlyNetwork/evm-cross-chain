@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "../baseScripts/BaseScript.s.sol";
-import "../baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/script/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/script/baseScripts/ConfigHelper.s.sol";
 import "../contracts/CrossChainRelayUpgradeable.sol";
 import "../contracts/VaultCrossChainManagerUpgradeable.sol";
 import "contract-evm/src/library/types/VaultTypes.sol";

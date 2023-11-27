@@ -19,9 +19,7 @@ contract VaultMock is IVault{
     function depositTo(address receiver, VaultTypes.VaultDepositFE calldata data) external payable override {
     }
 
-    function getDepositFee(VaultTypes.VaultDepositFE calldata data, address recevier) external view override returns (uint256) {
-        return 0;
-    }
+    function getDepositFee(address recevier, VaultTypes.VaultDepositFE calldata data) external view returns (uint256) {return 0;}
 
     function enableDepositFee(bool _enabled) external override {
     }
@@ -32,52 +30,31 @@ contract VaultMock is IVault{
     // functions for receive rebalance msg 
     function rebalanceMint(RebalanceTypes.RebalanceMintCCData memory data) external override {
         RebalanceTypes.RebalanceMintCCFinishData memory finishData = RebalanceTypes.RebalanceMintCCFinishData({
-            rebalanceStatus: 0,
+            success: true,
             rebalanceId: data.rebalanceId,
             amount: data.amount,
             tokenHash: data.tokenHash,
-            srcChainId: data.dstChainId,
-            dstChainId: data.srcChainId
+            burnChainId: data.mintChainId,
+            mintChainId: data.burnChainId
         });
         // the rebalance logic @zion for your reference
-        IVaultCrossChainManager(crossChainManagerAddress).mintFinish(data);
+        IVaultCrossChainManager(crossChainManagerAddress).mintFinish(finishData);
     }
 
     function rebalanceBurn(RebalanceTypes.RebalanceBurnCCData memory data) external override {
         RebalanceTypes.RebalanceBurnCCFinishData memory finishData = RebalanceTypes.RebalanceBurnCCFinishData({
-            rebalanceStatus: 0,
+            success: true,
             rebalanceId: data.rebalanceId,
             amount: data.amount,
             tokenHash: data.tokenHash,
-            srcChainId: data.srcChainId,
-            dstChainId: data.dstChainId
+            burnChainId: data.burnChainId,
+            mintChainId: data.mintChainId
         });
         // the rebalance logic @zion for your reference
         IVaultCrossChainManager(crossChainManagerAddress).burnFinish(finishData);
     }
-
-    // CCTP
-    function depositForBurn(
-        uint64 rebalanceId,
-        uint128 amount,
-        bytes32 tokenHash,
-        uint256 srcChainId,
-        uint256 dstChainId,
-        uint32 destinationDomain,
-        bytes32 mintRecipient
-    ) external override {
-    }
-
-    function receiveMessage(
-        uint64 rebalanceId,
-        uint128 amount,
-        bytes32 tokenHash,
-        uint256 srcChainId,
-        uint256 dstChainId,
-        bytes calldata message,
-        bytes calldata attestation
-    ) external override {
-    }
+    function setTokenMessengerContract(address _tokenMessengerContract) external {}
+    function setRebalanceMessengerContract(address _rebalanceMessengerContract) external {}
 
     // admin call
     function setCrossChainManager(address _crossChainManagerAddress) external override {

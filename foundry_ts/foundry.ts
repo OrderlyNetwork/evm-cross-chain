@@ -3,16 +3,34 @@ import { exec, set } from "shelljs";
 import * as fs from "fs";
 import {foundry_script_folder} from "./utils/const";
 import { findFoundryScript } from "./utils/findFoundryScript";
+import { getEtherscanApiKey, getExplorerApiUrl, getRpcUrl } from "./utils/envUtils";
+
 
 // foundry wrapper function, send an operation method name to the function and run a command
-export function foundry_wrapper(method_name: string, broadcast: boolean, simulate: boolean, deploy: boolean = false, network: string = "none") {
+export function foundry_wrapper(method_name: string, broadcast: boolean, simulate: boolean, verify: boolean = false, explorer: "etherscan" | "blockscout" = "etherscan", network: string = "none") {
     let broadcastFlag = broadcast ? "--broadcast" : "";
     const foundryScriptPath = findFoundryScript(foundry_script_folder, method_name);
     if (!foundryScriptPath) {
         console.log(`Cannot find ${method_name} script in ${foundry_script_folder}`);
         process.exit(1);
     }
-    let command = `source .env && forge script ${foundryScriptPath} -vvvv ${broadcastFlag}`;
+    
+    let verifyFlag = verify ? " --verify --legacy" : "";
+    if (verify) {
+        const explorerApiUrl = getExplorerApiUrl(network);
+        const explorerRpcUrl = getRpcUrl(network);
+        if (explorer === "etherscan") {
+            const apiKey = getEtherscanApiKey(network);
+            verifyFlag = ` -f ${explorerRpcUrl} --verifier-url ${explorerApiUrl} --etherscan-api-key ${apiKey} ` + verifyFlag;
+        } else if (explorer === "blockscout") {
+            verifyFlag = ` -f ${explorerRpcUrl} --verifier blockscout --verifier-url ${explorerApiUrl} ` + verifyFlag;
+        } else {
+            console.log(`Cannot find explorer type ${explorer}`);
+            process.exit(1);
+        }
+    }
+
+    let command = `source .env && forge script ${foundryScriptPath} ${verifyFlag} -vvvv ${broadcastFlag}`;
     console.log(`Running ${method_name} script: ${command}`);
 
     if (simulate) {return;}

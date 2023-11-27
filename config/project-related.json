@@ -12,6 +12,9 @@
         }
     },
     "staging": {
+        "opgoerli": {
+            "vault": "0x7fc077e4487bb03D393a0C2b87B52798E19602DB"
+        },
         "arbitrumgoerli": {
             "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
         },
