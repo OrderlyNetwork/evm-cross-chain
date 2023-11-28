@@ -13,7 +13,7 @@
     },
     "staging": {
         "opgoerli": {
-            "vault": "0x7fc077e4487bb03D393a0C2b87B52798E19602DB"
+            "vault": "0x1bae7b601760A45710B43Da2C8f8a3c933A144D2"
         },
         "arbitrumgoerli": {
             "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
@@ -36,6 +36,9 @@
         }
     },
     "production": {
+        "optimism": {
+            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+        },
         "arbitrum": {
             "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
         },
