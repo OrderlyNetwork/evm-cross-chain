@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 import "contract-evm/src/interface/IVault.sol";
 import "contract-evm/src/library/types/VaultTypes.sol";
 import "contract-evm/src/library/types/EventTypes.sol";
+import "contract-evm/src/library/types/RebalanceTypes.sol";
 import "contract-evm/src/library/Utils.sol";
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -25,6 +26,18 @@ contract VaultCrossChainManagerDatalayout {
     IOrderlyCrossChain public crossChainRelay;
     // map of chainId => LedgerCrossChainManager
     mapping(uint256 => address) public ledgerCrossChainManagers;
+
+    // only vault
+    modifier onlyVault() {
+        require(msg.sender == address(vault), "VaultCrossChainManager: only vault can call");
+        _;
+    }
+
+    // only relay
+    modifier onlyRelay() {
+        require(msg.sender == address(crossChainRelay), "VaultCrossChainManager: only crossChainRelay can call");
+        _;
+    }
 }
 
 contract VaultCrossChainManagerUpgradeable is
@@ -77,27 +90,41 @@ contract VaultCrossChainManagerUpgradeable is
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload)
         external
         override
+        onlyRelay
     {
-        require(msg.sender == address(crossChainRelay), "VaultCrossChainManager: only crossChainRelay can call");
         require(message.dstChainId == chainId, "VaultCrossChainManager: dstChainId not match");
 
-        EventTypes.WithdrawData memory data = abi.decode(payload, (EventTypes.WithdrawData));
 
-        // if token is CrossChainManagerTest
-        if (keccak256(bytes(data.tokenSymbol)) == keccak256(bytes("CrossChainManagerTest"))) {
-            _sendTestWithdrawBack();
+        if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdrawData)){
+            EventTypes.WithdrawData memory data = abi.decode(payload, (EventTypes.WithdrawData));
+            // if token is CrossChainManagerTest
+            if (keccak256(bytes(data.tokenSymbol)) == keccak256(bytes("CrossChainManagerTest"))) {
+                _sendTestWithdrawBack();
+            } else {
+                VaultTypes.VaultWithdraw memory withdrawData = VaultTypes.VaultWithdraw({
+                    accountId: data.accountId,
+                    sender: data.sender,
+                    receiver: data.receiver,
+                    brokerHash: Utils.calculateStringHash(data.brokerId),
+                    tokenHash: Utils.calculateStringHash(data.tokenSymbol),
+                    tokenAmount: data.tokenAmount,
+                    fee: data.fee,
+                    withdrawNonce: data.withdrawNonce
+                });
+                _sendWithdrawToVault(withdrawData);
+            }
+        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCData)){
+            RebalanceTypes.RebalanceBurnCCData memory data = abi.decode(payload, (RebalanceTypes.RebalanceBurnCCData));
+            // call vault burn
+            // TODO @zion
+            vault.rebalanceBurn(data);
+        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCData)){
+            RebalanceTypes.RebalanceMintCCData memory data = abi.decode(payload, (RebalanceTypes.RebalanceMintCCData));
+            // call vault mint
+            // TODO @zion
+            vault.rebalanceMint(data);
         } else {
-            VaultTypes.VaultWithdraw memory withdrawData = VaultTypes.VaultWithdraw({
-                accountId: data.accountId,
-                sender: data.sender,
-                receiver: data.receiver,
-                brokerHash: Utils.getBrokerHash(data.brokerId),
-                tokenHash: Utils.getTokenHash(data.tokenSymbol),
-                tokenAmount: data.tokenAmount,
-                fee: data.fee,
-                withdrawNonce: data.withdrawNonce
-            });
-            _sendWithdrawToVault(withdrawData);
+            revert("VaultCrossChainManager: payloadDataType not match");
         }
     }
 
@@ -126,8 +153,7 @@ contract VaultCrossChainManagerUpgradeable is
 
     /// @notice Initiates a deposit to the vault.
     /// @param data Struct containing deposit data.
-    function deposit(VaultTypes.VaultDeposit memory data) external override {
-        require(msg.sender == address(vault), "only vault can call deposit");
+    function deposit(VaultTypes.VaultDeposit memory data) external override onlyVault{
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -145,10 +171,7 @@ contract VaultCrossChainManagerUpgradeable is
 
     /// @notice Initiates a deposit to the vault along with native fees.
     /// @param data Struct containing deposit data.
-    /// @param amount Amount of native fee.
-    function depositWithFee(VaultTypes.VaultDeposit memory data, uint256 amount) external payable override {
-        require(msg.sender == address(vault), "only vault can call depositWithFee");
-        require(msg.value >= amount, "not enough fee");
+    function depositWithFee(VaultTypes.VaultDeposit memory data) external payable override onlyVault{
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -161,17 +184,52 @@ contract VaultCrossChainManagerUpgradeable is
         // encode message
         bytes memory payload = abi.encode(data);
 
-        crossChainRelay.sendMessageWithFee{value: amount}(message, payload, amount);
+        crossChainRelay.sendMessageWithFee{value: msg.value}(message, payload);
     }
 
     /// @notice Approves a cross-chain withdrawal from the ledger to the vault.
     /// @param data Struct containing withdrawal data.
-    function withdraw(VaultTypes.VaultWithdraw memory data) external override {
-        require(msg.sender == address(vault), "only vault can call withdraw");
+    function withdraw(VaultTypes.VaultWithdraw memory data) external override onlyVault{
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.WithdrawFinish),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultWithdraw),
+            srcCrossChainManager: address(this),
+            dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
+            srcChainId: chainId,
+            dstChainId: ledgerChainId
+        });
+        // encode message
+        bytes memory payload = abi.encode(data);
+
+        crossChainRelay.sendMessage(message, payload);
+    }
+
+    /// @notice send burn finish back to ledger
+    /// @param data Struct containing burn data.
+    function burnFinish(RebalanceTypes.RebalanceBurnCCFinishData memory data) external override onlyVault {
+        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurnFinish),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCFinishData),
+            srcCrossChainManager: address(this),
+            dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
+            srcChainId: chainId,
+            dstChainId: ledgerChainId
+        });
+        // encode message
+        bytes memory payload = abi.encode(data);
+
+        crossChainRelay.sendMessage(message, payload);
+    }
+
+    /// @notice send mint finish back to ledger
+    /// @param data Struct containing mint data.
+    function mintFinish(RebalanceTypes.RebalanceMintCCFinishData memory data) external override onlyVault {
+        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMintFinish),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCFinishData),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
             srcChainId: chainId,
@@ -190,7 +248,7 @@ contract VaultCrossChainManagerUpgradeable is
             sender: address(0),
             receiver: address(0),
             brokerHash: bytes32(0),
-            tokenHash: Utils.getTokenHash("CrossChainManagerTest"),
+            tokenHash: Utils.calculateStringHash("CrossChainManagerTest"),
             tokenAmount: 0,
             fee: 0,
             withdrawNonce: 0
@@ -208,11 +266,6 @@ contract VaultCrossChainManagerUpgradeable is
         bytes memory payload = abi.encode(data);
 
         crossChainRelay.sendMessage(message, payload);
-    }
-
-    /// @notice get version
-    function getVersion() external pure returns (string memory) {
-        return "0.0.1";
     }
 
     /// @notice get role

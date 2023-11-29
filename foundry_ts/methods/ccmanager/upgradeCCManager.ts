@@ -6,6 +6,7 @@ import { ccmanager_deploy_json } from "../../utils/const";
 import { set_env_var, foundry_wrapper } from "../../foundry";
 import { checkArgs } from "../../helper";
 import { setupDeployJson } from "../../utils/setupDeployJson";
+import { verifyContract } from "../verifyContract";
 
 // current file name
 const method_name = "upgradeCCManager";
@@ -25,6 +26,15 @@ export function upgradeCCManager(env: string, network: string, role: string, bro
     set_env_var(method_name, "broadcast", broadcast.toString());
     foundry_wrapper(method_name, broadcast, simulate);
 
+    if (role === "ledger") {
+        verifyContract(env, network, "LedgerCCManager", false, undefined, "0.8.19", simulate);
+    } else if (role === "vault") {
+        verifyContract(env, network, "VaultCCManager", false, undefined, "0.8.19", simulate);
+    } else {
+        // error and exit
+        console.log("role is not ledger or vault");
+        process.exit(1);
+    }
 }
 
 addOperation(method_name, upgradeCCManagerWithArgv);

@@ -6,18 +6,20 @@ import "../contracts/CrossChainRelayProxy.sol";
 import "../contracts/layerzero/mocks/LZEndpointMock.sol";
 
 contract CrossChainRelaySetup is Test {
-    uint16 constant _srcLzChainId = 1001;
-    uint16 constant _dstLzChainId = 1002;
-    uint16 constant _srcChainId = 1;
-    uint16 constant _dstChainId = 2;
+    uint16 constant _vaultLzChainId = 1001;
+    uint16 constant _ledgerLzChainId = 1002;
+    uint16 constant _vaultChainId = 1;
+    uint16 constant _ledgerChainId = 2;
     CrossChainRelayProxy _srcRelayProxy;
     CrossChainRelayProxy _dstRelayProxy;
+    CrossChainRelayUpgradeable _srcRelayImpl;
+    CrossChainRelayUpgradeable _dstRelayImpl;
     LZEndpointMock _srcEndpoint;
     LZEndpointMock _dstEndpoint;
 
     function deployCrossChainRelay() public {
-        _srcEndpoint = new LZEndpointMock(_srcLzChainId);
-        _dstEndpoint = new LZEndpointMock(_dstLzChainId);
+        _srcEndpoint = new LZEndpointMock(_vaultLzChainId);
+        _dstEndpoint = new LZEndpointMock(_ledgerLzChainId);
         _srcRelayProxy = new CrossChainRelayProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
         _dstRelayProxy = new CrossChainRelayProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
 
@@ -35,15 +37,21 @@ contract CrossChainRelaySetup is Test {
         CrossChainRelayUpgradeable srcRelay = CrossChainRelayUpgradeable(payable(address(_srcRelayProxy)));
         CrossChainRelayUpgradeable dstRelay = CrossChainRelayUpgradeable(payable(address(_dstRelayProxy)));
 
-        srcRelay.setTrustedRemote(_dstLzChainId, srcToDstPath);
-        dstRelay.setTrustedRemote(_srcLzChainId, dstToSrcPath);
+        srcRelay.setTrustedRemote(_ledgerLzChainId, srcToDstPath);
+        dstRelay.setTrustedRemote(_vaultLzChainId, dstToSrcPath);
 
-        srcRelay.setSrcChainId(_srcChainId);
-        srcRelay.addChainIdMapping(_srcChainId, _srcLzChainId);
-        srcRelay.addChainIdMapping(_dstChainId, _dstLzChainId);
+        srcRelay.setSrcChainId(_vaultChainId);
+        srcRelay.addChainIdMapping(_vaultChainId, _vaultLzChainId);
+        srcRelay.addChainIdMapping(_ledgerChainId, _ledgerLzChainId);
 
-        dstRelay.setSrcChainId(_dstChainId);
-        dstRelay.addChainIdMapping(_srcChainId, _srcLzChainId);
-        dstRelay.addChainIdMapping(_dstChainId, _dstLzChainId);
+        dstRelay.setSrcChainId(_ledgerChainId);
+        dstRelay.addChainIdMapping(_vaultChainId, _vaultLzChainId);
+        dstRelay.addChainIdMapping(_ledgerChainId, _ledgerLzChainId);
+    }
+
+    function newCrossChainRelay() public returns (CrossChainRelayProxy) {
+        CrossChainRelayProxy proxy = new CrossChainRelayProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
+        CrossChainRelayUpgradeable(payable(address(proxy))).initialize(address(_srcEndpoint));
+        return proxy;
     }
 }

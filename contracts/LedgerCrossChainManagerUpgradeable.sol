@@ -6,6 +6,7 @@ import "contract-evm/src/interface/IOperatorManager.sol";
 import "contract-evm/src/library/types/AccountTypes.sol";
 import "contract-evm/src/library/types/EventTypes.sol";
 import "contract-evm/src/library/types/VaultTypes.sol";
+import "contract-evm/src/library/types/RebalanceTypes.sol";
 import "contract-evm/src/library/Utils.sol";
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -29,6 +30,16 @@ contract LedgerCrossChainManagerDatalayout {
     mapping(uint256 => address) public vaultCrossChainManagers;
 
     mapping(bytes32 => mapping(uint256 => uint128)) public tokenDecimalMapping;
+
+    modifier onlyLedger() {
+        require(msg.sender == address(ledger), "LedgerCrossChainManager: caller is not ledger");
+        _;
+    }
+
+    modifier onlyRelay() {
+        require(msg.sender == address(crossChainRelay), "LedgerCrossChainManager: caller is not crossChainRelay");
+        _;
+    }
 }
 
 contract DecimalManager is LedgerCrossChainManagerDatalayout {
@@ -36,7 +47,7 @@ contract DecimalManager is LedgerCrossChainManagerDatalayout {
     /// @param tokenHash token hash
     /// @param tokenChainId token chain id
     /// @param decimal decimal
-    function setTokenDecimal(bytes32 tokenHash, uint256 tokenChainId, uint128 decimal) external {
+    function _setTokenDecimal(bytes32 tokenHash, uint256 tokenChainId, uint128 decimal) internal {
         tokenDecimalMapping[tokenHash][tokenChainId] = decimal;
     }
 
@@ -143,6 +154,14 @@ contract LedgerCrossChainManagerUpgradeable is
         vaultCrossChainManagers[_chainId] = _vaultCrossChainManager;
     }
 
+    /// @notice set token decimal
+    /// @param tokenHash ERC20 token hash
+    /// @param tokenChainId token chain id
+    /// @param decimal token decimal
+    function setTokenDecimal(bytes32 tokenHash, uint256 tokenChainId, uint128 decimal) external onlyOwner {
+        _setTokenDecimal(tokenHash, tokenChainId, decimal);
+    }
+
     /// @notice send a cross-chain deposit
     /// @param data deposit data
     function deposit(AccountTypes.AccountDeposit memory data) internal {
@@ -156,8 +175,8 @@ contract LedgerCrossChainManagerUpgradeable is
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload)
         external
         override
+        onlyRelay
     {
-        require(msg.sender == address(crossChainRelay), "LedgerCrossChainManager: only crossChainRelay can call");
         require(message.dstChainId == chainId, "LedgerCrossChainManager: dstChainId not match");
         if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit)) {
             VaultTypes.VaultDeposit memory data = abi.decode(payload, (VaultTypes.VaultDeposit));
@@ -179,7 +198,7 @@ contract LedgerCrossChainManagerUpgradeable is
             VaultTypes.VaultWithdraw memory data = abi.decode(payload, (VaultTypes.VaultWithdraw));
 
             // handle test withdraw
-            if (data.tokenHash == Utils.getBrokerHash("CrossChainManagerTest")) {
+            if (data.tokenHash == Utils.calculateStringHash("CrossChainManagerTest")) {
                 emit TestWithdrawDone();
                 return;
             }
@@ -200,6 +219,22 @@ contract LedgerCrossChainManagerUpgradeable is
             });
 
             withdrawFinish(withdrawData);
+        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCFinishData))
+        {
+            RebalanceTypes.RebalanceBurnCCFinishData memory data =
+                abi.decode(payload, (RebalanceTypes.RebalanceBurnCCFinishData));
+            uint128 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
+            data.amount = cvtTokenAmount;
+
+            ledger.rebalanceBurnFinish(data);
+        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCFinishData))
+        {
+            RebalanceTypes.RebalanceMintCCFinishData memory data =
+                abi.decode(payload, (RebalanceTypes.RebalanceMintCCFinishData));
+            uint128 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
+            data.amount = cvtTokenAmount;
+
+            ledger.rebalanceMintFinish(data);
         } else {
             revert("LedgerCrossChainManager: payloadDataType not match");
         }
@@ -207,10 +242,7 @@ contract LedgerCrossChainManagerUpgradeable is
 
     /// @notice send a cross-chain withdrawal from the ledger to the vault.
     /// @param data Struct containing withdrawal data.
-    function withdraw(EventTypes.WithdrawData memory data) public override {
-        // only ledger can call this function
-        require(msg.sender == address(ledger), "caller is not ledger");
-
+    function withdraw(EventTypes.WithdrawData memory data) external override onlyLedger {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Withdraw),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -223,12 +255,55 @@ contract LedgerCrossChainManagerUpgradeable is
 
         // convert token amount to dst chain decimal
         uint128 cvtTokenAmount =
-            convertDecimal(data.tokenAmount, Utils.getTokenHash(data.tokenSymbol), chainId, data.chainId);
-        uint128 cvtFeeAmount = convertDecimal(data.fee, Utils.getTokenHash(data.tokenSymbol), chainId, data.chainId);
+            convertDecimal(data.tokenAmount, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
+        uint128 cvtFeeAmount =
+            convertDecimal(data.fee, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
         data.tokenAmount = cvtTokenAmount;
         data.fee = cvtFeeAmount;
 
         bytes memory payload = abi.encode(data);
+
+        crossChainRelay.sendMessage(message, payload);
+    }
+
+    function burn(RebalanceTypes.RebalanceBurnCCData memory burnData) external override onlyLedger {
+        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurn),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCData),
+            srcCrossChainManager: address(this),
+            dstCrossChainManager: vaultCrossChainManagers[burnData.burnChainId],
+            srcChainId: chainId,
+            dstChainId: burnData.burnChainId
+        });
+
+        // convert token amount to dst chain decimal
+        uint128 cvtTokenAmount =
+            convertDecimal(burnData.amount, burnData.tokenHash, chainId, burnData.burnChainId);
+        burnData.amount = cvtTokenAmount;
+
+        bytes memory payload = abi.encode(burnData);
+
+        crossChainRelay.sendMessage(message, payload);
+    }
+
+    function mint(RebalanceTypes.RebalanceMintCCData memory mintData) external override onlyLedger {
+        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMint),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCData),
+            srcCrossChainManager: address(this),
+            dstCrossChainManager: vaultCrossChainManagers[mintData.mintChainId],
+            srcChainId: chainId,
+            dstChainId: mintData.mintChainId
+        });
+
+        // convert token amount to dst chain decimal
+        uint128 cvtTokenAmount =
+            convertDecimal(mintData.amount, mintData.tokenHash, chainId, mintData.mintChainId);
+        mintData.amount = cvtTokenAmount;
+
+        bytes memory payload = abi.encode(mintData);
 
         crossChainRelay.sendMessage(message, payload);
     }
@@ -263,8 +338,9 @@ contract LedgerCrossChainManagerUpgradeable is
 
         // convert token amount to dst chain decimal
         uint128 cvtTokenAmount =
-            convertDecimal(data.tokenAmount, Utils.getTokenHash(data.tokenSymbol), chainId, data.chainId);
-        uint128 cvtFeeAmount = convertDecimal(data.fee, Utils.getTokenHash(data.tokenSymbol), chainId, data.chainId);
+            convertDecimal(data.tokenAmount, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
+        uint128 cvtFeeAmount =
+            convertDecimal(data.fee, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
         data.tokenAmount = cvtTokenAmount;
         data.fee = cvtFeeAmount;
 
@@ -277,11 +353,6 @@ contract LedgerCrossChainManagerUpgradeable is
     /// @param message withdraw message
     function withdrawFinish(AccountTypes.AccountWithdraw memory message) internal {
         ledger.accountWithDrawFinish(message);
-    }
-
-    /// @notice get version
-    function getVersion() external pure returns (string memory) {
-        return "0.0.1";
     }
 
     /// @notice get role

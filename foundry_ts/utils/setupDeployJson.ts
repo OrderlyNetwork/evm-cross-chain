@@ -21,12 +21,22 @@ export function setupDeployJson(file_path: string, env: string, network: string,
             "proxy": "",
             "relay": "",
         }
-    } else if (role === "manager") {
+    } else if (role === "vault") {
         json[env][network] = {
             "owner": "",
             "manager": "",
             "proxy": "",
+            "role": "vault"
         }
+    } else if (role === "ledger") {
+        json[env][network] = {
+            "owner": "",
+            "manager": "",
+            "proxy": "",
+            "role": "ledger"
+        }
+    } else {
+        throw new Error("role not supported");
     }
 
     //write updated json back to file_path

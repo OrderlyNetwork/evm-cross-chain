@@ -17,7 +17,7 @@ export function deployCCManagerWithArgv(argv: any) {
 }
 
 export function deployCCManager(env: string, network: string, role: string, broadcast: boolean, simulate: boolean) {
-    setupDeployJson(ccmanager_deploy_json, env, network, "manager");
+    setupDeployJson(ccmanager_deploy_json, env, network, role);
     set_env_var(method_name, "env", env);
     set_env_var(method_name, "network", network);
     set_env_var(method_name, "role", role);

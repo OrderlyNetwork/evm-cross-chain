@@ -1,5 +1,41 @@
 # Orderly Cross-Chain Service
 
+## Table of Contents
+
+- [1. Introduction](#1-introduction)
+  - [Role And Responsiblility](#role-and-responsiblility)
+- [2. Diagram](#2-diagram)
+- [3. An simple example: deposit](#3-an-simple-example-deposit)
+- [4. File Structure](#4-file-structure)
+  - [4.1 Project configuration](#41-project-configuration)
+  - [`.env` file](#env-file)
+- [5. Deployment and Setup](#5-deployment-and-setup)
+  - [5.0 Preparation](#50-preparation)
+  - [5.3 Deployment and Setup](#53-deployment-and-setup)
+  - [5.4 Add a new cross-chain service on the new added vault chain](#54-add-a-new-cross-chain-service-on-the-new-added-vault-chain)
+- [6 Operation Scripts](#6-operation-scripts)
+  - [6.1 The design of operation scripts](#61-the-design-of-operation-scripts)
+  - [6.2 Script Sum Up](#62-script-sum-up)
+- [7. Useful Commands during Your Development and Maintainance](#7-useful-commands-during-your-development-and-maintainance)
+  - [change layerzero cross-chain airdrop gas](#change-layerzero-cross-chain-airdrop-gas)
+  - [Retry payload when PayloadStored event found](#retry-payload-when-payloadstored-event-found)
+  - [Start an "auto PayloadStored event monitor and retry" service](#start-an-auto-payloadstored-event-monitor-and-retry-service)
+  - [Upgrade CC Manager](#upgrade-cc-manager)
+- [8. Generate Typescript Wrapper](#8-generate-typescript-wrapper)
+- [9. Deploy and Setup Cross Chain Service](#9-deploy-and-setup-cross-chain-service)
+  - [9.1 Meta info setup](#91-meta-info-setup)
+  - [9.2 vault ledger and operator address setup](#92-vault-ledger-and-operator-address-setup)
+  - [9.3 set token decimal information](#93-set-token-decimal-information)
+  - [9.4 deploy and setup cross-chain service](#94-deploy-and-setup-cross-chain-service)
+- [10. verify contracts](#10-verify-contracts)
+  - [verify contracts on blockscout](#verify-contracts-on-blockscout)
+  - [verify on etherscan explorer](#verify-on-etherscan-explorer)
+  - [possible issues with `forge verify-contract`](#possible-issues-with-forge-verify-contract)
+- [11. print necessary information of cross-chain service](#11-print-necessary-information-of-cross-chain-service)
+- [12. release new version](#12-release-new-version)
+- [Issues](#issues)
+- [License](#license)
+
 ## 1. Introduction
 
 This project is built for providing cross-chain service for Orderly V2, which has components including multiple vaults, a dedicated ledger, cross-chain managers for both the vaults and the ledger, and cross-relay for each chain with our services. These components are deployed across blockchains, such as Ethereum, Arbitrum, and Avalanche. The vaults serve as secure repositories for user funds, while the ledger acts as a comprehensive database for all user-related information. To facilitate seamless communication between the vaults and the ledger—each residing on different blockchains—we have implemented dedicated cross-chain managers. These managers are tasked with converting messages into cross-chain payloads, enabling fluid inter-blockchain communication. Recognizing the variety of existing cross-chain solutions, a relay is positioned on each blockchain to encapsulate multiple cross-chain options. This relay plays a key role in transmitting messages from the cross-chain managers, thereby ensuring robust and flexible cross-chain interactions
@@ -61,11 +97,9 @@ Here's an overview of the main folders in this project and what they contain:
 
 - `config/`: A general folder for storing project-related informations like contract address.
 
-## 5. Deployment and Setup
+### 4.1 Project configuration
 
-In this section, I will introduce how to deploy evm-cross-chain service for orderly v2, and how to setup every contracts. Scripts organization and related file format will also be introduced.
-
-### 5.1 Json File Format under `config`
+#### json config files `config/*.json`
 
 first of all, I will introduce the role of json files under `config`. Foundry scripts are not like javascript or ts. It is not that convenient to save deployment infos and projecte related infos into files. So we usually copy and paste the info into some place(confluence, or readme). But copy paste isn't a good habit. So I decide to put everything into json files automatically. So I write a helper base class for foundry scripts so that it can help users better read from and write to json files.
 
@@ -90,7 +124,7 @@ The above example stores cross-chain-relay service's deployment address and owne
 
 Other project related json files are oragized by the same way. The json file read and write helper foundry script is `baseScripts/ConfigHelper.s.sol` it wraps the read and write of cross-chain-relay infos and cross-chain-manager infos, and other useful helper functions.
 
-#### 5.2 Infos in .env
+#### `.env` file
 
 Beside json files under `config`, other public informations are stored in `.env`, and the example is `.env.example`.
 
@@ -102,9 +136,34 @@ in `.env` you can set your private keys, chain RPC URLs, chain Ids and other pub
 
 3. Setup Layerzero Endpoins addresses
 
+## 5. Deployment and Setup
+In this section, I will introduce how to deploy evm-cross-chain service for orderly v2, and how to setup every contracts. Scripts organization and related file format will also be introduced.
+
+### 5.0 Preparation
+You need prepare your `.env` file first. You can copy the `.env.example file and rename it to `.env`. For every network you want to deploy, you need to set the following variables in `.env`.
+
+#### SOP for adding new support for a network named as `XXX`
+
+**for private key configuration**
+
+1. set XXX_PRIVATE_KEY in .env
+
+**for contract verification**
+
+2. set etherscan key(if needed) and explorer api url in `.env` (for contract verification)
+
+**for basic network configuration**
+
+3. set XXX_CHAIN_ID in .env
+4. set XXX_RPC_URL in .env
+5. set XXX_LZ_CHAIN_ID in `.env` (for layerzero cross-chain support)
+6. set XXX_ENDPOINT in `.env` (for layerzero cross-chain support)
+
+
+
 ### 5.3 Deployment and Setup
 
-Before you start deployment and setup, please make sure you setup your .env correctly.
+Before you start deployment and setup, please make sure you setup your `.env` correctly.
 
 In this repo `evm-cross-chain`, which provids cross-chain-service for orderly v2 between vault and ledger. It has two main components, `cross-chain-relay` and `cross-chain-manager`. I won't elaborate the role and responsibility of the two componenets here, but I will introduce the procedures of deployment and setup of both.
 
@@ -127,8 +186,7 @@ for ledger cross-chain-manager, the setup procedure is like:
 1. set the the current chain Id
 2. set the cross-chain-relay's address
 3. set Ledger address
-4. set operator manager address
-5. set token decimal information for different chains
+4. set token decimal information for different chains
 
 for vault cross-chain-manager, the setup procedure is like:
 
@@ -138,6 +196,35 @@ for vault cross-chain-manager, the setup procedure is like:
 4. set the ledger cross-chain-manager's network chain Id and the the address
 
 Some components relies on other components, so you'd better deploy all of them so before your setup starts.
+
+### 5.4 Add a new cross-chain service on the new added vault chain
+There are some times we need to add new vault chains. So we need to deploy cross-chain-relay and cross-chain-manager on the new added vault chain. And update settings of contracts on the ledger side. The following steps are the procedures of adding a new vault chain.
+
+1. update token decimal in `config/token-decimals.json`, make sure the new added vault chain's token decimal is set correctly.
+2. update project related infos in `config/project-related.json` (or you can update it later, if you choose to setup vault later, you should drop the --connectVault flag in the following script)
+3. run a script to add a new cross-chain service on the new added vault chain and setup it and update ledger side contracts settings
+```shell
+ts-node foundry_ts/entry.ts --method addVaultCCService --env dev --vaultNetwork opgoerli --ledgerNetwork orderlyop --initEther 0.01 --broadcast --connectVault
+```
+
+If you didn't transfer enough token to the proxy address, you can run the following script to transfer more token to the proxy address:
+```shell
+ts-node foundry_ts/entry.ts --method transferNativeToken --network <network> --to <address> --ether <amount> --broadcast
+```
+If you didn't connect vault cross-chain-manager to vault in the above script, you can run the following script to connect them:
+```shell
+ts-node foundry_ts/entry.ts --method setCCManagerVault --env <env> --network <network> --broadcast
+```
+If you add new operations in cross-chain-relay or cross-chain-manager, you should also setup `config/cross-chain-method-gas.json`, and call the following script on every chain:
+```shell
+ ts-node foundry_ts/entry.ts --method setCrossChainFeeAll --env <env> --network <network> --broadcast
+```
+
+4. generate new contract abi if necessary (if contract changed)
+5. add git tag and push to github
+6. update abi json file in [contract-abi](https://gitlab.com/orderlynetwork/orderly-v2/contract-abi)
+7. fill the information on confluence [Orderly V2 Contract Information Board](https://wootraders.atlassian.net/wiki/spaces/ORDER/pages/343441906/Orderly+V2+Contract+Information+Board#Orderly-V2-Settlement-Layer) 
+8. fill the balance monitor information to make sure enough balance on the new added vault cross-chain relay.
 
 ## 6 Operation Scripts
 
@@ -242,6 +329,14 @@ ts-node foundry_ts/entry.ts --method monitorPayloadAndRetry --blockNumber 423138
 
 the data here is the packed encode bytes of src UA address and dst UA address.
 
+### Upgrade CC Manager
+
+```shell
+ts-node foundry_ts/entry.ts --method upgradeCCManager --env dev --network arbitrumgoerli --role vault --broadcast
+```
+
+change the `env` `network` `role` into the correct value according to your goal.
+
 ## 8. Generate Typescript Wrapper
 
 I implement a code generator for foundry script wrapper. Simply run:
@@ -254,6 +349,36 @@ pass the role(relay or ccmanager) and the path of the foundry script, then the f
 
 make sure that you set your method name same with the foundry script file name. Which mean in the above example, you should read your arguments as `FS_sendPingPong_xxx` from env.
 
+## 9. Deploy and Setup Cross Chain Service
+
+### 9.1 Meta info setup
+
+before you start deployment, you should have several variables set up in `.env`:
+
+- network private key
+- network chain id
+- network rpc url
+- network layerzero chain id
+- network layerzero endpoint address
+
+### 9.2 vault ledger and operator address setup
+
+set vault ledger and operator address in `config/project-related.json`
+
+### 9.3 set token decimal information
+
+set token decimal information in `config/token-decimals.json`
+
+### 9.4 deploy and setup cross-chain service
+
+we have a integrated script for deploying cross-chain relay and cross-chain manager. you can run the following command to deploy and setup cross-chain service:
+
+```shell
+ts-node foundry_ts/entry.ts --method deployAndSetupAnEnv --env production --vaultNetwork arbitrum --ledgerNetwork orderlymain --initEther 1 --broadcast
+```
+
+`--initEther` has no effect right now. We require you manually transfer native later after this script.
+
 ## 10. verify contracts
 
 ### verify contracts on blockscout
@@ -261,22 +386,88 @@ make sure that you set your method name same with the foundry script file name. 
 to verify your contracts on blockscout, you should run the following command:
 
 ```shell
-forge verify-contract 0x0e9453Ad2F87A351D58eefF40cC508038f8e0f61 contracts/CrossChainRelayUpgradeable.sol:CrossChainRelayUpgradeable --chain-id 4460 --verifier-url https://testnet-explorer.orderly.org/api\? --verifier blockscout
+forge verify-contract <address> <contract-path>:<contract-name> --chain-id <chain-id> --verifier-url https://testnet-explorer.orderly.org/api\? --verifier blockscout
 ```
+
+or you can verify using the following script. It will automatically find the address of contract and verify it on blockscout.
+
+```shell
+ts-node foundry_ts/entry.ts --method verifyContract --contract <CCRelay|VaultCCManager|LedgerCCManager> --network <network> --env <env> 
+````
 
 this example shows how you can verify the contract on orderly L2 chain. The reason for the `\?` suffix of the verifier-url is discussed on a github issue: https://github.com/foundry-rs/foundry/issues/5160.
 
-### verify on etherscan like explorers
+### verify on etherscan explorer
 
 here is a sample command:
 
-```
+```shell
 forge verify-contract <contract-address> contracts/CrossChainRelayUpgradeable.sol:CrossChainRelayUpgradeable --chain-id 421613 --verifier-url https://api-goerli.arbiscan.io/api -e <etherscan-api-key>
+```
+
+or you can verify using the following script. It will automatically find the address of contract and verify it on etherscan like explorers:
+
+```shell
+ts-node foundry_ts/entry.ts --method verifyContract --contract VaultCCManager  --network arbitrum --env production
 ```
 
 the example above shows how you can verify contract arbitrum goerli network, whose explorer api is: `https://api-goerli.arbiscan.io/api`. Because it uses infrastructure the same as etherscan, so we can use the same verification way to verify contracts on arbitrum goerli. arbitrum-goerli's etherscan api key is shared with arbitrum's mainnet. So, you can generate an api key using the mainnet explorer, cause' arbitrum-goerli's explorer has no where to do that.
 
-## Issues
+### possible issues with `forge verify-contract`
+
+verifing contracts using `forge verfiy-contract` sometimes may not work. It will print `OK`, but if you check the explorer, you will find the contract is not verified. It could possibly be the wrong constructor arguments or the compiler version. So you have to pass `--constructor-args` with abi encoded constructor arguments and `--compiler-version` with the compiler version used to compile the contract. Or you can output the standard json input or the flattened contract souce and verify it on explorer manually.
+
+* generate standard json input
+```shell
+forge verify-contract --chain-id <id> --verifier-url <url> -e <key> --show-standard-json-input <address> <contract> > standard.json
+```
+* generate flattened solidity file
+```shell
+forge flatten <contract> > flattened.sol
+```
+
+then you can verify it on explorer using the generated standard json input or flattened solidity file. Make sure you set the constructor arguments correctly. You can goto `https://abi.hashex.org/` to get the abi encoded constructor arguments.
+
+
+## 11. print necessary information of cross-chain service
+
+simple run the following command:
+
+print cross-chain relay information on chain:
+
+```shell
+ts-node foundry_ts/entry.ts --method printRelay --env production --network arbitrum --dstNetwork orderlymain
+```
+
+print cross-chain manager vault side information on chain:
+
+```shell
+ts-node foundry_ts/entry.ts --method printCCManagerVault --env production --network arbitru
+```
+
+print cross-chain manager ledger side information on chain:
+
+```shell
+ts-node foundry_ts/entry.ts --method printCCManagerLedger --env production --network orderlymain
+```
+
+print token decimal configuration on chain:
+
+```shell
+ts-node foundry_ts/entry.ts --method printCCManagerTokenDecimal --env production --network orderlymain
+```
+
+you need to change the parameters to suit your needs.
+
+## 12. release new version
+To release a new version on dev, qa, staging or production, you need to follow the following steps:
+1. make sure features are all complete
+2. make sure you write tests on those features, and tests passed
+3. copy the new abi to abi folder
+4. deploy and setup the new version on dev, qa, staging or production
+5. add git tag and push to github
+
+# Issues
 
 1. if you put urls like https://testnet-explorer.orderly.org/api\? into `.env` file. foundry script will have problem parsing `.env`. you need to use "" to enclose it and add `\` to escape the parsing. so it will be like:
    "https://testnet-explorer.orderly.org/api\\\\?"
@@ -285,6 +476,6 @@ the example above shows how you can verify contract arbitrum goerli network, who
 
 In a certain situation, oracle could be backoff for a long time, which will block relayer for a long time. Then txs could be in pending. The cause of oracle backoff is Orderly chain stopping mining.
 
-## License
+# License
 
 [MIT License](LICENSE)
