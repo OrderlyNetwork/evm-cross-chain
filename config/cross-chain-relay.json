@@ -76,17 +76,17 @@
     "arbitrum": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
       "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
-      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+      "relay": "0xB327191924Fde508AeCAe9F79b253CC5031DceA2"
     },
     "orderlymain": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
       "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
-      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+      "relay": "0xa9874b1247d98d193FDA73Ce956DfD675C39c1E6"
     },
     "optimism": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
       "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
-      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+      "relay": "0xc2Be17D3E0641262073A20FCf62083Dfd6FB40e0"
     }
   }
 }

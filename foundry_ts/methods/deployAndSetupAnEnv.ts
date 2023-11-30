@@ -51,8 +51,8 @@ export function deployAndSetupAnEnv(env: string, vaultNetwork: string, ledgerNet
     addRelayLzChainMapping(env, ledgerNetwork, ledgerNetwork, broadcast, simulate);
 
     // 3.3 layerzero fee
-    setCrossChainFeeAll(env, vaultNetwork, broadcast, simulate);
-    setCrossChainFeeAll(env, ledgerNetwork, broadcast, simulate);
+    setCrossChainFeeAll(env, vaultNetwork, "", broadcast, simulate);
+    setCrossChainFeeAll(env, ledgerNetwork, "", broadcast, simulate);
 
     // 3.4 layerzero trusted remote
     setRelayTrustedRemote(env, vaultNetwork, ledgerNetwork, broadcast, simulate);

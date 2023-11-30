@@ -12,12 +12,17 @@ import { setCrossChainFee } from "./setCrossChainFee";
 const method_name = "setCrossChainFeeAll";
 
 export function setCrossChainFeeAllWithArgv(argv: any) {
-    const required_flags = ["env", "network"];
+    const required_flags = ["env", "network", "methods"];
     checkArgs(method_name, argv, required_flags);
-    setCrossChainFeeAll(argv.env, argv.network, argv.broadcast, argv.simulate);
+    setCrossChainFeeAll(argv.env, argv.network, argv.methods, argv.broadcast, argv.simulate);
 }
 
-export function setCrossChainFeeAll(env: string, network: string, broadcast: boolean, simulate: boolean) {
+export function setCrossChainFeeAll(env: string, network: string, methods: string, broadcast: boolean, simulate: boolean) {
+
+    let methodList = undefined;
+    if (methods) {
+        methodList = methods.split(",");
+    }
 
     // load from json file config/cross-chain-method-gas.json
     const fs = require('fs');
@@ -27,6 +32,9 @@ export function setCrossChainFeeAll(env: string, network: string, broadcast: boo
     console.log("gas jsonContent: ");
     console.log(jsonContent)
     for (const key in jsonContent) {
+        if (methodList && !methodList.includes(key)) {
+            continue;
+        }
         setCrossChainFee(env, network, key, jsonContent[key], broadcast, simulate);
     }
 }

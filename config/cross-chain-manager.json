@@ -76,19 +76,19 @@
   "production": {
     "optimism": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
-      "manager": "0xd1c426290eaf9C16dC55e9bd10b624abb827DEef",
+      "manager": "0x32c9896783C4Ccaed4D9B0c79eF808A394D6335d",
       "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
       "role": "vault"
     },
     "arbitrum": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
-      "manager": "0xd1c426290eaf9C16dC55e9bd10b624abb827DEef",
+      "manager": "0xDA7b4403C32481b12FAC8D74375686e9843e57C0",
       "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
       "role": "vault"
     },
     "orderlymain": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
-      "manager": "0xd1c426290eaf9C16dC55e9bd10b624abb827DEef",
+      "manager": "0x795956590672782B90deB620A249264721eCB340",
       "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
       "role": "ledger"
     }

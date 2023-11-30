@@ -73,7 +73,7 @@ export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwo
 
     // 3.3 layerzero fee
     if (operationCnt > skip) { // 5
-        setCrossChainFeeAll(env, vaultNetwork, broadcast, simulate);
+        setCrossChainFeeAll(env, vaultNetwork, "", broadcast, simulate);
     }
     operationCnt++;
 
