@@ -11,3 +11,4 @@ import "./verifyContract";
 import "./addVaultCCService";
 import "./upgradeContracts";
 import "./genRawTxJson";
+import "./localVerifyDeployment";
