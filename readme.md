@@ -467,6 +467,14 @@ To release a new version on dev, qa, staging or production, you need to follow t
 4. deploy and setup the new version on dev, qa, staging or production
 5. add git tag and push to github
 
+## 13. create Safe proposal, sign and execute
+1. generate raw tx json
+```shell
+ts-node foundry_ts/entry.ts --method genRawTx --env <env> --network <network> --contractName <contract name> --funcName <function name> --value <ETH token amount> --params < param1,param2,... >
+```
+by running this command, a raw tx json will be generated under data with name `<env>_<network>_<contractName>_<funcName>.json`. You can use this json to create a safe proposal.
+2. 
+
 # Issues
 
 1. if you put urls like https://testnet-explorer.orderly.org/api\? into `.env` file. foundry script will have problem parsing `.env`. you need to use "" to enclose it and add `\` to escape the parsing. so it will be like:

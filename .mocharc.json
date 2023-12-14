@@ -1,0 +1,5 @@
+{
+    "extension": ["ts"],
+    "spec": "foundry_ts/**/*.spec.ts",
+    "require": "ts-node/register"
+}

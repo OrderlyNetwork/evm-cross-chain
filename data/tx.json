@@ -1,0 +1,11 @@
+{
+    "operation": 0,
+    "safeTxGas": 0,
+    "baseGas": 0,
+    "gasPrice": 0,
+    "gasToken": "0x0000000000000000000000000000000000000000",
+    "refundReceiver": "0x0000000000000000000000000000000000000000",
+    "to": "0xB327191924Fde508AeCAe9F79b253CC5031DceA2",
+    "data": "0x39ce5e17000000000000000000000000b327191924fde508aecae9f79b253cc5031dcea2",
+    "value": "0"
+}

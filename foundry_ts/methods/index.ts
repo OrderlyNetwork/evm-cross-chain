@@ -10,3 +10,4 @@ import "./outputFunctionSelector";
 import "./verifyContract";
 import "./addVaultCCService";
 import "./upgradeContracts";
+import "./genRawTxJson";

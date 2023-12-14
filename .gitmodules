@@ -4,3 +4,6 @@
 [submodule "lib/contract-evm"]
 	path = lib/contract-evm
 	url = git@gitlab.com:orderlynetwork/orderly-v2/contract-evm.git
+[submodule "lib/safe-contracts"]
+	path = lib/safe-contracts
+	url = https://github.com/safe-global/safe-contracts

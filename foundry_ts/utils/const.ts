@@ -58,3 +58,10 @@ export const compilerVersionMap = {
     "0.8.19": "v0.8.19+commit.7dd6d404",
     "0.8.20": "v0.8.20+commit.a1b79de6",
 }
+
+export function getContractAbiPath(contractName: string) {
+    // get real contract name using contractMeta
+    const contractInfo = CONTRACT_META[contractName as ContractMetaKey];
+    const realContractName = contractInfo.name;
+    return "out/" + realContractName + ".sol/" + realContractName + ".json";
+}
