@@ -1,0 +1,94 @@
+{
+    "dev": {
+        "opgoerli": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "abitrumgoerli": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "orderlyop": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ]
+    },
+    "staging": {
+        "opgoerli": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "abitrumgoerli": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "orderlyop": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ]
+    },
+    "qa": {
+        "opgoerli": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "abitrumgoerli": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "orderlyop": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ]
+    },
+    "production": {
+        "orderlymain": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "optimism": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "arbitrum": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ]
+    }
+}

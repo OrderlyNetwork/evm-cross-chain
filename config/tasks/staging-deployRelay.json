@@ -1,0 +1,7 @@
+{
+    "networks": [
+        "orderlyop",
+        "arbitrumgoerli"
+    ],
+    "env": "staging"
+}

@@ -1,0 +1,4 @@
+{
+    "networks": ["orderly", "fuji"],
+    "env": "qa-mock"
+}

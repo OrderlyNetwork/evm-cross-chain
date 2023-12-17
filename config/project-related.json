@@ -1,0 +1,50 @@
+{
+    "qa": {
+        "arbitrumgoerli": {
+            "vault": "0x22b10472d3Da206aaA85D3f19E91A8da15E0F56A"
+        },
+        "opgoerli": {
+            "vault": "0x7fc077e4487bb03D393a0C2b87B52798E19602DB"
+        },
+        "orderlyop": {
+            "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
+            "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
+        }
+    },
+    "staging": {
+        "opgoerli": {
+            "vault": "0x1bae7b601760A45710B43Da2C8f8a3c933A144D2"
+        },
+        "arbitrumgoerli": {
+            "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
+        },
+        "orderlyop": {
+            "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
+            "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
+        }
+    },
+    "dev": {
+        "opgoerli": {
+            "vault": "0xe014a38501cF2B8139dED0b60Ed4FbD02C113b59"
+        },
+        "arbitrumgoerli": {
+            "vault": "0x0C554dDb6a9010Ed1FD7e50d92559A06655dA482"
+        },
+        "orderlyop": {
+            "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",
+            "operator-manager": "0xe34614EB781C5838C78B7f913b89A05e7a5b97e2"
+        }
+    },
+    "production": {
+        "optimism": {
+            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+        },
+        "arbitrum": {
+            "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
+        },
+        "orderlymain": {
+            "ledger": "0x6F7a338F2aA472838dEFD3283eB360d4Dff5D203",
+            "operator-manager": "0x7CC5B6433eb33164c88F6512f56C566CFC3420BF"
+        }
+    }
+}

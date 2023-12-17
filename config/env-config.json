@@ -1,0 +1,62 @@
+{
+    "qa": {
+        "ledger": "orderlyop",
+        "vault": [
+            "arbitrumgoerli",
+            "opgoerli"
+        ],
+        "orderlyop": "ledger",
+        "arbitrumgoerli": "vault",
+        "opgoerli": "vault",
+        "networks": [
+            "opgoerli",
+            "arbitrumgoerli",
+            "orderlyop"
+        ]
+    },
+    "dev": {
+        "ledger": "orderlyop",
+        "vault": [
+            "arbitrumgoerli",
+            "opgoerli"
+        ],
+        "orderlyop": "ledger",
+        "arbitrumgoerli": "vault",
+        "opgoerli": "vault",
+        "networks": [
+            "opgoerli",
+            "arbitrumgoerli",
+            "orderlyop"
+        ]
+    },
+    "staging": {
+        "ledger": "orderlyop",
+        "vault": [
+            "arbitrumgoerli",
+            "opgoerli"
+        ],
+        "orderlyop": "ledger",
+        "arbitrumgoerli": "vault",
+        "opgoerli": "vault",
+        "networks": [
+            "opgoerli",
+            "arbitrumgoerli",
+            "orderlyop"
+        ]
+    },
+    "production": {
+        "ledger": "orderlymain",
+        "vault": [
+            "arbitrum",
+            "optimism"
+        ],
+        "orderlymain": "ledger",
+        "arbitrum": "vault",
+        "optimism": "vault",
+        "networks": [
+            "optimism",
+            "arbitrum",
+            "orderlymain"
+        ]
+    }
+}

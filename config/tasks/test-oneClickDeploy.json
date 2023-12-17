@@ -1,0 +1,5 @@
+{
+    "env": "test",
+    "vaultNetwork": "arbitrumgoerli",
+    "ledgerNetwork": "orderlyop"
+}

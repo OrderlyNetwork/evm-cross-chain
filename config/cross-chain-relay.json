@@ -1,0 +1,92 @@
+{
+  "qa-mock": {
+    "fuji": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xBE404b97de8A6B1304F3dbC17F565034721A40b7",
+      "relay": "0xAcf376844CEDe2f8cdaA8bA88A44FE4d4332A4DF"
+    },
+    "orderly": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x8E1f5dBF1E0601f99bE7563cca3B319AdF814684",
+      "relay": "0xB20a5257B32bFb0E17C10Ed98CD618335bBA0EFF"
+    },
+    "orderlyop": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x80Ea0CA3E06141Fc66538F8134bAA30A5F1F2a8E",
+      "relay": "0xb3d4a6119B7B4408Be5F0Ea6c9e5CE9f80245b0c"
+    },
+    "arbitrumgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xFDbb917FF2aFa1DFb8400c0F48A77c40EE07c01c",
+      "relay": "0x832e72eF95Cc2b078c0Df027007E53498F1Be4A8"
+    }
+  },
+  "qa": {
+    "orderlyop": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
+      "relay": "0x4457f4d8c4879f6BD5260ce37c493113c79306BE"
+    },
+    "arbitrumgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
+      "relay": "0x412211b39beCc0A3AB233B9520742511D373B703"
+    },
+    "opgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xF2a96DDd9585386Db5352326E02909C7EcEDa299",
+      "relay": "0x9D1f32Fe70578a59D562235547153539C23Fa498"
+    }
+  },
+  "staging": {
+    "orderlyop": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xa1a9C94bb24B09739Af80E6EfaB7ca0F576182bc",
+      "relay": "0x718f4EfAE9BD385E88aB833d9DDe3cABEb5F098a"
+    },
+    "arbitrumgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xF920a86c1ea7788933c188e7A3516807A18655d6",
+      "relay": "0xf91bbF1c3542b7066791D7f9C64cAEe6cDc91039"
+    },
+    "opgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xC469eB33daFdE05CC0f05dDFca4fF793f680F02E",
+      "relay": "0x6C14bf583C142B66EC59F8fc725B255e3a94BAA3"
+    }
+  },
+  "dev": {
+    "orderlyop": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0x2F92BbA92C55D757c536D080f2d8088074B33060"
+    },
+    "arbitrumgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
+      "relay": "0xe07a21a12750FB1C82b0FCB621d1fc1F0426C2F4"
+    },
+    "opgoerli": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0x544bfE75441e394cF2Af92d7c33545F8600e2dfb"
+    }
+  },
+  "production": {
+    "arbitrum": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
+      "relay": "0xB327191924Fde508AeCAe9F79b253CC5031DceA2"
+    },
+    "orderlymain": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
+      "relay": "0xa9874b1247d98d193FDA73Ce956DfD675C39c1E6"
+    },
+    "optimism": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
+      "relay": "0xc2Be17D3E0641262073A20FCf62083Dfd6FB40e0"
+    }
+  }
+}

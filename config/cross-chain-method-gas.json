@@ -1,0 +1,11 @@
+{
+    "withdraw": 400000,
+    "deposit": 250000,
+    "withdrawFinish": 200000,
+    "pingPong": 500000,
+    "ping": 500000,
+    "burn": 450000,
+    "burnFinish": 280000,
+    "mint": 550000,
+    "mintFinish": 280000
+}
