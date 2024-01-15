@@ -1,5 +1,4 @@
 [profile.default]
-[profile.default]
 solc="0.8.19"
 solc_version = '0.8.19'
 src = 'contracts'

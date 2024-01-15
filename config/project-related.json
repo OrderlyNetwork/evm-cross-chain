@@ -6,6 +6,12 @@
         "opgoerli": {
             "vault": "0x7fc077e4487bb03D393a0C2b87B52798E19602DB"
         },
+        "opsepolia": {
+            "vault": "0xd5164A5a83c64E59F842bC091E06614b84D95fF5"
+        },
+        "arbsepolia": {
+            "vault": "0xB15a3a4D451311e03e34d9331C695078Ad5Cf5F1"
+        },
         "orderlyop": {
             "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
             "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
@@ -29,6 +35,12 @@
         },
         "arbitrumgoerli": {
             "vault": "0x0C554dDb6a9010Ed1FD7e50d92559A06655dA482"
+        },
+        "opsepolia": {
+            "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
+        },
+        "arbsepolia": {
+            "vault": "0x3ac2ba11ca2f9f109d50fb1a46d4c23fcadbbef6"
         },
         "orderlyop": {
             "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",

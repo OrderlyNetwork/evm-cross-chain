@@ -12,3 +12,5 @@ import "./addVaultCCService";
 import "./upgradeContracts";
 import "./genRawTxJson";
 import "./localVerifyDeployment";
+import "./hashData";
+import "./safeSubmitTx";

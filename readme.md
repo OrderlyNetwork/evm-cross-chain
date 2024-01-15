@@ -204,9 +204,10 @@ Some components relies on other components, so you'd better deploy all of them s
 ### Add a new cross-chain service on the new added vault chain
 There are some times we need to add new vault chains. So we need to deploy cross-chain-relay and cross-chain-manager on the new added vault chain. And update settings of contracts on the ledger side. The following steps are the procedures of adding a new vault chain.
 
-1. update token decimal in `config/token-decimals.json`, make sure the new added vault chain's token decimal is set correctly.
-2. update project related infos in `config/project-related.json` (or you can update it later, if you choose to setup vault later, you should drop the --connectVault flag in the following script)
-3. run a script to add a new cross-chain service on the new added vault chain and setup it and update ledger side contracts settings
+1. Setup the new vault chain's network configuration in `.env` file, including private key, chain id, rpc url, layerzero chain id and layerzero endpoint address.
+2. update token decimal in `config/token-decimals.json`, make sure the new added vault chain's token decimal is set correctly.
+3. update project related infos in `config/project-related.json` (or you can update it later, if you choose to setup vault later, you should drop the --connectVault flag in the following script)
+4. run a script to add a new cross-chain service on the new added vault chain and setup it and update ledger side contracts settings
 ```shell
 ts-node foundry_ts/entry.ts --method addVaultCCService --env dev --vaultNetwork opgoerli --ledgerNetwork orderlyop --initEther 0.01 --broadcast --connectVault
 ```
@@ -423,6 +424,8 @@ forge flatten <contract> > flattened.sol
 ```
 
 then you can verify it on explorer using the generated standard json input or flattened solidity file. Make sure you set the constructor arguments correctly. You can goto `https://abi.hashex.org/` to get the abi encoded constructor arguments.
+
+The reason that `forge verify-contract` doesn't succeed is that it doesn't pass the constructor arguments correctly or the compiler version is not correct. So you have to pass them manually. By using the typescript wrapper `verifyContract`, you can successfully verify contracts on explorer.
 
 
 ## 11. print necessary information of cross-chain service

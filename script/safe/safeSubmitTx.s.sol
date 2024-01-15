@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import {QuickSort} from "./libraries/QuickSort.sol";
 import {SignatureDecoder} from "safe/common/SignatureDecoder.sol";
 import {Safe, Enum} from "safe/Safe.sol";
 
@@ -10,8 +11,13 @@ import "forge-std/Script.sol";
 
 import "../baseScripts/Utils.sol";
 
-contract SafeTxDataBuilder is Script, SignatureDecoder {
+contract SafeSubmitTx is Script, SignatureDecoder {
     using stdJson for string;
+    using QuickSort for address[];
+
+    address[] signers;
+    bytes[] signatures;
+    mapping(address => bytes) signatureOf;
 
     struct SafeTxData {
         address to;
@@ -34,7 +40,7 @@ contract SafeTxDataBuilder is Script, SignatureDecoder {
     string internal ROOT = vm.projectRoot();
     string internal SIGNATURES_DIR = string.concat(ROOT, "/data/");
 
-    string internal TX_FILE = vm.envString("FS_hashData_txFile");
+    string internal TX_FILE = vm.envString("FS_safeSubmitTx_txFile");
     string internal HASH_DATA_FILE = string.concat(SIGNATURES_DIR, "hashData.txt");
     string internal SIGNATURES_FILE = string.concat(SIGNATURES_DIR, "signatures.txt");
 
@@ -45,11 +51,13 @@ contract SafeTxDataBuilder is Script, SignatureDecoder {
     bytes32 internal DOMAIN_SEPARATOR;
 
     function setUp() public {
-        string memory network = vm.envString("FS_safeSignProposal_network");
+        string memory network = vm.envString("FS_safeSubmitTx_network");
         string memory networkUpCase = StringUtils.toUpperCase(network);
         uint256 pk = vm.envUint(string.concat(networkUpCase, "_PRIVATE_KEY"));
         SENDER = vm.addr(pk);
-        vm.createSelectFork(string.concat("RPC_URL_", networkUpCase));
+        string memory rpcUrl = vm.envString(string.concat("RPC_URL_", networkUpCase));
+        vm.createSelectFork(rpcUrl);
+        vm.startBroadcast(pk);
         SAFE = Safe(payable(vm.envAddress("SAFE")));
 
         NONCE = vm.envOr("SAFE_NONCE", SAFE.nonce());
@@ -94,5 +102,74 @@ contract SafeTxDataBuilder is Script, SignatureDecoder {
         (v, r, s) = signatureSplit(signature, 0);
 
         signer = ecrecover(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash)), v, r, s);
+    }
+
+    function run() public {
+        SafeTxData memory txData = loadSafeTxData();
+
+        loadSignatures(hashData(txData));
+
+        signers.sort();
+
+        for (uint256 i; i < signers.length; ++i) {
+            txData.signatures = bytes.concat(txData.signatures, signatureOf[signers[i]]);
+        }
+
+        // Execute tx.
+        // vm.broadcast(SENDER);
+        SAFE.execTransaction(
+            txData.to,
+            txData.value,
+            txData.data,
+            txData.operation,
+            txData.safeTxGas,
+            txData.baseGas,
+            txData.gasPrice,
+            txData.gasToken,
+            txData.refundReceiver,
+            txData.signatures
+        );
+        vm.stopBroadcast();
+    }
+
+    function loadSignatures(bytes32 dataHash) internal {
+        bytes memory line = bytes(vm.readLine(SIGNATURES_FILE));
+
+        while (line.length > 0 && signatures.length < THRESHOLD) {
+            parseSignature(dataHash, line);
+
+            line = bytes(vm.readLine(SIGNATURES_FILE));
+        }
+
+        uint256 nbSignatures = signatures.length;
+        require(
+            nbSignatures >= THRESHOLD,
+            string.concat(
+                "Not enough signatures (found: ", vm.toString(nbSignatures), "; expected: ", vm.toString(THRESHOLD), ")"
+            )
+        );
+    }
+
+    function parseSignature(bytes32 dataHash, bytes memory line) internal {
+        require(
+            line.length == 132,
+            string.concat(
+                "Malformed signature: ", string(line), " (length: ", vm.toString(line.length), "; expected: 132)"
+            )
+        );
+
+        bytes memory hexSignature = new bytes(130);
+        for (uint256 j; j < 130; ++j) {
+            hexSignature[j] = line[j + 2];
+        }
+
+        bytes memory signature = vm.parseBytes(string(hexSignature));
+
+        (address signer, bytes32 r, bytes32 s, uint8 v) = decode(dataHash, signature);
+        require(signatureOf[signer].length == 0, string.concat("Duplicate signature: ", string(line)));
+
+        signatureOf[signer] = abi.encodePacked(r, s, v + 4);
+        signatures.push(signature);
+        signers.push(signer);
     }
 }

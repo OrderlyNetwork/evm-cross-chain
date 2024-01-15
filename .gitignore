@@ -22,3 +22,7 @@ cache_forge/
 .openzeppelin/
 
 broadcast/
+
+data/
+
+tx.json

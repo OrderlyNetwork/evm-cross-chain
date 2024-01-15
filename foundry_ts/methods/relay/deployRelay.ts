@@ -21,7 +21,7 @@ export function deployRelay(env: string, network: string, broadcast: boolean, si
     set_env_var(method_name, "broadcast", broadcast.toString());
 
     const explorerType = getExporerType(network);
-    foundry_wrapper(method_name, broadcast, simulate, true, explorerType, network);
+    foundry_wrapper(method_name, broadcast, simulate, false, explorerType, network);
 
 }
 

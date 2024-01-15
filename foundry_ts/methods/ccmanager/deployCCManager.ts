@@ -6,6 +6,7 @@ import { ccmanager_deploy_json } from "../../utils/const";
 import { set_env_var, foundry_wrapper } from "../../foundry";
 import { checkArgs } from "../../helper";
 import { setupDeployJson } from "../../utils/setupDeployJson";
+import { getExporerType } from "../../utils/envUtils";
 
 // current file name
 const method_name = "deployCCManager";
@@ -22,7 +23,8 @@ export function deployCCManager(env: string, network: string, role: string, broa
     set_env_var(method_name, "network", network);
     set_env_var(method_name, "role", role);
     set_env_var(method_name, "broadcast", broadcast.toString());
-    foundry_wrapper(method_name, broadcast, simulate);
+    const explorerType = getExporerType(network);
+    foundry_wrapper(method_name, broadcast, simulate, false, explorerType, network);
 
 }
 
