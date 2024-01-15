@@ -194,4 +194,18 @@ contract ConfigHelper is Script {
         bytes memory data = getValueByKey(projectRelatedFile, env, network, "operator-manager");
         return abi.decode(data, (address));
     }
+
+    // function writeToProposal(string memory env, string memory network, address to, uint256 value, string memory method, string[] memory params) internal {
+    //     string memory root_path = 'proposal/';
+    //     string memory proposalPath = root_path.concat(method);
+
+    //     string memory json = method.concat('_proposal');
+    //     json.serialize("to", to);
+    //     json.serialize("value", vm.toString(value));
+    //     json.serialize("method", method);
+    //     json.serialize("params", params);
+    //     json.serialize("operation", uint256(0));
+
+    //     json.write(proposalPath);
+    // }
 }
