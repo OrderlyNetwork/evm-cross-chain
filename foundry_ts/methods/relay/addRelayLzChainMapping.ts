@@ -17,9 +17,7 @@ export function addRelayLzChainMappingWithArgv(argv: any) {
 }
 
 export function addRelayLzChainMapping(env: string, relayNetwork: string, addNetwork: string, broadcast: boolean, simulate: boolean, multisig: boolean = false) {
-    set_env_var(method_name, "env", env);
-    set_env_var(method_name, "relayNetwork", relayNetwork);
-    set_env_var(method_name, "addNetwork", addNetwork);
+
     if (multisig) {
         // get relay address
         const relayAddress = getContractAddress(env, relayNetwork, "CCRelay", true);
@@ -29,9 +27,13 @@ export function addRelayLzChainMapping(env: string, relayNetwork: string, addNet
         const filename = "addRelayLzChainMapping";
         writeToProposal(filename, env, relayNetwork, relayAddress, value, method, params);
 
-    } else {
-        foundry_wrapper(method_name, broadcast, simulate);
+        return;
     }
+    set_env_var(method_name, "env", env);
+    set_env_var(method_name, "relayNetwork", relayNetwork);
+    set_env_var(method_name, "addNetwork", addNetwork);
+
+    foundry_wrapper(method_name, broadcast, simulate);
 
 }
 
