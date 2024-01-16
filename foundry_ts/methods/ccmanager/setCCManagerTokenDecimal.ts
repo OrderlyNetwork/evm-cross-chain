@@ -11,7 +11,6 @@ import { getTokenDecimal } from "../../utils/getEnvConfig";
 import { writeToProposal } from "../../utils/writeProposal";
 import { getContractAddress } from "../../utils/getDeployData";
 
-addArgvType("boolean", "multisig");
 
 // current file name
 const method_name = "setCCManagerTokenDecimal";

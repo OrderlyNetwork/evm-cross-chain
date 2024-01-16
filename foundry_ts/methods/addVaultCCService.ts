@@ -22,8 +22,6 @@ import { getDeployData } from "@openzeppelin/hardhat-upgrades/dist/utils/deploy-
 import { getContractAddress } from "../utils/getDeployData";
 import { verifyContract } from "./verifyContract";
 
-addArgvType("boolean", "multisig");
-
 // current file name
 const method_name = "addVaultCCService";
 

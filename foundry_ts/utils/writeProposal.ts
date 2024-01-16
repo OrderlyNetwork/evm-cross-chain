@@ -1,3 +1,4 @@
+import { exec } from "shelljs";
 
 interface SafeProposal {
     to: string;
@@ -13,6 +14,12 @@ export function writeToProposal(filename: string, env: string, network: string, 
     const date = new Date();
     const timestamp = date.getTime();
 
+    // mkdir -p proposal
+    fs.mkdirSync("proposal", { recursive: true });
+
+    // rm all files under proposal folder
+    const rmCmd = "rm ./proposal/*"
+    exec(rmCmd);
 
     const filePath = `proposal/${env}_${network}_${filename}_${timestamp}.json`;
 

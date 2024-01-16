@@ -7,7 +7,6 @@ import { ethers } from "ethers";
 import { getLzChainId } from "../../utils/envUtils";
 import { writeToProposal } from "../../utils/writeProposal";
 
-addArgvType("boolean", "multisig");
 
 // current file name
 const method_name = "setRelayTrustedRemote";

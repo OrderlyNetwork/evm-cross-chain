@@ -6,6 +6,9 @@ import { ccmanager_deploy_json } from "../../utils/const";
 import { set_env_var, foundry_wrapper } from "../../foundry";
 import { checkArgs } from "../../helper";
 import { setupDeployJson } from "../../utils/setupDeployJson";
+import { getContractAddress } from "../../utils/getDeployData";
+import { ccMethodToNumber, getLzCrossChainGasLimitSetting } from "../../utils/getLzCrossChainSetting";
+import { writeToProposal } from "../../utils/writeProposal";
 
 // current file name
 const method_name = "setCrossChainFee";
@@ -13,11 +16,22 @@ const method_name = "setCrossChainFee";
 export function setCrossChainFeeWithArgv(argv: any) {
     const required_flags = ["env", "network", "ccmethod", "fee"];
     checkArgs(method_name, argv, required_flags);
-    setCrossChainFee(argv.env, argv.network, argv.ccmethod, argv.fee, argv.broadcast, argv.simulate);
+    setCrossChainFee(argv.env, argv.network, argv.ccmethod, argv.fee, argv.broadcast, argv.simulate, argv.multisig);
 }
 
-export function setCrossChainFee(env: string, network: string, ccmethod: string, fee: number, broadcast: boolean, simulate: boolean) {
+export function setCrossChainFee(env: string, network: string, ccmethod: string, fee: number, broadcast: boolean, simulate: boolean, multisig: boolean = false) {
     
+    if (multisig) {
+        const address = getContractAddress(env, network, "CCRelay", true);
+        const funcSig = "addFlowGasLimitMapping(uint8,uint256)"
+        const gasLimitSetting = getLzCrossChainGasLimitSetting();
+        const methodNumber = ccMethodToNumber(ccmethod);
+
+        const params = [methodNumber.toString(), gasLimitSetting[ccmethod].toString()];
+        const filename = "setCrossChainFee";
+        writeToProposal(filename, env, network, address, "0", funcSig, params);
+        return;
+    }
 
     set_env_var(method_name, "env", env);
     set_env_var(method_name, "network", network);

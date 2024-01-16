@@ -5,7 +5,6 @@ import { getContractAddress } from "../../utils/getDeployData";
 import { getChainId, getLzChainId } from "../../utils/envUtils";
 import { writeToProposal } from "../../utils/writeProposal";
 
-addArgvType("boolean", "multisig");
 
 // current file name
 const method_name = "addRelayLzChainMapping";
