@@ -63,6 +63,16 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xC469eB33daFdE05CC0f05dDFca4fF793f680F02E",
       "relay": "0x6C14bf583C142B66EC59F8fc725B255e3a94BAA3"
+    },
+    "opsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x09a766D6bcA1Fd8FdB6c09b76084719cF94d041b",
+      "relay": "0xa1a9C94bb24B09739Af80E6EfaB7ca0F576182bc"
+    },
+    "arbsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "relay": "0x748e2F48d0a8Ac9174CdCBD344478295994Aae04"
     }
   },
   "dev": {

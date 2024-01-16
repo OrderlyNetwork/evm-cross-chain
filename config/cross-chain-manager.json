@@ -63,6 +63,18 @@
       "manager": "0xFA59A70dD17Fb89F031A34e27728754e8B7f19fb",
       "proxy": "0x2a08870fa26745032fdb4ecf0B2B91a4c1a260eD",
       "role": "vault"
+    },
+    "opsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x1A51DeF69d02c4960d10F9Df95C0A5CE7b5A069c",
+      "proxy": "0x6C14bf583C142B66EC59F8fc725B255e3a94BAA3",
+      "role": "vault"
+    },
+    "arbsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x17CbA19ed2d0e5B58034309A39c0326D6011CFba",
+      "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
+      "role": "vault"
     }
   },
   "dev": {

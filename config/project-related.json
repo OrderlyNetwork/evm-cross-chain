@@ -24,6 +24,12 @@
         "arbitrumgoerli": {
             "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
         },
+        "opsepolia": {
+            "vault": "0xEfF2896077B6ff95379EfA89Ff903598190805EC"
+        },
+        "arbsepolia": {
+            "vault": "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f"
+        },
         "orderlyop": {
             "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
             "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
