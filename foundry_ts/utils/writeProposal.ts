@@ -19,7 +19,7 @@ export function writeToProposal(filename: string, env: string, network: string, 
 
     // rm all files under proposal folder
     const rmCmd = "rm ./proposal/*"
-    exec(rmCmd);
+    // exec(rmCmd);
 
     const filePath = `proposal/${env}_${network}_${filename}_${timestamp}.json`;
 

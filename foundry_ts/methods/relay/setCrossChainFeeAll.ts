@@ -12,7 +12,7 @@ import { setCrossChainFee } from "./setCrossChainFee";
 const method_name = "setCrossChainFeeAll";
 
 export function setCrossChainFeeAllWithArgv(argv: any) {
-    const required_flags = ["env", "network", "methods"];
+    const required_flags = ["env", "network"];
     checkArgs(method_name, argv, required_flags);
     setCrossChainFeeAll(argv.env, argv.network, argv.methods, argv.broadcast, argv.simulate);
 }

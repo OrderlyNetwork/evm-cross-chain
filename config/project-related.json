@@ -12,6 +12,9 @@
         "arbsepolia": {
             "vault": "0xB15a3a4D451311e03e34d9331C695078Ad5Cf5F1"
         },
+        "mumbai": {
+            "vault": "0x7C4570Db29bF8dF8Aa0dBF6bdE637264F9E0Bd67"
+        },
         "orderlyop": {
             "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
             "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
@@ -44,6 +47,9 @@
         },
         "opsepolia": {
             "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
+        },
+        "mumbai": {
+            "vault": "0x56604D4097042f7950Eb8BFc58b0Dff072089070"
         },
         "arbsepolia": {
             "vault": "0x3ac2ba11ca2f9f109d50fb1a46d4c23fcadbbef6"
