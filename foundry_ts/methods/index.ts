@@ -15,3 +15,4 @@ import "./localVerifyDeployment";
 import "./hashData";
 import "./safeSubmitTx";
 import "./collectProposals";
+import "./simulate";
