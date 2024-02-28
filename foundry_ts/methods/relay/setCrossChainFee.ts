@@ -27,7 +27,7 @@ export function setCrossChainFee(env: string, network: string, ccmethod: string,
         const gasLimitSetting = getLzCrossChainGasLimitSetting();
         const methodNumber = ccMethodToNumber(ccmethod);
 
-        const params = [methodNumber.toString(), gasLimitSetting[ccmethod].toString()];
+        const params = [methodNumber.toString(), fee.toString()];
         const filename = "setCrossChainFee";
         writeToProposal(filename, env, network, address, "0", funcSig, params);
         return;

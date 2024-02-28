@@ -29,8 +29,8 @@ export function getLzCrossChainGasLimitSetting() : LzCCGasLimitSetting {
 }
 
 const defaultMethodNumber = {
-    "withdraw": 0,
-    "deposit": 1,
+    "deposit": 0,
+    "withdraw": 1,
     "withdrawFinish": 2,
     "pingPong": 3,
     "ping": 4,
