@@ -21,6 +21,7 @@ contract PrintRelay is BaseScript, ConfigHelper, RelayHelper {
         vmSelectRpc(network);
 
         CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(relayData.proxy));
+        console.log("owner: ", address(relay.owner()));
         // print chain id
         console.log("chainId: ", relay._currentChainId());
         // print lz chain id mapping

@@ -1,0 +1,32 @@
+[
+    {
+      "inputs": [
+        {
+          "internalType": "bool",
+          "name": "payInZro",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "relayerFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "oracleFee",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFees",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+  
