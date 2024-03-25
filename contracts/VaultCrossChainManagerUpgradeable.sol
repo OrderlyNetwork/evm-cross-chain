@@ -94,8 +94,7 @@ contract VaultCrossChainManagerUpgradeable is
     {
         require(message.dstChainId == chainId, "VaultCrossChainManager: dstChainId not match");
 
-
-        if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdrawData)){
+        if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdrawData)) {
             EventTypes.WithdrawData memory data = abi.decode(payload, (EventTypes.WithdrawData));
             // if token is CrossChainManagerTest
             if (keccak256(bytes(data.tokenSymbol)) == keccak256(bytes("CrossChainManagerTest"))) {
@@ -113,12 +112,12 @@ contract VaultCrossChainManagerUpgradeable is
                 });
                 _sendWithdrawToVault(withdrawData);
             }
-        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCData)){
+        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCData)) {
             RebalanceTypes.RebalanceBurnCCData memory data = abi.decode(payload, (RebalanceTypes.RebalanceBurnCCData));
             // call vault burn
             // TODO @zion
             vault.rebalanceBurn(data);
-        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCData)){
+        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCData)) {
             RebalanceTypes.RebalanceMintCCData memory data = abi.decode(payload, (RebalanceTypes.RebalanceMintCCData));
             // call vault mint
             // TODO @zion
@@ -153,7 +152,7 @@ contract VaultCrossChainManagerUpgradeable is
 
     /// @notice Initiates a deposit to the vault.
     /// @param data Struct containing deposit data.
-    function deposit(VaultTypes.VaultDeposit memory data) external override onlyVault{
+    function deposit(VaultTypes.VaultDeposit memory data) external override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -171,7 +170,7 @@ contract VaultCrossChainManagerUpgradeable is
 
     /// @notice Initiates a deposit to the vault along with native fees.
     /// @param data Struct containing deposit data.
-    function depositWithFee(VaultTypes.VaultDeposit memory data) external payable override onlyVault{
+    function depositWithFee(VaultTypes.VaultDeposit memory data) external payable override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -187,9 +186,33 @@ contract VaultCrossChainManagerUpgradeable is
         crossChainRelay.sendMessageWithFee{value: msg.value}(message, payload);
     }
 
+    /// @notice Initiates a deposit to the vault along with native fees.
+    /// @param refundReceiver Address of the receiver of the deposit fee refund.
+    /// @param data Struct containing deposit data.
+    function depositWithFeeRefund(address refundReceiver, VaultTypes.VaultDeposit memory data)
+        external
+        payable
+        override
+        onlyVault
+    {
+        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit),
+            srcCrossChainManager: address(this),
+            dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
+            srcChainId: chainId,
+            dstChainId: ledgerChainId
+        });
+        // encode message
+        bytes memory payload = abi.encode(data);
+
+        crossChainRelay.sendMessageWithFeeRefund{value: msg.value}(refundReceiver, message, payload);
+    }
+
     /// @notice Approves a cross-chain withdrawal from the ledger to the vault.
     /// @param data Struct containing withdrawal data.
-    function withdraw(VaultTypes.VaultWithdraw memory data) external override onlyVault{
+    function withdraw(VaultTypes.VaultWithdraw memory data) external override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.WithdrawFinish),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
