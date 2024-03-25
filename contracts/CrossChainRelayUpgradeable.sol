@@ -228,6 +228,30 @@ contract CrossChainRelayUpgradeable is
         emit MessageSent(data, payload);
     }
 
+    /// @notice send cross-chain message with fee
+    /// @param refundReceiver the receiver address for the lz fee refund
+    /// @param data the cross chain meta message
+    /// @param payload the payload
+    function sendMessageWithFeeRefund(
+        address refundReceiver,
+        OrderlyCrossChainMessage.MessageV1 memory data,
+        bytes memory payload
+    ) public payable override onlyCaller {
+        bytes memory lzPayload = data.encodeMessageV1AndPayload(payload);
+        uint16 lzDstChainId = _chainIdMapping[data.dstChainId];
+        require(lzDstChainId != 0, "CrossChainRelay: invalid dst chain id");
+
+        uint16 version = 1;
+        uint256 gasLimit = _flowGasLimitMapping[data.method];
+        if (gasLimit == 0) {
+            gasLimit = 3000000;
+        }
+        bytes memory adapterParams = abi.encodePacked(version, gasLimit);
+
+        _lzSend(lzDstChainId, lzPayload, payable(refundReceiver), address(0), adapterParams, msg.value);
+        emit MessageSent(data, payload);
+    }
+
     /// @notice test function, send ping to another chain
     /// @param dstChainId the destination chain id
     function ping(uint256 dstChainId) internal {
