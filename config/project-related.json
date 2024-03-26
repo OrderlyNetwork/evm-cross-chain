@@ -15,6 +15,9 @@
         "mumbai": {
             "vault": "0x7C4570Db29bF8dF8Aa0dBF6bdE637264F9E0Bd67"
         },
+        "basesepolia": {
+            "vault": "0xEcb4abe96113c9caA3204e96C63C5377D02cb636"
+        },
         "orderlyop": {
             "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
             "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
@@ -36,6 +39,9 @@
         "mumbai": {
             "vault": "0xB483f9D0bD47371B54087983214887c3Be103b92"
         },
+        "basesepolia": {
+            "vault": "0xdc7348975aE9334DbdcB944DDa9163Ba8406a0ec"
+        },
         "orderlyop": {
             "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
             "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
@@ -56,6 +62,9 @@
         },
         "arbsepolia": {
             "vault": "0x3ac2ba11ca2f9f109d50fb1a46d4c23fcadbbef6"
+        },
+        "basesepolia": {
+            "vault": "0x2A5b650A894409372DDeE241EDAC92d4152bE24d"
         },
         "orderlyop": {
             "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",

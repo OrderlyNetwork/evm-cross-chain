@@ -49,6 +49,12 @@
       "manager": "0x5890e6a2db9c3b3cef0756f655c356b19Bf6a713",
       "proxy": "0x5771f66593025483266cD2e14237fdf45D649Fa5",
       "role": "vault"
+    },
+    "basesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x544bfE75441e394cF2Af92d7c33545F8600e2dfb",
+      "proxy": "0x3D6B3c33Ef5d7EF3D300E9993bCBa84994282796",
+      "role": "vault"
     }
   },
   "staging": {
@@ -87,6 +93,12 @@
       "manager": "0x18Cdc3393Ba8e72b12e9A04deA9C556Ae404E614",
       "proxy": "0x96B94EC878263C7393BCfe81B2a80477616F5AD8",
       "role": "vault"
+    },
+    "basesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x17CbA19ed2d0e5B58034309A39c0326D6011CFba",
+      "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
+      "role": "vault"
     }
   },
   "dev": {
@@ -121,6 +133,12 @@
       "role": "vault"
     },
     "mumbai": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "role": "vault"
+    },
+    "basesepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "manager": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
       "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",

@@ -40,6 +40,11 @@
   dependencies:
     tslib "^2.3.1"
 
+"@axelar-network/axelar-gmp-sdk-solidity@^5.6.4":
+  version "5.6.4"
+  resolved "https://registry.yarnpkg.com/@axelar-network/axelar-gmp-sdk-solidity/-/axelar-gmp-sdk-solidity-5.6.4.tgz#fe224ff039f86f1cbf72d9b53339a8354f531b65"
+  integrity sha512-PQjV+HeJynmSRMhyM3SexwnbFNruSaiRUeNCWjV8/7CkdPsDqypoqIXVRVU8Zk92DUUHeqZZzL/3qP2LYuvlnA==
+
 "@chakra-ui/icon@3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@chakra-ui/icon/-/icon-3.2.0.tgz#92b9454aa0d561b4994bcd6a1b3bb1fdd5c67bef"
