@@ -9,7 +9,7 @@ import "evm-cross-chain/contracts/axelar/AxelarCCAdapter.sol";
 import "evm-cross-chain/contracts/OrderlyProxy.sol";
 
 
-contract RelayHelper is BaseScript, OperationHelper {
+contract AxelarHelper is BaseScript, OperationHelper {
     using StringUtils for string;
 
     function upgradeAxelarAdapter(address proxyAddress) internal returns (address) {
@@ -22,7 +22,7 @@ contract RelayHelper is BaseScript, OperationHelper {
     function deployAxelarAdapter() internal returns (address, address) {
         AxelarCCAdapter adapter = new AxelarCCAdapter();
         OrderlyProxy proxy = new OrderlyProxy(address(adapter), "");
-        adapter.initialize();
+        AxelarCCAdapter(address(proxy)).initialize();
         return (address(adapter), address(proxy));
     }
 

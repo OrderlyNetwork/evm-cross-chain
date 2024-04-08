@@ -81,7 +81,10 @@ export function collectProposals(method_name: string, env: string, network: stri
 
     fs.writeFileSync(outputFilePath, jsonString);
 
-    const safeNetwork = SafeTasksNetworkMapping[network as keyof typeof SafeTasksNetworkMapping];
+    let safeNetwork = SafeTasksNetworkMapping[network as keyof typeof SafeTasksNetworkMapping];
+    if (safeNetwork === undefined) {
+        safeNetwork = network;
+    }
     const safeEnv = SafeEnvzMapping[env as keyof typeof SafeEnvzMapping];
     const proposalPath = `txn/CrossChain/${outFilename}`
 

@@ -9,3 +9,4 @@ import "./setCCManagerVault";
 import "./upgradeCCManager";
 import "./sendTestWithdraw";
 import "./printCCManagerTokenDecimal";
+import "./deployNewManagerImpl";

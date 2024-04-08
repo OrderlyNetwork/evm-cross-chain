@@ -2,7 +2,8 @@
   "name": "hardhat_demo",
   "version": "1.0.0",
   "description": "## Setting up a project ## Compiling and deploying contracts ## Writing tasks and testing contracts ## Hardhat Runtime Environment introduction ## Setting up tenderly ## Debugging and simulation with tenderly ## Q&A",
-  "main": "index.js",
+  "main": "dist/index",
+  "types": "dist/index",
   "scripts": {
     "test": "mocha"
   },
@@ -11,7 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.1",
-    "@nomicfoundation/hardhat-ethers": "^3.0.4",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "@nomicfoundation/hardhat-verify": "^1.0.4",
@@ -23,7 +24,7 @@
     "@types/shelljs": "^0.8.12",
     "chai": "^4.3.10",
     "dotenv": "^16.3.1",
-    "ethers": "^6.6.5",
+    "ethers": "^6.11.1",
     "hardhat-deploy": "^0.11.34",
     "hardhat-deploy-ethers": "^0.4.1",
     "hardhat-deploy-tenderly": "^0.2.0",

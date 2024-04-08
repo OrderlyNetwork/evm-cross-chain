@@ -16,3 +16,5 @@ import "./hashData";
 import "./safeSubmitTx";
 import "./collectProposals";
 import "./simulate";
+import "./deployProxyContract";
+import "./easyCall";

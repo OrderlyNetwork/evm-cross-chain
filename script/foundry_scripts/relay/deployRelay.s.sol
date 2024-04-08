@@ -15,8 +15,8 @@ contract DeployRelay is BaseScript, ConfigHelper, RelayHelper {
         string memory network = vm.envString("FS_deployRelay_network");
         bool broadcast = vm.envBool("FS_deployRelay_broadcast");
 
-        // vmSelectRpcAndBroadcast(network);
-        vm.startBroadcast(getPrivateKey(network));
+        vmSelectRpcAndBroadcast(network);
+        // vm.startBroadcast(getPrivateKey(network));
 
         address lzEndpoint = getLzEndpoint(network);
 

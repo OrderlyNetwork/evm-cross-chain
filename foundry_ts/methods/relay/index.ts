@@ -14,3 +14,6 @@ import "./printRelay";
 import "./addRelayLzChainMappingAll";
 import "./forceResume";
 import "./upgradeRelay";
+
+import "./deployAxelarAdapter";
+import "./deployNewRelayImp";

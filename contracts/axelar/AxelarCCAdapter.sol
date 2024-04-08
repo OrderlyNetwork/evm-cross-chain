@@ -15,6 +15,15 @@ import { IAxelarGateway } from '@axelar-network/axelar-gmp-sdk-solidity/contract
 import { IAxelarGasService } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarGasService.sol';
 import { IAxelarExecutable } from '@axelar-network/axelar-gmp-sdk-solidity/contracts/interfaces/IAxelarExecutable.sol';
 
+
+/// @notice An adapter for wrapping axelar cross-chain
+/// setting up steps:
+/// 1. setup gasService, and gatewayContract
+/// 2. set chainId mapping to axelar chain config.
+/// 3. set the message receiver (crossChainRelay)
+/// 4. set trustedRemote
+/// 5. set gasLimit
+/// 6. set gasFeeEstimate and defaultGasFee
 contract AxelarCCAdapterData {
     /// Axelar related configurations
     IAxelarGasService public gasService;
@@ -25,12 +34,31 @@ contract AxelarCCAdapterData {
     /// orderly project configurations
     IOrderlyCrossChain public crossChainRelay;
 
-    /// @dev gap for future storage
-    uint256[50] private __gap;
+    /// estimate gas limit settings
+    mapping(uint8 => uint256) gasLimitConfigs;
+    mapping(uint8 => uint256) gasFeeEstimate;
+    uint256 defaultGasFee;
+
+    /// trusted msg source
+    string trustedRemote;
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[20] private __gap;
 }
 
 
-contract AxelarCCAdapter is ICrossChainAdapter, IAxelarExecutable, Initializable, OwnableUpgradeable, UUPSUpgradeable, AxelarCCAdapterData {
+contract AxelarCCAdapter is
+    ICrossChainAdapter,
+    Initializable,
+    OwnableUpgradeable,
+    UUPSUpgradeable,
+    AxelarCCAdapterData {
+    
+    error NotApprovedByGateway();
 
     constructor() {
         _disableInitializers();
@@ -47,7 +75,10 @@ contract AxelarCCAdapter is ICrossChainAdapter, IAxelarExecutable, Initializable
 
     /// @dev estimate gas for sending a cross chain message
     function estimateGas(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) external view override returns (uint256) {
-        return 0;
+        uint256 gasFee = gasFeeEstimate[message.method];
+        if (gasFee == 0) {
+            gasFee = 0.1 ether;
+        }
     }
 
     /// @dev set axelar configurations
@@ -69,7 +100,7 @@ contract AxelarCCAdapter is ICrossChainAdapter, IAxelarExecutable, Initializable
 
     /// @dev return the gateway contract address
     /// @return IAxelarGateway the gateway contract
-    function gateway() external view override returns (IAxelarGateway) {
+    function gateway() external view returns (IAxelarGateway) {
         return gatewayContract;
     }
 
@@ -83,22 +114,48 @@ contract AxelarCCAdapter is ICrossChainAdapter, IAxelarExecutable, Initializable
 
         bytes memory payload = OrderlyCrossChainMessage.encodeMessageV1AndPayload(message, orderlyPayload);
 
-        axelarSend(destinationChain, destinationAddress, payload);
+        axelarSend(destinationChain, destinationAddress, payload, address(0x00));
 
         emit OrderlyCCMessageSent(message, payload);
+    }
+
+    /// @dev send a cross chain message
+    function sendWithRefund(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory orderlyPayload, address refundAddress) external override payable {
+        
+        string memory destinationChain = chainId2Name[message.dstChainId];
+        string memory destinationAddress = chainId2Address[message.dstChainId];
+
+        bytes memory payload = OrderlyCrossChainMessage.encodeMessageV1AndPayload(message, orderlyPayload);
+
+        axelarSend(destinationChain, destinationAddress, payload, refundAddress);
+
+        emit OrderlyCCMessageSent(message, payload);
+    }
+
+    /// @dev send a test message
+    function sendPingPong(uint256 dstChainId) external payable onlyOwner {
+        bytes memory payload = bytes("0x123456789");
+        string memory destinationChain = chainId2Name[dstChainId];
+        string memory destinationAddress = chainId2Address[dstChainId];
+        axelarSend(destinationChain, destinationAddress, payload, address(0x00));
     }
 
     function axelarSend(
         string memory destinationChain,
         string memory destinationAddress,
-        bytes memory payload
+        bytes memory payload,
+        address refundAddress
     ) internal {
+        address refundTo = refundAddress;
+        if (refundTo == address(0x00)) {
+            refundTo = msg.sender;
+        }
         gasService.payNativeGasForContractCall{value: msg.value} (
             address(this),
             destinationChain,
             destinationAddress,
             payload,
-            msg.sender
+            refundTo
         );
 
         gatewayContract.callContract(destinationChain,destinationAddress,payload);
@@ -122,30 +179,6 @@ contract AxelarCCAdapter is ICrossChainAdapter, IAxelarExecutable, Initializable
         _execute(sourceChain, sourceAddress, payload);
     }
 
-    function executeWithToken(
-        bytes32 commandId,
-        string calldata sourceChain,
-        string calldata sourceAddress,
-        bytes calldata payload,
-        string calldata tokenSymbol,
-        uint256 amount
-    ) external {
-        bytes32 payloadHash = keccak256(payload);
-
-        if (
-            !gatewayContract.validateContractCallAndMint(
-                commandId,
-                sourceChain,
-                sourceAddress,
-                payloadHash,
-                tokenSymbol,
-                amount
-            )
-        ) revert NotApprovedByGateway();
-
-        _executeWithToken(sourceChain, sourceAddress, payload, tokenSymbol, amount);
-    }
-
     function _execute(
         string calldata,
         string calldata,
@@ -158,18 +191,7 @@ contract AxelarCCAdapter is ICrossChainAdapter, IAxelarExecutable, Initializable
         emit OrderlyCCMessageReceived(message, orderlyPayload);
 
         // send the message to orderly
-        crossChainRelay.receiveMessage(message, payload);
-    }
-
-    function _executeWithToken(
-        string calldata sourceChain,
-        string calldata sourceAddress,
-        bytes calldata payload,
-        string calldata tokenSymbol,
-        uint256 amount
-    ) internal {
-        /// @dev not implemented yet, revert
-        revert("not implemented yet");
+        // crossChainRelay.receiveMessage(message, payload);
     }
 
     /*** END ** Axelar Receiver Functions ** END ***/

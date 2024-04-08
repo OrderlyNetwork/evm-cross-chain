@@ -10,5 +10,6 @@ interface ICrossChainAdapter {
     function estimateGas(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) external view returns (uint256);
 
     function send(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory orderlyPayload) external payable;
+    function sendWithRefund(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory orderlyPayload, address refundAddress) external payable;
 
 }
