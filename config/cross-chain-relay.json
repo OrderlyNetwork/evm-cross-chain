@@ -40,12 +40,12 @@
     "opsepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x2730d08725c2430B419D2B795d0dA98A48Eae613",
-      "relay": "0x7613280ba1ce920df4152102f8AfF736ca6b555a"
+      "relay": "0x412211b39beCc0A3AB233B9520742511D373B703"
     },
     "arbsepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xED0294bDE7f5aEBC1eBe4Ed16940d684D3276C89",
-      "relay": "0x821FB86CaCE10336e2e5Ac130B6343094a20A2FE"
+      "relay": "0xd42E4Fafc3A6dEa9c4d1627900ab00a268128467"
     },
     "mumbai": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
@@ -55,7 +55,7 @@
     "basesepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xED0294bDE7f5aEBC1eBe4Ed16940d684D3276C89",
-      "relay": "0x821FB86CaCE10336e2e5Ac130B6343094a20A2FE"
+      "relay": "0x51E74D767f61f2445A4142E13e265A2128648Ea8"
     },
     "amoy": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
