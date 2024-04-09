@@ -105,6 +105,12 @@
       "manager": "0x17CbA19ed2d0e5B58034309A39c0326D6011CFba",
       "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
       "role": "vault"
+    },
+    "amoy": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x52d156305F1bf01813c7ed5854DbF29BB2C24995",
+      "proxy": "0x2F504DC60D1E56A6421b9db56eC21e8B0fcb311b",
+      "role": "vault"
     }
   },
   "dev": {

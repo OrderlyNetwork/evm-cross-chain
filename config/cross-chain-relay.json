@@ -98,6 +98,11 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
       "relay": "0x748e2F48d0a8Ac9174CdCBD344478295994Aae04"
+    },
+    "amoy": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x339c8523d4c2354E392424D76C2c3546Df2e7a13",
+      "relay": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0"
     }
   },
   "dev": {
