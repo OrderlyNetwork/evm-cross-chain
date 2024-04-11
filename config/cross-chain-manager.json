@@ -84,13 +84,13 @@
     },
     "opsepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "manager": "0x1A51DeF69d02c4960d10F9Df95C0A5CE7b5A069c",
+      "manager": "0xd9341E5F92461236EE9e46b153d96F4B2E8c80cD",
       "proxy": "0x6C14bf583C142B66EC59F8fc725B255e3a94BAA3",
       "role": "vault"
     },
     "arbsepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "manager": "0x17CbA19ed2d0e5B58034309A39c0326D6011CFba",
+      "manager": "0xEfb319B7656Cc36e23D100F3D6F127bA56c00AA2",
       "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
       "role": "vault"
     },
@@ -102,7 +102,7 @@
     },
     "basesepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "manager": "0x17CbA19ed2d0e5B58034309A39c0326D6011CFba",
+      "manager": "0xd42E4Fafc3A6dEa9c4d1627900ab00a268128467",
       "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
       "role": "vault"
     },
