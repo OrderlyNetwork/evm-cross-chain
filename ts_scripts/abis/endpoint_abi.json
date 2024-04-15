@@ -1,0 +1,90 @@
+[
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_dstChainId",
+          "type": "uint16"
+        },
+        {
+          "name": "_userApplication",
+          "type": "address"
+        },
+        {
+          "name": "_payload",
+          "type": "bytes"
+        },
+        {
+          "name": "_payInZRO",
+          "type": "bool"
+        },
+        {
+          "name": "_adapterParam",
+          "type": "bytes"
+        }
+      ],
+      "name": "estimateFees",
+      "outputs": [
+        {
+          "name": "nativeFee",
+          "type": "uint"
+        },
+        {
+          "name": "zroFee",
+          "type": "uint"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+          {
+              "internalType": "uint16",
+              "name": "_srcChainId",
+              "type": "uint16"
+          },
+          {
+              "internalType": "bytes",
+              "name": "_srcAddress",
+              "type": "bytes"
+          }
+      ],
+      "name": "getInboundNonce",
+      "outputs": [
+          {
+              "internalType": "uint64",
+              "name": "",
+              "type": "uint64"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint16",
+              "name": "_dstChainId",
+              "type": "uint16"
+          },
+          {
+              "internalType": "address",
+              "name": "_srcAddress",
+              "type": "address"
+          }
+      ],
+      "name": "getOutboundNonce",
+      "outputs": [
+          {
+              "internalType": "uint64",
+              "name": "",
+              "type": "uint64"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  }
+  ]
+  

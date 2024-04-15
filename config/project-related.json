@@ -6,6 +6,21 @@
         "opgoerli": {
             "vault": "0x7fc077e4487bb03D393a0C2b87B52798E19602DB"
         },
+        "opsepolia": {
+            "vault": "0xd5164A5a83c64E59F842bC091E06614b84D95fF5"
+        },
+        "arbsepolia": {
+            "vault": "0xB15a3a4D451311e03e34d9331C695078Ad5Cf5F1"
+        },
+        "mumbai": {
+            "vault": "0x7C4570Db29bF8dF8Aa0dBF6bdE637264F9E0Bd67"
+        },
+        "basesepolia": {
+            "vault": "0xEcb4abe96113c9caA3204e96C63C5377D02cb636"
+        },
+        "amoy": {
+            "vault": "0x835E970110E4a46BCA21A7551FEaA5F532F72701"
+        },
         "orderlyop": {
             "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
             "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
@@ -17,6 +32,21 @@
         },
         "arbitrumgoerli": {
             "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
+        },
+        "opsepolia": {
+            "vault": "0xEfF2896077B6ff95379EfA89Ff903598190805EC"
+        },
+        "arbsepolia": {
+            "vault": "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f"
+        },
+        "mumbai": {
+            "vault": "0xB483f9D0bD47371B54087983214887c3Be103b92"
+        },
+        "basesepolia": {
+            "vault": "0xdc7348975aE9334DbdcB944DDa9163Ba8406a0ec"
+        },
+        "amoy": {
+            "vault": "0xDf3A1a266BCc75B88Ce9b786DF521F8DaeD5b08b"
         },
         "orderlyop": {
             "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
@@ -30,6 +60,21 @@
         "arbitrumgoerli": {
             "vault": "0x0C554dDb6a9010Ed1FD7e50d92559A06655dA482"
         },
+        "opsepolia": {
+            "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
+        },
+        "mumbai": {
+            "vault": "0x56604D4097042f7950Eb8BFc58b0Dff072089070"
+        },
+        "arbsepolia": {
+            "vault": "0x3ac2ba11ca2f9f109d50fb1a46d4c23fcadbbef6"
+        },
+        "basesepolia": {
+            "vault": "0x2A5b650A894409372DDeE241EDAC92d4152bE24d"
+        },
+        "amoy": {
+            "vault": "0x2a5b650a894409372ddee241edac92d4152be24d"
+        },
         "orderlyop": {
             "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",
             "operator-manager": "0xe34614EB781C5838C78B7f913b89A05e7a5b97e2"
@@ -41,6 +86,12 @@
         },
         "arbitrum": {
             "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
+        },
+        "polygon": {
+            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+        },
+        "base": {
+            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
         },
         "orderlymain": {
             "ledger": "0x6F7a338F2aA472838dEFD3283eB360d4Dff5D203",

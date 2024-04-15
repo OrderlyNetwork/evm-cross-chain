@@ -1,8 +1,11 @@
 
-import { operation_map, argv_type_config } from "./utils/config";
+import { operation_map, argv_type_config, addArgvType } from "./utils/config";
 import "./methods";
 
+addArgvType("boolean", "multisig");
+
 const argv = require('minimist')(process.argv.slice(2), argv_type_config);
+
 
 if (argv.method === undefined) {
     console.error(`Usage: ts-node foundry_ts/entry.ts --method <method> [--broadcast] [--simulate] ...`);

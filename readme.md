@@ -4,19 +4,22 @@
 
 - [1. Introduction](#1-introduction)
   - [Role And Responsiblility](#role-and-responsiblility)
-- [2. Diagram](#2-diagram)
-- [3. An simple example: deposit](#3-an-simple-example-deposit)
-- [4. File Structure](#4-file-structure)
-  - [4.1 Project configuration](#41-project-configuration)
+  - [A simple example: deposit](#a-simple-example-deposit)
+- [2. File Structure](#2-file-structure)
+- [3. Get Started](#3-get-started)
+- [4. Project configuration](#4-project-configuration)
+  - [JSON config files `config/*.json`](#json-config-files-configjson)
   - [`.env` file](#env-file)
-- [5. Deployment and Setup](#5-deployment-and-setup)
-  - [5.0 Preparation](#50-preparation)
-  - [5.3 Deployment and Setup](#53-deployment-and-setup)
-  - [5.4 Add a new cross-chain service on the new added vault chain](#54-add-a-new-cross-chain-service-on-the-new-added-vault-chain)
-- [6 Operation Scripts](#6-operation-scripts)
+- [5. Usage](#5-usage)
+  - [Preparation](#preparation)
+    - [Add new support for a network named as XXX](#add-new-support-for-a-network-named-as-xxx)
+  - [Steps of deployment&setup](#steps-of-deploymentsetup)
+  - [Add a new cross-chain service on the new added vault chain](#add-a-new-cross-chain-service-on-the-new-added-vault-chain)
+  - [generate new contract abi if necessary (if contract changed)](#generate-new-contract-abi-if-necessary-if-contract-changed)
+- [6. Operation Scripts](#6-operation-scripts)
   - [6.1 The design of operation scripts](#61-the-design-of-operation-scripts)
   - [6.2 Script Sum Up](#62-script-sum-up)
-- [7. Useful Commands during Your Development and Maintainance](#7-useful-commands-during-your-development-and-maintainance)
+- [7. Useful Commands](#7-useful-commands)
   - [change layerzero cross-chain airdrop gas](#change-layerzero-cross-chain-airdrop-gas)
   - [Retry payload when PayloadStored event found](#retry-payload-when-payloadstored-event-found)
   - [Start an "auto PayloadStored event monitor and retry" service](#start-an-auto-payloadstored-event-monitor-and-retry-service)
@@ -61,11 +64,11 @@ This project is built for providing cross-chain service for Orderly V2, which ha
 - construct cross-chain message and payload and send then to cross-chain-relay
 - convert messages sent from ledger on the other chain to vault into the recognizeable type and forward to vault
 
-## 2. Diagram
+**Diagram:**
 
 ![structure](imgs/infra)
 
-## 3. An simple example: deposit
+### A simple example: deposit
 
 1. The vault receives a user's deposit request.
 
@@ -83,7 +86,7 @@ This project is built for providing cross-chain service for Orderly V2, which ha
 
 8. Finally, the Ledger processes the deposit.
 
-## 4. File Structure
+## 2. File Structure
 
 Here's an overview of the main folders in this project and what they contain:
 
@@ -97,11 +100,17 @@ Here's an overview of the main folders in this project and what they contain:
 
 - `config/`: A general folder for storing project-related informations like contract address.
 
-### 4.1 Project configuration
+## 3. Get Started
+To get started, you need to install the following dependencies and prepare some pre-settings:
+* nodejs, yarn
+* foundry
+* follow the [Project configuration](#4-project-configuration) section to setup your project configuration
 
-#### json config files `config/*.json`
+## 4. Project configuration
 
-first of all, I will introduce the role of json files under `config`. Foundry scripts are not like javascript or ts. It is not that convenient to save deployment infos and projecte related infos into files. So we usually copy and paste the info into some place(confluence, or readme). But copy paste isn't a good habit. So I decide to put everything into json files automatically. So I write a helper base class for foundry scripts so that it can help users better read from and write to json files.
+### JSON config files `config/*.json`
+
+First of all, I will introduce the role of json files under `config`. Foundry scripts are not like javascript or ts. It is not that convenient to save deployment infos and projecte related infos into files. So we usually copy and paste the info into some place(confluence, or readme). But copy paste isn't a good habit. So I decide to put everything into json files automatically. So I write a helper base class for foundry scripts so that it can help users better read from and write to json files.
 
 The json files under `config` is organized by `env` first, and then `network`, and then specific infos. Just like the following relay deployment example:
 
@@ -124,7 +133,7 @@ The above example stores cross-chain-relay service's deployment address and owne
 
 Other project related json files are oragized by the same way. The json file read and write helper foundry script is `baseScripts/ConfigHelper.s.sol` it wraps the read and write of cross-chain-relay infos and cross-chain-manager infos, and other useful helper functions.
 
-#### `.env` file
+### `.env` file
 
 Beside json files under `config`, other public informations are stored in `.env`, and the example is `.env.example`.
 
@@ -136,13 +145,13 @@ in `.env` you can set your private keys, chain RPC URLs, chain Ids and other pub
 
 3. Setup Layerzero Endpoins addresses
 
-## 5. Deployment and Setup
+## 5. Usage
 In this section, I will introduce how to deploy evm-cross-chain service for orderly v2, and how to setup every contracts. Scripts organization and related file format will also be introduced.
 
-### 5.0 Preparation
-You need prepare your `.env` file first. You can copy the `.env.example file and rename it to `.env`. For every network you want to deploy, you need to set the following variables in `.env`.
+### Preparation
+You need prepare your `.env` file first. For every network you want to deploy, you need to set the following variables in `.env`.
 
-#### SOP for adding new support for a network named as `XXX`
+#### Add new support for a network named as XXX
 
 **for private key configuration**
 
@@ -160,18 +169,13 @@ You need prepare your `.env` file first. You can copy the `.env.example file and
 6. set XXX_ENDPOINT in `.env` (for layerzero cross-chain support)
 
 
+### Steps of deployment&setup
 
-### 5.3 Deployment and Setup
-
-Before you start deployment and setup, please make sure you setup your `.env` correctly.
-
-In this repo `evm-cross-chain`, which provids cross-chain-service for orderly v2 between vault and ledger. It has two main components, `cross-chain-relay` and `cross-chain-manager`. I won't elaborate the role and responsibility of the two componenets here, but I will introduce the procedures of deployment and setup of both.
-
-Both components take advantage of UUPS for upgradeable contracts deployment. so the deployment of them includes the following steps:
+This detailed steps of deployment is described in section [9. Deploy and Setup Cross Chain Service](9-deploy-and-setup-cross-chain-service). Here I will introduce the steps in a more general way.
 
 1. deploy the implementation contract
 2. deploy proxy contract
-3. initialize the contract (one-time function)
+3. initialize the contract
 
 After deployment, you need to setup the contracts. Cross-chain-relay and cross-chain-manager has different setup procedures. for cross-chain-relay, please follow the following setup procedure:
 
@@ -197,12 +201,13 @@ for vault cross-chain-manager, the setup procedure is like:
 
 Some components relies on other components, so you'd better deploy all of them so before your setup starts.
 
-### 5.4 Add a new cross-chain service on the new added vault chain
+### Add a new cross-chain service on the new added vault chain
 There are some times we need to add new vault chains. So we need to deploy cross-chain-relay and cross-chain-manager on the new added vault chain. And update settings of contracts on the ledger side. The following steps are the procedures of adding a new vault chain.
 
-1. update token decimal in `config/token-decimals.json`, make sure the new added vault chain's token decimal is set correctly.
-2. update project related infos in `config/project-related.json` (or you can update it later, if you choose to setup vault later, you should drop the --connectVault flag in the following script)
-3. run a script to add a new cross-chain service on the new added vault chain and setup it and update ledger side contracts settings
+1. Setup the new vault chain's network configuration in `.env` file, including private key, chain id, rpc url, layerzero chain id and layerzero endpoint address.
+2. update token decimal in `config/token-decimals.json`, make sure the new added vault chain's token decimal is set correctly.
+3. update project related infos in `config/project-related.json` (or you can update it later, if you choose to setup vault later, you should drop the --connectVault flag in the following script)
+4. run a script to add a new cross-chain service on the new added vault chain and setup it and update ledger side contracts settings
 ```shell
 ts-node foundry_ts/entry.ts --method addVaultCCService --env dev --vaultNetwork opgoerli --ledgerNetwork orderlyop --initEther 0.01 --broadcast --connectVault
 ```
@@ -220,23 +225,23 @@ If you add new operations in cross-chain-relay or cross-chain-manager, you shoul
  ts-node foundry_ts/entry.ts --method setCrossChainFeeAll --env <env> --network <network> --broadcast
 ```
 
-4. generate new contract abi if necessary (if contract changed)
+### generate new contract abi if necessary (if contract changed)
 5. add git tag and push to github
 6. update abi json file in [contract-abi](https://gitlab.com/orderlynetwork/orderly-v2/contract-abi)
 7. fill the information on confluence [Orderly V2 Contract Information Board](https://wootraders.atlassian.net/wiki/spaces/ORDER/pages/343441906/Orderly+V2+Contract+Information+Board#Orderly-V2-Settlement-Layer) 
 8. fill the balance monitor information to make sure enough balance on the new added vault cross-chain relay.
 
-## 6 Operation Scripts
+## 6. Operation Scripts
 
 To better manage the complex procedures of cross-chain-relay and cross-chain-manager, we define the single operation of each step in above procedures as `operation`. Each operation is realized using a foundry script and a typescript wrapper. And some useful composite operations(includes several operations together) can be built using typescript wrapper (call several operations in one invocation).
 
-Before we start on introducing the operation script structure. We need to introduce some helper scripts first. Because cross-chain-relay and cross-chain-manager has fixed procedures, so we don't need write a same operation again and again. Therefore, I provide some helper function in scripts to help users better build more other operations. For example, cross-chain-relay's helper script locates at `baseScripts/RelayHelper.s.sol`, it implements all operations for cross-chain-relay. Cross-chain-manager's helper script locates at `baseScripts/CCManagerHelper.s.sol`.
+Before we start on introducing the operation script structure. We need to introduce some helper scripts first. Because cross-chain-relay and cross-chain-manager has fixed procedures, so we don't need write a same operation again and again. Therefore, I provide some helper function in scripts to help users better build more other operations. For example, cross-chain-relay's helper script locates at `./script/baseScripts/RelayHelper.s.sol`, it implements all operations for cross-chain-relay. Cross-chain-manager's helper script locates at `./script/baseScripts/CCManagerHelper.s.sol`.
 
 Now let's take a look at the structure of the actual operation scripts.
 
 ### 6.1 The design of operation scripts
 
-First an operation implemented by a foundry script under `./foundry_scripts`. The file structure under `./foundry_scripts` depends on the role of the operations, relay's operations are placed under `relay`, cross-chain-manager's operations are placed under `ccmanager`. General operations like `retryPayload`, `transferNativeToken` is place under `./foundry_scripts`.
+First an operation implemented by a foundry script under `./script/foundry_scripts`. The file structure under `./script/foundry_scripts` depends on the role of the operations, relay's operations are placed under `relay`, cross-chain-manager's operations are placed under `ccmanager`. General operations like `retryPayload`, `transferNativeToken` is place under `./script/foundry_scripts`.
 
 Every foundry script is wrapped by a typescript script. The required input arguments of foundry scripts are passed from typescript script's arguments. The arguments will be formatted as `FS_${operation_name}_${argument_name}` and set in `.env` by typescript, so that foundry script can read them by using `vm.env`. Let's take a look at an example, to see how a script is invoked.
 
@@ -305,7 +310,7 @@ Of course you can start will existing typescript operations, and just add a new 
 
 The second way of adding new script using typescript is recommended. Foundry script should be regarded as low-level invocation of contract operation. Complex operations that are more useful in real situation should be implemented in typescript.
 
-## 7. Useful Commands during Your Development and Maintainance
+## 7. Useful Commands 
 
 ### change layerzero cross-chain airdrop gas
 
@@ -320,14 +325,6 @@ ts-node foundry_ts/entry.ts --method setCrossChainFee --ccmethod pingPong --fee 
 ```shell
 ts-node foundry_ts/entry.ts --method retryPayload --env staging --network arbitrumgoerli --data <0x> --broadcast
 ```
-
-### Start an "auto PayloadStored event monitor and retry" service
-
-```shell
-ts-node foundry_ts/entry.ts --method monitorPayloadAndRetry --blockNumber 42313850 --data 0xA1A9C94BB24B09739AF80E6EFAB7CA0F576182BCF920A86C1EA7788933C188E7A3516807A18655D6 --network arbitrumgoerli
-```
-
-the data here is the packed encode bytes of src UA address and dst UA address.
 
 ### Upgrade CC Manager
 
@@ -428,6 +425,8 @@ forge flatten <contract> > flattened.sol
 
 then you can verify it on explorer using the generated standard json input or flattened solidity file. Make sure you set the constructor arguments correctly. You can goto `https://abi.hashex.org/` to get the abi encoded constructor arguments.
 
+The reason that `forge verify-contract` doesn't succeed is that it doesn't pass the constructor arguments correctly or the compiler version is not correct. So you have to pass them manually. By using the typescript wrapper `verifyContract`, you can successfully verify contracts on explorer.
+
 
 ## 11. print necessary information of cross-chain service
 
@@ -467,13 +466,20 @@ To release a new version on dev, qa, staging or production, you need to follow t
 4. deploy and setup the new version on dev, qa, staging or production
 5. add git tag and push to github
 
+## 13. create Safe proposal, sign and execute
+1. generate raw tx json
+```shell
+ts-node foundry_ts/entry.ts --method genRawTx --env <env> --network <network> --contractName <contract name> --funcName <function name> --value <ETH token amount> --params < param1,param2,... >
+```
+by running this command, a raw tx json will be generated under data with name `<env>_<network>_<contractName>_<funcName>.json`. You can use this json to create a safe proposal.
+2. 
+
 # Issues
 
 1. if you put urls like https://testnet-explorer.orderly.org/api\? into `.env` file. foundry script will have problem parsing `.env`. you need to use "" to enclose it and add `\` to escape the parsing. so it will be like:
    "https://testnet-explorer.orderly.org/api\\\\?"
 
-2. Oracle backoff
-
+2. Oracle backoff: 
 In a certain situation, oracle could be backoff for a long time, which will block relayer for a long time. Then txs could be in pending. The cause of oracle backoff is Orderly chain stopping mining.
 
 # License

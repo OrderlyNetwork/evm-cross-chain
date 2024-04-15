@@ -14,6 +14,10 @@ export function getChainId(network: string): number {
     return parseInt(process.env[network.toUpperCase() + "_CHAIN_ID"] as string);
 }
 
+export function getLzChainId(network: string): number {
+    return parseInt(process.env[network.toUpperCase() + "_LZ_CHAIN_ID"] as string);
+}
+
 export function getEtherscanApiKey(network: string): string {
     return process.env[network.toUpperCase() + "_ETHERSCAN_API_KEY"] as string;
 }

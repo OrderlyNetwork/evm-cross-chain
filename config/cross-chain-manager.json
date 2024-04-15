@@ -31,6 +31,36 @@
       "manager": "0x8FBBFD00D630B63F6924Fe85D880993e47709c06",
       "proxy": "0x748e2F48d0a8Ac9174CdCBD344478295994Aae04",
       "role": "vault"
+    },
+    "opsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x4d2a4C00fdC1CE61d455b85c4a35A9F9F115462d",
+      "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
+      "role": "vault"
+    },
+    "arbsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x8d45642C8b208DE2d50C2453860b2B13Fb429e5f",
+      "proxy": "0x3D6B3c33Ef5d7EF3D300E9993bCBa84994282796",
+      "role": "vault"
+    },
+    "mumbai": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x5890e6a2db9c3b3cef0756f655c356b19Bf6a713",
+      "proxy": "0x5771f66593025483266cD2e14237fdf45D649Fa5",
+      "role": "vault"
+    },
+    "basesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x0e0D384D1d5f9968574a83814572749158108aa2",
+      "proxy": "0x3D6B3c33Ef5d7EF3D300E9993bCBa84994282796",
+      "role": "vault"
+    },
+    "amoy": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x544bfE75441e394cF2Af92d7c33545F8600e2dfb",
+      "proxy": "0x3D6B3c33Ef5d7EF3D300E9993bCBa84994282796",
+      "role": "vault"
     }
   },
   "staging": {
@@ -50,6 +80,36 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "manager": "0xFA59A70dD17Fb89F031A34e27728754e8B7f19fb",
       "proxy": "0x2a08870fa26745032fdb4ecf0B2B91a4c1a260eD",
+      "role": "vault"
+    },
+    "opsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0xd9341E5F92461236EE9e46b153d96F4B2E8c80cD",
+      "proxy": "0x6C14bf583C142B66EC59F8fc725B255e3a94BAA3",
+      "role": "vault"
+    },
+    "arbsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0xEfb319B7656Cc36e23D100F3D6F127bA56c00AA2",
+      "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
+      "role": "vault"
+    },
+    "mumbai": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x18Cdc3393Ba8e72b12e9A04deA9C556Ae404E614",
+      "proxy": "0x96B94EC878263C7393BCfe81B2a80477616F5AD8",
+      "role": "vault"
+    },
+    "basesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0xd42E4Fafc3A6dEa9c4d1627900ab00a268128467",
+      "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
+      "role": "vault"
+    },
+    "amoy": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x52d156305F1bf01813c7ed5854DbF29BB2C24995",
+      "proxy": "0x2F504DC60D1E56A6421b9db56eC21e8B0fcb311b",
       "role": "vault"
     }
   },
@@ -71,26 +131,68 @@
       "manager": "0x94843406ac2b468C54c527853246614D5B5753Ab",
       "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
       "role": "vault"
+    },
+    "opsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0xeAbA3DbD466B4691F17beE97477966da29268CFf",
+      "proxy": "0xE8709025f99dd1B8533FB9b78Ca879Ee4ec7E70a",
+      "role": "vault"
+    },
+    "arbsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x0e0D384D1d5f9968574a83814572749158108aa2",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "role": "vault"
+    },
+    "mumbai": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "role": "vault"
+    },
+    "basesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0xdA1EEa76a78Ab770368B9b6FA8A201A4efcba844",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "role": "vault"
+    },
+    "amoy": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "role": "vault"
     }
   },
   "production": {
     "optimism": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
-      "manager": "0xd1c426290eaf9C16dC55e9bd10b624abb827DEef",
+      "manager": "0x83AfA1005B0b3382f44cEb6057F00bd53431c53B",
       "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
       "role": "vault"
     },
     "arbitrum": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
-      "manager": "0xd1c426290eaf9C16dC55e9bd10b624abb827DEef",
+      "manager": "0xD7120707fBd5eD14f62d14e91C5874b03d742DB4",
       "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
       "role": "vault"
     },
     "orderlymain": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
-      "manager": "0xd1c426290eaf9C16dC55e9bd10b624abb827DEef",
+      "manager": "0x795956590672782B90deB620A249264721eCB340",
       "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
       "role": "ledger"
+    },
+    "polygon": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "manager": "0x0CF66b26b1F95553630ca403f5111CdeF3BdDff6",
+      "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
+      "role": "vault"
+    },
+    "base": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "manager": "0xFa02A1f872cA85cEC0d9fDA391CE1C7A8DB28Cfb",
+      "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
+      "role": "vault"
     }
   }
 }

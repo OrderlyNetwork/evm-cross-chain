@@ -68,7 +68,7 @@ function getRpcUrl(networkName: string) {
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.18",
+    version: "0.8.20",
     settings: {
       optimizer: {
         enabled: true,
@@ -77,37 +77,37 @@ const config: HardhatUserConfig = {
     }
   },
   networks: {
-    ethereum: {
-      url: getRpcUrl('ethereum'),
-      chainId: 1,
-      accounts: getAccount('ethereum'),
-    },
-    bsc: {
-      url: getRpcUrl('bsc'),
-      chainId: 56,
-      accounts: getAccount('bsc'),
-    },
-    fuji: {
-      url: getRpcUrl('fuji'),
-      chainId: 43113,
-      saveDeployments: true,
-      accounts: getAccount('fuji'),
-    },
-    orderly: {
-      url: getRpcUrl('orderly'),
-      chainId: 986532,
-      accounts: getAccount('orderly'),
-    },
+    // ethereum: {
+    //   url: getRpcUrl('ethereum'),
+    //   chainId: 1,
+    //   accounts: getAccount('ethereum'),
+    // },
+    // bsc: {
+    //   url: getRpcUrl('bsc'),
+    //   chainId: 56,
+    //   accounts: getAccount('bsc'),
+    // },
+    // fuji: {
+    //   url: getRpcUrl('fuji'),
+    //   chainId: 43113,
+    //   saveDeployments: true,
+    //   accounts: getAccount('fuji'),
+    // },
+    // orderly: {
+    //   url: getRpcUrl('orderly'),
+    //   chainId: 986532,
+    //   accounts: getAccount('orderly'),
+    // },
     orderlyop: {
       url: getRpcUrl('orderlyop'),
       chainId: 4460,
       accounts: getAccount('orderlyop'),
     },
-    arbitrumgoerli: {
-      url: getRpcUrl('arbitrumgoerli'),
-      chainId: 421613,
-      accounts: getAccount('arbitrumgoerli'),
-    }
+    // arbitrumgoerli: {
+    //   url: getRpcUrl('arbitrumgoerli'),
+    //   chainId: 421613,
+    //   accounts: getAccount('arbitrumgoerli'),
+    // }
   },
   deterministicDeployment,
   tenderly: {

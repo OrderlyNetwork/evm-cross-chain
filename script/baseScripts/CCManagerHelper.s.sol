@@ -16,11 +16,21 @@ contract CCManagerHelper is BaseScript, OperationHelper {
         return (address(vaultManager), address(proxy));
     }
 
+    function deployNewVaultManager() internal returns (address) {
+        VaultCrossChainManagerUpgradeable vaultManager = new VaultCrossChainManagerUpgradeable();
+        return address(vaultManager);
+    }
+
     function deployLedgerManager() internal returns (address, address) {
         LedgerCrossChainManagerUpgradeable vaultManager = new LedgerCrossChainManagerUpgradeable();
         CrossChainManagerProxy proxy = new CrossChainManagerProxy(address(vaultManager), bytes(""));
         LedgerCrossChainManagerUpgradeable(payable(proxy)).initialize();
         return (address(vaultManager), address(proxy));
+    }
+
+    function deployNewLedgerManager() internal returns (address) {
+        LedgerCrossChainManagerUpgradeable ledgerManager = new LedgerCrossChainManagerUpgradeable();
+        return address(ledgerManager);
     }
 
     function upgradeVaultManager(address proxy) internal returns (address) {

@@ -1,4 +1,4 @@
-export const foundry_script_folder = "script/foundry_scripts";
+export const foundry_script_folder = "script";
 export const relay_deploy_json = "config/cross-chain-relay.json";
 export const ccmanager_deploy_json = "config/cross-chain-manager.json";
 export const cc_gas_json = "config/cross-chain-method-gas.json";
@@ -57,4 +57,11 @@ export const compilerVersionMap = {
     "0.8.18": "v0.8.18+commit.87f61d96",
     "0.8.19": "v0.8.19+commit.7dd6d404",
     "0.8.20": "v0.8.20+commit.a1b79de6",
+}
+
+export function getContractAbiPath(contractName: string) {
+    // get real contract name using contractMeta
+    const contractInfo = CONTRACT_META[contractName as ContractMetaKey];
+    const realContractName = contractInfo.name;
+    return "out/" + realContractName + ".sol/" + realContractName + ".json";
 }

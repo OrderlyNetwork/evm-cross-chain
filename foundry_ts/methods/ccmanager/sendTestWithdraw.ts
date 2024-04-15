@@ -6,6 +6,9 @@ import { ccmanager_deploy_json } from "../../utils/const";
 import { set_env_var, foundry_wrapper } from "../../foundry";
 import { checkArgs } from "../../helper";
 import { setupDeployJson } from "../../utils/setupDeployJson";
+import { writeToProposal } from "../../utils/writeProposal";
+import { getChainId } from "../../utils/envUtils";
+import { getContractAddress } from "../../utils/getDeployData";
 
 // current file name
 const method_name = "sendTestWithdraw";
@@ -13,10 +16,19 @@ const method_name = "sendTestWithdraw";
 export function sendTestWithdrawWithArgv(argv: any) {
     const required_flags = ["env", "network", "toNetwork"];
     checkArgs(method_name, argv, required_flags);
-    sendTestWithdraw(argv.env, argv.network, argv.toNetwork, argv.broadcast, argv.simulate);
+    sendTestWithdraw(argv.env, argv.network, argv.toNetwork, argv.broadcast, argv.simulate, argv.multisig);
 }
 
-export function sendTestWithdraw(env: string, network: string, toNetwork: string, broadcast: boolean, simulate: boolean) {
+export function sendTestWithdraw(env: string, network: string, toNetwork: string, broadcast: boolean, simulate: boolean, multisig: boolean = false) {
+
+    if (multisig) {
+        const method = "sendTestWithdraw(uint256)";
+        const params = [getChainId(toNetwork).toString()];
+        const address = getContractAddress(env, network, "LedgerCCManager", true);
+        const filename = "sendTestWithdraw";
+        writeToProposal(filename, env, network, address, "0", method, params);
+        return;
+    }
     
 
     set_env_var(method_name, "env", env);

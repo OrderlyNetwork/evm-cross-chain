@@ -1,4 +1,4 @@
-import { addOperation } from "../utils/config";
+import { addArgvType, addOperation } from "../utils/config";
 import { set_env_var, foundry_wrapper } from "../foundry";
 import { checkArgs } from "../helper";
 import { setupDeployJson } from "../utils/setupDeployJson";
@@ -30,11 +30,11 @@ export function addVaultCCServiceWithArgv(argv: any) {
     checkArgs(method_name, argv, required_flags);
     // print all args
     console.log("argv: ", argv);
-    addVaultCCService(argv.env, argv.vaultNetwork, argv.ledgerNetwork, argv.connectVault, argv.initEther, argv.broadcast, argv.simulate, argv.skip);
+    addVaultCCService(argv.env, argv.vaultNetwork, argv.ledgerNetwork, argv.connectVault, argv.initEther, argv.broadcast, argv.simulate, argv.skip, argv.multisig);
 }
 
 /// TODO
-export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwork: string, connectVault: boolean, initEther: number, broadcast: boolean, simulate: boolean, skip: number) {
+export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwork: string, connectVault: boolean, initEther: number, broadcast: boolean, simulate: boolean, skip: number, multisig: boolean = false) {
 
     // default compiler version
     const compilerVersion = "0.8.19";
@@ -73,7 +73,7 @@ export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwo
 
     // 3.3 layerzero fee
     if (operationCnt > skip) { // 5
-        setCrossChainFeeAll(env, vaultNetwork, broadcast, simulate);
+        setCrossChainFeeAll(env, vaultNetwork, "", broadcast, simulate);
     }
     operationCnt++;
 
@@ -125,17 +125,17 @@ export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwo
     // 5. update settings on ledger side
     // 5.1 set token decimal
     if (operationCnt > skip) { // 13
-        setCCManagerTokenDecimal(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+        setCCManagerTokenDecimal(env, ledgerNetwork, vaultNetwork, broadcast, simulate, multisig);
     }
     operationCnt++;
     // 5.2 set trusted remote
     if (operationCnt > skip) { // 14
-        setRelayTrustedRemote(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+        setRelayTrustedRemote(env, ledgerNetwork, vaultNetwork, broadcast, simulate, multisig);
     }
     operationCnt++;
     // 5.3 add lz chain mapping
     if (operationCnt > skip) { // 15
-        addRelayLzChainMapping(env, ledgerNetwork, vaultNetwork, broadcast, simulate);
+        addRelayLzChainMapping(env, ledgerNetwork, vaultNetwork, broadcast, simulate, multisig);
     }
     operationCnt++;
 

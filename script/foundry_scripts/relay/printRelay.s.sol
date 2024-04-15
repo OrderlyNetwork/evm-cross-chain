@@ -18,9 +18,10 @@ contract PrintRelay is BaseScript, ConfigHelper, RelayHelper {
         console.log("[PrintRelay]dstNetwork: ", dstNetwork);
 
         RelayDeployData memory relayData = getRelayDeployData(env, network);
-        vmSelectRpcAndBroadcast(network);
+        vmSelectRpc(network);
 
         CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(relayData.proxy));
+        console.log("owner: ", address(relay.owner()));
         // print chain id
         console.log("chainId: ", relay._currentChainId());
         // print lz chain id mapping
@@ -50,7 +51,21 @@ contract PrintRelay is BaseScript, ConfigHelper, RelayHelper {
         console.log(
             "pingPong gas: ", relay._flowGasLimitMapping(uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong))
         );
+        console.log(
+            "mint gas: ", relay._flowGasLimitMapping(uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMint))
+        );
+        console.log(
+            "mintFinish gas: ", relay._flowGasLimitMapping(uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMintFinish))
+        );
+        // burn
+        console.log(
+            "burn gas: ", relay._flowGasLimitMapping(uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurn))
+        );
+        console.log(
+            "burnFinish gas: ", relay._flowGasLimitMapping(uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurnFinish))
+        );
 
-        vm.stopBroadcast();
+
+        // vm.stopBroadcast();
     }
 }

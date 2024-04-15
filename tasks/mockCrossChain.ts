@@ -97,7 +97,7 @@ async function sendMsg(networkInfo: NetworkInfo, data: string, hre: HardhatRunti
   let tx;
   while (true) {
     try {
-      tx = await relayContract.connect(wallet).receiveMessage(crossChainMessage, decodedData[7]);
+      tx = await relayContract.connect(wallet).getFunction('receiveMessage')(crossChainMessage, decodedData[7]);
       break;
     } catch (e) {
       console.log(`tx failed or reverted, wait for 5 seconds and retry`);

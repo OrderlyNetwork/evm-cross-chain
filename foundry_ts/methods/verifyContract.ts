@@ -53,7 +53,7 @@ export function verifyContract(env: string, network: string, contract: string, p
         }
         const constructorArgsFlag = constructorArgs ? `--constructor-args ${constructorArgs}` : "";
         const compilerVersionFlag = compilerVeresion ? `--compiler-version ${compilerVersionMap[compilerVeresion as keyof typeof compilerVersionMap]}` : "";
-        cmd = (`forge verify-contract ${contractAddress} ${contractPath} --chain-id ${chainId} --verifier-url ${explorerApiUrl} -e ${etherscanApiKey} ${constructorArgsFlag} ${compilerVersionFlag}`)
+        cmd = (`forge verify-contract ${contractAddress} ${contractPath} --chain-id ${chainId} --verifier-url ${explorerApiUrl} --etherscan-api-key ${etherscanApiKey} ${constructorArgsFlag} ${compilerVersionFlag}`)
     }
     console.log(cmd);
     if (!simulate) {

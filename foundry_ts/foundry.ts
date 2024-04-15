@@ -16,9 +16,9 @@ export function foundry_wrapper(method_name: string, broadcast: boolean, simulat
     }
     
     let verifyFlag = verify ? " --verify --legacy" : "";
+    const explorerRpcUrl = getRpcUrl(network);
     if (verify) {
         const explorerApiUrl = getExplorerApiUrl(network);
-        const explorerRpcUrl = getRpcUrl(network);
         if (explorer === "etherscan") {
             const apiKey = getEtherscanApiKey(network);
             verifyFlag = ` -f ${explorerRpcUrl} --verifier-url ${explorerApiUrl} --etherscan-api-key ${apiKey} ` + verifyFlag;
@@ -28,7 +28,11 @@ export function foundry_wrapper(method_name: string, broadcast: boolean, simulat
             console.log(`Cannot find explorer type ${explorer}`);
             process.exit(1);
         }
+    } else if (network !== "none"){
+        verifyFlag = ` --rpc-url ${explorerRpcUrl} `;
     }
+
+
 
     let command = `source .env && forge script ${foundryScriptPath} ${verifyFlag} -vvvv ${broadcastFlag}`;
     console.log(`Running ${method_name} script: ${command}`);

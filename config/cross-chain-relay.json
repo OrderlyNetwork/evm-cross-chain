@@ -36,6 +36,31 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xF2a96DDd9585386Db5352326E02909C7EcEDa299",
       "relay": "0x9D1f32Fe70578a59D562235547153539C23Fa498"
+    },
+    "opsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x2730d08725c2430B419D2B795d0dA98A48Eae613",
+      "relay": "0x412211b39beCc0A3AB233B9520742511D373B703"
+    },
+    "arbsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xED0294bDE7f5aEBC1eBe4Ed16940d684D3276C89",
+      "relay": "0xd42E4Fafc3A6dEa9c4d1627900ab00a268128467"
+    },
+    "mumbai": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x07Ef4F8170d87976a042C6De2b0a67286fD2070a",
+      "relay": "0x6FcCD5464128aF8Ed345C8BCb294b15C22b2901c"
+    },
+    "basesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xED0294bDE7f5aEBC1eBe4Ed16940d684D3276C89",
+      "relay": "0x51E74D767f61f2445A4142E13e265A2128648Ea8"
+    },
+    "amoy": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xED0294bDE7f5aEBC1eBe4Ed16940d684D3276C89",
+      "relay": "0x821FB86CaCE10336e2e5Ac130B6343094a20A2FE"
     }
   },
   "staging": {
@@ -53,6 +78,31 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xC469eB33daFdE05CC0f05dDFca4fF793f680F02E",
       "relay": "0x6C14bf583C142B66EC59F8fc725B255e3a94BAA3"
+    },
+    "opsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x09a766D6bcA1Fd8FdB6c09b76084719cF94d041b",
+      "relay": "0xf61e60ca8295fb64fA1333e14BCb38B1e4B3A360"
+    },
+    "arbsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "relay": "0x5dC15b3492184F3dFf8f2c8206127C50c7dDFc24"
+    },
+    "mumbai": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x2F504DC60D1E56A6421b9db56eC21e8B0fcb311b",
+      "relay": "0x52d156305F1bf01813c7ed5854DbF29BB2C24995"
+    },
+    "basesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "relay": "0x8d45642C8b208DE2d50C2453860b2B13Fb429e5f"
+    },
+    "amoy": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x339c8523d4c2354E392424D76C2c3546Df2e7a13",
+      "relay": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0"
     }
   },
   "dev": {
@@ -70,23 +120,58 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
       "relay": "0x544bfE75441e394cF2Af92d7c33545F8600e2dfb"
+    },
+    "opsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "relay": "0x0Cff6d95C968D59439F28e7cC9e28ccFa83235c7"
+    },
+    "arbsepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xBFC9141Fb39F17dFE48D06c525119Ae390A4955a"
+    },
+    "mumbai": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
+    },
+    "basesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0x07B994696c7a492241bA4b8AE4d6B54bABf3a6A0"
+    },
+    "amoy": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
     }
   },
   "production": {
     "arbitrum": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
       "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
-      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+      "relay": "0x42152684C81c1A562f0b2c6939df91a6c940e81a"
     },
     "orderlymain": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
       "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
-      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+      "relay": "0xa9874b1247d98d193FDA73Ce956DfD675C39c1E6"
     },
     "optimism": {
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
       "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
-      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+      "relay": "0xB327191924Fde508AeCAe9F79b253CC5031DceA2"
+    },
+    "polygon": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
+      "relay": "0xBaB058Da9dAaB199f638625f35A8aF4a459b3166"
+    },
+    "base": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
+      "relay": "0x32c9896783C4Ccaed4D9B0c79eF808A394D6335d"
     }
   }
 }

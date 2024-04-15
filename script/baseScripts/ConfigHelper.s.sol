@@ -17,6 +17,12 @@ struct RelayDeployData {
     address relay;
 }
 
+struct CCAdapterDeployData {
+    address owner;
+    address proxy;
+    address adapter;
+}
+
 struct TokenDecimalConfig {
     uint256 decimals;
     string name;
@@ -46,6 +52,14 @@ contract ConfigHelper is Script {
         returns (string memory)
     {
         return key1.formJsonKey().concat(key2.formJsonKey().concat(key3.formJsonKey()));
+    }
+
+    function formKey(string memory key1, string memory key2, string memory key3, string memory key4)
+        internal
+        pure
+        returns (string memory)
+    {
+        return key1.formJsonKey().concat(key2.formJsonKey().concat(key3.formJsonKey())).concat(key4.formJsonKey());
     }
 
     function getValueByKey(string memory path, string memory key1, string memory key2, string memory key3)
@@ -133,6 +147,7 @@ contract ConfigHelper is Script {
         writeToJsonFileByKey(vm.toString(data.owner), deploySaveFile, env, network, "owner");
     }
 
+
     function writeRelayDeployData(string memory env, string memory network, address relay, address proxy, address owner)
         internal
     {
@@ -150,6 +165,13 @@ contract ConfigHelper is Script {
         vm.writeJson(value, deploySavePath, networkKey);
     }
 
+    function writeCCAdapterDeployData(string memory env, string memory network, string memory name, address adapter, address proxy, address owner) internal {
+        string memory deploySaveFile = vm.envString("DEPLOY_CCADAPTER_SAVE_FILE");
+        writeToJsonFileByKey(vm.toString(proxy),   deploySaveFile, env, network, name, "proxy");
+        writeToJsonFileByKey(vm.toString(adapter), deploySaveFile, env, network, name, "adapter");
+        writeToJsonFileByKey(vm.toString(owner),   deploySaveFile, env, network, name, "owner");
+    }
+
     function writeToJsonFileByKey(string memory value, string memory path, string memory key1, string memory key2)
         internal
     {
@@ -164,6 +186,17 @@ contract ConfigHelper is Script {
         string memory key3
     ) internal {
         vm.writeJson(value, path, formKey(key1, key2, key3));
+    }
+
+    function writeToJsonFileByKey(
+        string memory value,
+        string memory path,
+        string memory key1,
+        string memory key2,
+        string memory key3,
+        string memory key4
+    ) internal {
+        vm.writeJson(value, path, formKey(key1, key2, key3, key4));
     }
 
     function getTokenDecimals(string memory env, string memory network)
@@ -194,4 +227,18 @@ contract ConfigHelper is Script {
         bytes memory data = getValueByKey(projectRelatedFile, env, network, "operator-manager");
         return abi.decode(data, (address));
     }
+
+    // function writeToProposal(string memory env, string memory network, address to, uint256 value, string memory method, string[] memory params) internal {
+    //     string memory root_path = 'proposal/';
+    //     string memory proposalPath = root_path.concat(method);
+
+    //     string memory json = method.concat('_proposal');
+    //     json.serialize("to", to);
+    //     json.serialize("value", vm.toString(value));
+    //     json.serialize("method", method);
+    //     json.serialize("params", params);
+    //     json.serialize("operation", uint256(0));
+
+    //     json.write(proposalPath);
+    // }
 }

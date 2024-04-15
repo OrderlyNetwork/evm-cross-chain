@@ -30,6 +30,11 @@ interface IVaultCrossChainManager {
     /// @param data Struct containing deposit data.
     function depositWithFee(VaultTypes.VaultDeposit memory data) external payable;
 
+    /// @notice Initiates a deposit to the vault along with native fees.
+    /// @param refundReceiver Address of the receiver of the deposit fee refund.
+    /// @param data Struct containing deposit data.
+    function depositWithFeeRefund(address refundReceiver, VaultTypes.VaultDeposit memory data) external payable;
+
     /// @notice Fetches the deposit fee based on deposit data.
     /// @param data Struct containing deposit data.
     /// @return fee The calculated deposit fee.

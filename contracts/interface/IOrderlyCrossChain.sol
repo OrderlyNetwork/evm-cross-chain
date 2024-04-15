@@ -31,6 +31,16 @@ interface IOrderlyCrossChain {
         external
         payable;
 
+    /// @notice send message with fee, so no estimate gas fee will not run
+    /// @param refundReceiver receiver of the refund
+    /// @param message message
+    /// @param payload payload
+    function sendMessageWithFeeRefund(
+        address refundReceiver,
+        OrderlyCrossChainMessage.MessageV1 memory message,
+        bytes memory payload
+    ) external payable;
+
     /// @notice receive message after decoding the message
     /// @param message message
     /// @param payload payload

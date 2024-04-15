@@ -14,6 +14,11 @@ contract BaseScript is Script {
         vm.startBroadcast(pk);
     }
 
+    function vmSelectRpc(string memory network) internal {
+        string memory rpcUrl = getRpcUrl(network);
+        vm.createSelectFork(rpcUrl); 
+    }
+
     function getRpcUrl(string memory network) internal view returns (string memory) {
         return vm.envString(string("RPC_URL_").concat(network.toUpperCase()));
     }

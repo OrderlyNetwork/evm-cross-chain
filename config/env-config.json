@@ -18,15 +18,21 @@
         "ledger": "orderlyop",
         "vault": [
             "arbitrumgoerli",
-            "opgoerli"
+            "opgoerli",
+            "opsepolia",
+            "arbsepolia"
         ],
         "orderlyop": "ledger",
         "arbitrumgoerli": "vault",
         "opgoerli": "vault",
+        "opsepolia": "vault",
+        "arbsepolia": "vault",
         "networks": [
             "opgoerli",
             "arbitrumgoerli",
-            "orderlyop"
+            "orderlyop",
+            "arbsepolia",
+            "opsepolia"
         ]
     },
     "staging": {
