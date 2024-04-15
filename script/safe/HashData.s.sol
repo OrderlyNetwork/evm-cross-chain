@@ -54,7 +54,7 @@ contract HashData is Script, SignatureDecoder {
     }
 
 
-    function loadSafeTxData() internal view returns (SafeTxData memory txData) {
+    function loadSafeTxData() internal returns (SafeTxData memory txData) {
         string memory json = vm.readFile(TX_FILE);
 
         txData.to = json.readAddress("$.to");
