@@ -16,6 +16,12 @@ contract CCManagerHelper is BaseScript, OperationHelper {
         return (address(vaultManager), address(proxy));
     }
 
+    function deployProxyOnly(address impl) internal returns (address) {
+        CrossChainManagerProxy proxy = new CrossChainManagerProxy(impl, bytes(""));
+        VaultCrossChainManagerUpgradeable(payable(proxy)).initialize();
+        return address(proxy);
+    }
+
     function deployNewVaultManager() internal returns (address) {
         VaultCrossChainManagerUpgradeable vaultManager = new VaultCrossChainManagerUpgradeable();
         return address(vaultManager);
@@ -52,15 +58,18 @@ contract CCManagerHelper is BaseScript, OperationHelper {
     }
 
     function setChainId(string memory network, address managerProxy) internal {
+        // print address and chain id
+        console.log("managerProxy: ", managerProxy);
+        console.log("chainId: ", getChainId(network));
         ICrossChainManager(payable(managerProxy)).setChainId(getChainId(network));
     }
 
     function setVaultAddress(address vaultManagerProxy, address vaultAddress) internal {
-        // debug info
-        uint256 ledgerChainId = VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).ledgerChainId();
-        uint256 chainId = VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).chainId();
-        console.log("ledger Chain Id: ", ledgerChainId);
-        console.log("vault Chain Id: ", chainId);
+        // // debug info
+        // uint256 ledgerChainId = VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).ledgerChainId();
+        // uint256 chainId = VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).chainId();
+        // console.log("ledger Chain Id: ", ledgerChainId);
+        // console.log("vault Chain Id: ", chainId);
         VaultCrossChainManagerUpgradeable(payable(vaultManagerProxy)).setVault(vaultAddress);
     }
 

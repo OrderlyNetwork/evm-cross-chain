@@ -21,6 +21,9 @@
         "amoy": {
             "vault": "0x835E970110E4a46BCA21A7551FEaA5F532F72701"
         },
+        "mantlesepolia": {
+            "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
+        },
         "orderlyop": {
             "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
             "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
@@ -48,6 +51,9 @@
         "amoy": {
             "vault": "0xDf3A1a266BCc75B88Ce9b786DF521F8DaeD5b08b"
         },
+        "mantlesepolia": {
+            "vault": "0xfb0E5f3D16758984E668A3d76f0963710E775503"
+        },
         "orderlyop": {
             "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
             "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
@@ -74,6 +80,9 @@
         },
         "amoy": {
             "vault": "0x2a5b650a894409372ddee241edac92d4152be24d"
+        },
+        "mantlesepolia": {
+            "vault": "0x3CAA46F94610BDa1C60267a364d2E154E677BdF9"
         },
         "orderlyop": {
             "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",

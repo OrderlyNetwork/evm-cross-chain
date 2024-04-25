@@ -20,7 +20,11 @@ contract SetCCManagerVault is BaseScript, ConfigHelper, CCManagerHelper {
 
         address vault = getVaultAddress(env, network);
 
+        console.log("[SetCCManagerVault]vault address: ", vault);
+
         vmSelectRpcAndBroadcast(network);
+
+        console.log("[SetCCManagerVault]proxy: ", managerData.proxy);
 
         setVaultAddress(managerData.proxy, vault);
 

@@ -31,6 +31,14 @@ contract RelayHelper is BaseScript, OperationHelper {
         return (address(relay), address(proxy));
     }
 
+    function setEndpoint(address proxyAddress, string memory network) internal {
+        CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(proxyAddress));
+        address endpoint = getLzEndpoint(network);
+        console.log("[setEndpoint] set endpoint: ");
+        console.log("[setEndpoint] endpoint: ", endpoint);
+        relay.updateEndpoint(endpoint);
+    }
+
     function addRelayLzChainMapping(address proxyAddress, string memory network) internal {
         CrossChainRelayUpgradeable relay = CrossChainRelayUpgradeable(payable(proxyAddress));
         console.log("[addRelayLzChainMapping] add chain id mapping: ");

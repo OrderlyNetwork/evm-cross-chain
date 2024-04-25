@@ -24,6 +24,9 @@ contract PrintRelay is BaseScript, ConfigHelper, RelayHelper {
         console.log("owner: ", address(relay.owner()));
         // print chain id
         console.log("chainId: ", relay._currentChainId());
+        // print endpoint
+        // public lzEndpoint;
+        console.log("endpoint: ", address(relay.lzEndpoint()));
         // print lz chain id mapping
         console.log("lz chain id mapping: ", getChainId(dstNetwork), relay._chainIdMapping(getChainId(dstNetwork)));
         console.log("lz chain id mapping: ", getChainId(network), relay._chainIdMapping(getChainId(network)));

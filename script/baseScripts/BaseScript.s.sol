@@ -31,31 +31,12 @@ contract BaseScript is Script {
         return vm.envAddress(network.toUpperCase().concat("_ENDPOINT"));
     }
 
-    function getRelayProxyAddress(string memory network) internal view returns (address) {
-        return vm.envAddress(network.toUpperCase().concat("_RELAY_PROXY"));
-    }
-
-    function getManagerProxyAddress(string memory network) internal view returns (address) {
-        return vm.envAddress(network.toUpperCase().concat("_MANAGER_PROXY"));
-    }
-
     function getChainId(string memory network) internal view returns (uint256) {
         return vm.envUint(network.toUpperCase().concat("_CHAIN_ID"));
     }
 
     function getLzChainId(string memory network) internal view returns (uint16) {
         return uint16(vm.envUint(network.toUpperCase().concat("_LZ_CHAIN_ID")));
-}
-
-    function getOperatorManagerAddress(string memory network) internal view returns (address) {
-        return vm.envAddress(network.toUpperCase().concat("_OPERATOR_MANAGER"));
     }
 
-    function getVaultAddress(string memory network) internal view returns (address) {
-        return vm.envAddress(network.toUpperCase().concat("_VAULT"));
-    }
-
-    function getLedgerAddress(string memory network) internal view returns (address) {
-        return vm.envAddress(network.toUpperCase().concat("_LEDGER"));
-    }
 }

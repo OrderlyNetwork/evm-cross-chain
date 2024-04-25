@@ -27,6 +27,7 @@ export function getTokenDecimal(env: string, network: string, token: string) {
     const envConfig = JSON.parse(jsonString);
 
     const tokenDecimals = envConfig[env][network];
+    console.log(tokenDecimals);
     // it is an array of token decimal
     for (const tokenInfo of tokenDecimals) {
         if (tokenInfo["name"] === token) {

@@ -10,3 +10,4 @@ import "./upgradeCCManager";
 import "./sendTestWithdraw";
 import "./printCCManagerTokenDecimal";
 import "./deployNewManagerImpl";
+import "./deployProxyOnly";

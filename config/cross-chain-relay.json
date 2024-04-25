@@ -61,6 +61,11 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xED0294bDE7f5aEBC1eBe4Ed16940d684D3276C89",
       "relay": "0x821FB86CaCE10336e2e5Ac130B6343094a20A2FE"
+    },
+    "mantlesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x2521750f89bEb11C53a3646D45073bef33312a91",
+      "relay": "0x5771f66593025483266cD2e14237fdf45D649Fa5"
     }
   },
   "staging": {
@@ -145,6 +150,11 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
       "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
+    },
+    "mantlesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "relay": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7"
     }
   },
   "production": {

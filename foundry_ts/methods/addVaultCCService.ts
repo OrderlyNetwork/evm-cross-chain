@@ -38,13 +38,16 @@ export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwo
 
     // default compiler version
     const compilerVersion = "0.8.19";
-    if (!skip) {
+    if (skip === undefined) {
         skip = -1;
     }
     let operationCnt = 0;
 
     // 1. deploy relay
     if (operationCnt > skip) { // 0
+        console.log("deploy relay");
+        console.log('operationCnt: ', operationCnt);
+        console.log('skip: ', skip);
         deployRelay(env, vaultNetwork, broadcast, simulate);
     }
     operationCnt++;
