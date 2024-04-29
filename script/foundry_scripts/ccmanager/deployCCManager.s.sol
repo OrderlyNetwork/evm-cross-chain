@@ -20,7 +20,19 @@ contract DeployCCManager is BaseScript, ConfigHelper, CCManagerHelper {
 
         vmSelectRpcAndBroadcast(network);
 
-        (address manager, address proxy) = deployManager(role);
+        address manager;
+        address proxy;
+
+        if (role.compare("vault")) {
+            manager = deployNewVaultManager();
+        } else if (role.compare("ledger")) {
+            manager = deployNewLedgerManager();
+        } else {
+            revert("[DeployCCManager] wrong role of manager");
+        }
+
+        proxy = deployProxyOnly(manager);
+
 
         vm.stopBroadcast();
 
@@ -30,13 +42,4 @@ contract DeployCCManager is BaseScript, ConfigHelper, CCManagerHelper {
         }
     }
 
-    function deployManager(string memory role) internal returns (address, address) {
-        if (role.compare("vault")) {
-            return deployVaultManager();
-        } else if (role.compare("ledger")) {
-            return deployLedgerManager();
-        } else {
-            revert("[DeployCCManager] wrong role of manager");
-        }
-    }
 }

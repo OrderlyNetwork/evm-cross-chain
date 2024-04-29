@@ -16,9 +16,16 @@ contract RetryPayload is BaseScript, ConfigHelper {
 
         address endpoint = getLzEndpoint(network);
 
+        console.logBytes(data);
+        console.log("address: ", endpoint);
+
         vmSelectRpcAndBroadcast(network);
         (uint16 srcChainId, bytes memory srcAddress,,, bytes memory payload,) =
             abi.decode(data, (uint16, bytes, address, uint64, bytes, bytes));
+        
+        console.log("srcChainId: ", srcChainId);
+        console.logBytes(srcAddress);
+        console.logBytes(payload);
 
         console.log("retry payload...");
         ILayerZeroEndpoint(endpoint).retryPayload(srcChainId, srcAddress, payload);

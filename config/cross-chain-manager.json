@@ -117,6 +117,12 @@
       "manager": "0x52d156305F1bf01813c7ed5854DbF29BB2C24995",
       "proxy": "0x2F504DC60D1E56A6421b9db56eC21e8B0fcb311b",
       "role": "vault"
+    },
+    "mantlesepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x713bf90DE114521a038E8262421c40380770D894",
+      "proxy": "0xC0031c46DB3A30245400cf3095FdFbac064063DD",
+      "role": "vault"
     }
   },
   "dev": {

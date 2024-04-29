@@ -34,7 +34,7 @@ export function foundry_wrapper(method_name: string, broadcast: boolean, simulat
 
 
 
-    let command = `source .env && forge script ${foundryScriptPath} ${verifyFlag} -vvvv ${broadcastFlag} --skip-simulation -g 300`;
+    let command = `source .env && forge script ${foundryScriptPath} ${verifyFlag} -vvvv ${broadcastFlag} --skip-simulation -g 600`;
     console.log(`Running ${method_name} script: ${command}`);
 
     if (simulate) {return;}

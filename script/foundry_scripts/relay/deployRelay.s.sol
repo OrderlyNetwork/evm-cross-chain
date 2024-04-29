@@ -16,11 +16,12 @@ contract DeployRelay is BaseScript, ConfigHelper, RelayHelper {
         bool broadcast = vm.envBool("FS_deployRelay_broadcast");
 
         vmSelectRpcAndBroadcast(network);
-        // vm.startBroadcast(getPrivateKey(network));
+
+        address relay = deployNewRelayImpl();
 
         address lzEndpoint = getLzEndpoint(network);
 
-        (address relay, address proxy) = deployRelay(lzEndpoint);
+        address proxy = deployProxyOnly(relay, lzEndpoint);
 
         vm.stopBroadcast();
 

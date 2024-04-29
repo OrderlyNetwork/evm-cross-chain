@@ -23,6 +23,12 @@ contract RelayHelper is BaseScript, OperationHelper {
         return address(relay);
     }
 
+    function deployProxyOnly(address impl, address lzEndpoint) internal returns (address) {
+        CrossChainRelayProxy proxy = new CrossChainRelayProxy(impl, bytes(""));
+        CrossChainRelayUpgradeable(payable(proxy)).initialize(lzEndpoint);
+        return address(proxy);
+    }
+
     function deployRelay(address lzEndpoint) internal returns (address, address) {
         CrossChainRelayUpgradeable relay = new CrossChainRelayUpgradeable();
         CrossChainRelayProxy proxy = new CrossChainRelayProxy(address(relay), bytes(""));
