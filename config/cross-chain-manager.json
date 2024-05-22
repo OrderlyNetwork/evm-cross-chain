@@ -211,6 +211,12 @@
       "manager": "0xFa02A1f872cA85cEC0d9fDA391CE1C7A8DB28Cfb",
       "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
       "role": "vault"
+    },
+    "mantle": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "manager": "0xd1c426290eaf9C16dC55e9bd10b624abb827DEef",
+      "proxy": "0xa0a07a78c7d31E6f8698F48Fc9219f9a3030f38C",
+      "role": "vault"
     }
   }
 }

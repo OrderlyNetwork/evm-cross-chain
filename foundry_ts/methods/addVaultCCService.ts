@@ -53,16 +53,17 @@ export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwo
         console.log("deploy relay");
         console.log('operationCnt: ', operationCnt);
         console.log('skip: ', skip);
-        deployNewRelayImpl(env, vaultNetwork, broadcast, simulate, false);
-        deployRelayProxyOnly(env, vaultNetwork, broadcast, simulate);
+        deployRelay(env, vaultNetwork, broadcast, simulate);
+        // deployNewRelayImpl(env, vaultNetwork, broadcast, simulate, false);
+        // deployRelayProxyOnly(env, vaultNetwork, broadcast, simulate);
     }
     operationCnt++;
 
     // 2. deploy cc manager
     if (operationCnt > skip) { // 1
-        // deployCCManager(env, vaultNetwork, "vault", broadcast, simulate);
-        deployNewManagerImpl(env, vaultNetwork, "vault", broadcast, simulate, false);
-        deployProxyOnly(env, vaultNetwork, "vault", broadcast, simulate);
+        deployCCManager(env, vaultNetwork, "vault", broadcast, simulate);
+        // deployNewManagerImpl(env, vaultNetwork, "vault", broadcast, simulate, false);
+        // deployProxyOnly(env, vaultNetwork, "vault", broadcast, simulate);
     }
     operationCnt++;
 
