@@ -39,6 +39,7 @@
   "dependencies": {
     "@axelar-network/axelar-gmp-sdk-solidity": "^5.6.4",
     "@chakra-ui/icons": "^2.1.1",
+    "@duneanalytics/client-sdk": "^0.1.5",
     "@layerzerolabs/scan-client": "^0.0.6",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@openzeppelin/contracts": "^4.9.2",
