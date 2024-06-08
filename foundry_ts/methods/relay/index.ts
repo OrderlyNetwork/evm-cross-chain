@@ -19,3 +19,4 @@ import "./deployAxelarAdapter";
 import "./deployNewRelayImp";
 import "./setEndpoint";
 import "./deployRelayProxyOnly";
+import "./relayInitializeOnly";

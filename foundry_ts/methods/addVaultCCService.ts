@@ -26,6 +26,8 @@ import { deployRelayProxyOnly } from "./relay/deployRelayProxyOnly";
 import { network } from "hardhat";
 import { deployNewManagerImpl } from "./ccmanager/deployNewManagerImpl";
 import { deployProxyOnly } from "./ccmanager/deployProxyOnly";
+import { relayInitializeOnly } from "./relay/relayInitializeOnly";
+import { managerInitializeOnly } from "./ccmanager/managerInitializeOnly";
 
 // current file name
 const method_name = "addVaultCCService";
@@ -53,17 +55,19 @@ export function addVaultCCService(env: string, vaultNetwork: string, ledgerNetwo
         console.log("deploy relay");
         console.log('operationCnt: ', operationCnt);
         console.log('skip: ', skip);
-        deployRelay(env, vaultNetwork, broadcast, simulate);
-        // deployNewRelayImpl(env, vaultNetwork, broadcast, simulate, false);
-        // deployRelayProxyOnly(env, vaultNetwork, broadcast, simulate);
+        // deployRelay(env, vaultNetwork, broadcast, simulate);
+        deployNewRelayImpl(env, vaultNetwork, broadcast, simulate, false);
+        deployRelayProxyOnly(env, vaultNetwork, broadcast, simulate);
+        relayInitializeOnly(env, vaultNetwork, broadcast, simulate);
     }
     operationCnt++;
 
     // 2. deploy cc manager
     if (operationCnt > skip) { // 1
-        deployCCManager(env, vaultNetwork, "vault", broadcast, simulate);
-        // deployNewManagerImpl(env, vaultNetwork, "vault", broadcast, simulate, false);
-        // deployProxyOnly(env, vaultNetwork, "vault", broadcast, simulate);
+        // deployCCManager(env, vaultNetwork, "vault", broadcast, simulate);
+        deployNewManagerImpl(env, vaultNetwork, "vault", broadcast, simulate, false);
+        deployProxyOnly(env, vaultNetwork, "vault", broadcast, simulate);
+        managerInitializeOnly(env, vaultNetwork, "vault", broadcast, simulate);
     }
     operationCnt++;
 

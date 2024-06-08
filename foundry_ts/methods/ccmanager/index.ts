@@ -11,3 +11,4 @@ import "./sendTestWithdraw";
 import "./printCCManagerTokenDecimal";
 import "./deployNewManagerImpl";
 import "./deployProxyOnly";
+import "./managerInitializeOnly";

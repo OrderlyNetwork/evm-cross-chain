@@ -66,6 +66,16 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x2521750f89bEb11C53a3646D45073bef33312a91",
       "relay": "0x5771f66593025483266cD2e14237fdf45D649Fa5"
+    },
+    "sepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xf05C5b1eE868b18c760ca81b4B4Ebd1A54b52147",
+      "relay": "0xe0B0b683aa7d2745118B1F7D893fB20924dCEdcF"
+    },
+    "fuji": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x4812F9F27dC37C0911c75618a1f5F553fC78F5Ba",
+      "relay": "0xE2924195921391365566F5c8C24281D97AEC243f"
     }
   },
   "staging": {
@@ -113,6 +123,16 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x92DD844c209Cb519Ab85C5D8b5f0e3F254A8Cdb1",
       "relay": "0x8d45642C8b208DE2d50C2453860b2B13Fb429e5f"
+    },
+    "sepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xfD89A24390BfEBbA227c0e8BcD4447d0c3A84FC2",
+      "relay": "0xdFCF8399bbD5E4055BafFaB7369C15437232C589"
+    },
+    "fuji": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x9fA5512075be0FAa7f207aE42E02F34DE91E8256",
+      "relay": "0x98aeF7518aaa3aA49370a243D3f643c39A549A33"
     }
   },
   "dev": {
@@ -160,6 +180,16 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
       "relay": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7"
+    },
+    "sepolia": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xA008dcab52AAbeb090F7ce6EC2C8D827865D9C9A",
+      "relay": "0x6e667D8A74C337774C3dC4bcf92E56765Ff45E69"
+    },
+    "fuji": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xde1aB8F5C40544F3D8b500924B1da09148BaaebD",
+      "relay": "0xc5465F38dBe8A556902B073ff20955FA60B9BB64"
     }
   },
   "production": {

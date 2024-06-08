@@ -1,5 +1,11 @@
 {
     "qa": {
+        "fuji": {
+            "vault": "0xb960E6329a75716ea11090B6B42580d3004dab77"
+        },
+        "sepolia": {
+            "vault": "0xd5164A5a83c64E59F842bC091E06614b84D95fF5"
+        },
         "arbitrumgoerli": {
             "vault": "0x22b10472d3Da206aaA85D3f19E91A8da15E0F56A"
         },
@@ -30,6 +36,12 @@
         }
     },
     "staging": {
+        "fuji": {
+            "vault": "0xAB6c8F6245B67421302AAe30AcEB10E00c30F463"
+        },
+        "sepolia": {
+            "vault": "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f"
+        },
         "opgoerli": {
             "vault": "0x1bae7b601760A45710B43Da2C8f8a3c933A144D2"
         },
@@ -60,6 +72,12 @@
         }
     },
     "dev": {
+        "fuji": {
+            "vault": "0x695Cb2ab1b2Db899F8B653B36eF865D13E6809a8"
+        },
+        "sepolia": {
+            "vault": "0x1A26FBE7A6Dc6c12b8E10CD703b0c520Ee996B15"
+        },
         "opgoerli": {
             "vault": "0xe014a38501cF2B8139dED0b60Ed4FbD02C113b59"
         },
