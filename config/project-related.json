@@ -102,6 +102,15 @@
         "mantlesepolia": {
             "vault": "0x3CAA46F94610BDa1C60267a364d2E154E677BdF9"
         },
+        "seidev": {
+            "vault": ""
+        },
+        "storytest": {
+            "vault": ""
+        },
+        "morphholesky": {
+            "vault": ""
+        },
         "orderlyop": {
             "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",
             "operator-manager": "0xe34614EB781C5838C78B7f913b89A05e7a5b97e2"

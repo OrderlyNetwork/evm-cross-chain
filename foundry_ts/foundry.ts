@@ -34,7 +34,8 @@ export function foundry_wrapper(method_name: string, broadcast: boolean, simulat
 
 
 
-    let command = `source .env && forge script ${foundryScriptPath} ${verifyFlag} -vvvv ${broadcastFlag} `;
+    // let command = `source .env && forge script ${foundryScriptPath} ${verifyFlag} -vvvv ${broadcastFlag}  --skip-simulation --gas-price 800000  --priority-gas-price 10 --gas-limit  --priority-gas-price`;
+    let command = `source .env && forge script ${foundryScriptPath} ${verifyFlag} -vvvv ${broadcastFlag} --skip-simulation --legacy`;
     console.log(`Running ${method_name} script: ${command}`);
 
     if (simulate) {return;}

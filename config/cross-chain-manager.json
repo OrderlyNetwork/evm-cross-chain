@@ -215,6 +215,24 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x6408C0222cbadAB9Afa9c85e206637208ba6C580",
       "role": "vault"
+    },
+    "seidev": {
+      "manager": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "role": "vault"
+    },
+    "storytest": {
+      "manager": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "role": "vault"
+    },
+    "morphholesky": {
+      "manager": "0x55eDD48C9ff6f375DCeb6CD2D161FC8662A0aAa7",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
+      "role": "vault"
     }
   },
   "production": {
