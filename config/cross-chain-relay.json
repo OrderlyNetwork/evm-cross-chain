@@ -190,6 +190,21 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xde1aB8F5C40544F3D8b500924B1da09148BaaebD",
       "relay": "0xc5465F38dBe8A556902B073ff20955FA60B9BB64"
+    },
+    "seidev": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
+    },
+    "storytest": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
+    },
+    "morphholesky": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
     }
   },
   "production": {
