@@ -76,6 +76,21 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x4812F9F27dC37C0911c75618a1f5F553fC78F5Ba",
       "relay": "0xE2924195921391365566F5c8C24281D97AEC243f"
+    },
+    "seidev": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0xED0294bDE7f5aEBC1eBe4Ed16940d684D3276C89",
+      "relay": "0x821FB86CaCE10336e2e5Ac130B6343094a20A2FE"
+    },
+    "storytest": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
+    },
+    "morphholesky": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
     }
   },
   "staging": {
@@ -133,6 +148,21 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x9fA5512075be0FAa7f207aE42E02F34DE91E8256",
       "relay": "0x98aeF7518aaa3aA49370a243D3f643c39A549A33"
+    },
+    "seidev": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x25eB1e506608ab7eb8f91802e1dae6963848ED25",
+      "relay": "0x748e2F48d0a8Ac9174CdCBD344478295994Aae04"
+    },
+    "storytest": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
+    },
+    "morphholesky": {
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "proxy": "0x0978f0A39380410b46e5dA3183eAf3160F604Bd0",
+      "relay": "0xAAbdAE19567D77636B5F27545ee386D0d4B1D627"
     }
   },
   "dev": {

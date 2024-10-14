@@ -176,6 +176,27 @@
                 "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
                 "decimals": 6
             }
+        ],
+        "seidev": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "storytest": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "morphholesky": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
         ]
     },
     "qa": {
@@ -250,6 +271,27 @@
             }
         ],
         "mantlesepolia": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "seidev": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "storytest": [
+            {
+                "name": "USDC",
+                "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",
+                "decimals": 6
+            }
+        ],
+        "morphholesky": [
             {
                 "name": "USDC",
                 "tokenHash": "0xd6aca1be9729c13d677335161321649cccae6a591554772516700f986f942eaa",

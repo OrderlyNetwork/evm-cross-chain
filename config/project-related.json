@@ -30,6 +30,15 @@
         "mantlesepolia": {
             "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
         },
+        "seidev": {
+            "vault": "0x3ac2Ba11Ca2f9f109d50fb1a46d4C23fCadbbef6"
+        },
+        "storytest": {
+            "vault": ""
+        },
+        "morphholesky": {
+            "vault": ""
+        },
         "orderlyop": {
             "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
             "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
@@ -65,6 +74,15 @@
         },
         "mantlesepolia": {
             "vault": "0xfb0E5f3D16758984E668A3d76f0963710E775503"
+        },
+        "seidev": {
+            "vault": "0xA603f6e124259d37e43dd5008cB7613164D6a6e3"
+        },
+        "storytest": {
+            "vault": ""
+        },
+        "morphholesky": {
+            "vault": ""
         },
         "orderlyop": {
             "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
@@ -103,7 +121,7 @@
             "vault": "0x3CAA46F94610BDa1C60267a364d2E154E677BdF9"
         },
         "seidev": {
-            "vault": ""
+            "vault": "0x2A5b650A894409372DDeE241EDAC92d4152bE24d"
         },
         "storytest": {
             "vault": ""
