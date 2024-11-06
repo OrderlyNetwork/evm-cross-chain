@@ -156,6 +156,9 @@
         "avalanche": {
             "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
         },
+        "sei": {
+            "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
+        },
         "orderlymain": {
             "ledger": "0x6F7a338F2aA472838dEFD3283eB360d4Dff5D203",
             "operator-manager": "0x7CC5B6433eb33164c88F6512f56C566CFC3420BF"
