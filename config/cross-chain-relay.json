@@ -282,6 +282,11 @@
       "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
       "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
       "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
+    },
+    "morph": {
+      "owner": "0x295e0fC7ab0F86df5597F38c9568a2da217E6673",
+      "proxy": "0x173B47eDBeCa665125edc24C509bfE545CDA60a9",
+      "relay": "0xEAAeba4423153D6f972A6e7DDcEE488c4F130aca"
     }
   }
 }
