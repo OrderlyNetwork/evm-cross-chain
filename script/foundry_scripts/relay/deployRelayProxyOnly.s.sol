@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "evm-cross-chain/script/baseScripts/BaseScript.s.sol";
-import "evm-cross-chain/script/baseScripts/ConfigHelper.s.sol";
-import "evm-cross-chain/script/baseScripts/RelayHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/RelayHelper.s.sol";
 import "evm-cross-chain/contracts/CrossChainRelayUpgradeable.sol";
-import "evm-cross-chain/contracts/CrossChainRelayProxy.sol";
+import "evm-cross-chain/contracts/OrderlyProxy.sol";
 
 contract DeployRelayProxyOnly is BaseScript, ConfigHelper, RelayHelper {
     using StringUtils for string;
@@ -19,7 +19,7 @@ contract DeployRelayProxyOnly is BaseScript, ConfigHelper, RelayHelper {
 
         address relay = relayData.relay;
 
-        vmSelectRpcAndBroadcast(network);
+        vmSelectRpcAndBroadcast(env, network);
 
         address lzEndpoint = getLzEndpoint(network);
         address proxy = deployProxyOnly(relay, lzEndpoint);
@@ -30,7 +30,7 @@ contract DeployRelayProxyOnly is BaseScript, ConfigHelper, RelayHelper {
 
         if (broadcast) {
             console.log("[deployRelayProxyOnly] write relay deployment data to json file...");
-            writeRelayDeployData(env, network, relay, proxy, vm.addr(getPrivateKey(network)));
+            writeRelayDeployData(env, network, relay, proxy, vm.addr(getPrivateKey(env)));
         }
     }
 }

@@ -17,31 +17,52 @@ import "./interface/ILedgerCrossChainManager.sol";
 import "./interface/IOrderlyCrossChain.sol";
 import "./utils/OrderlyCrossChainMessage.sol";
 
+/**
+ * @title Ledger Cross Chain Manager
+ * @notice Manages cross-chain communication between the Orderly Ledger and Vaults
+ * @dev This contract is responsible for:
+ * - Processing cross-chain deposits from vaults to ledger
+ * - Handling withdrawals from ledger to vaults
+ * - Managing token decimal conversions between chains
+ * - Coordinating rebalancing operations (mint/burn) across chains
+ */
+
+/// @notice Storage layout for the Ledger Cross Chain Manager
+/// @dev Separate contract to enforce proper storage layout with upgradeable contracts
 contract LedgerCrossChainManagerDatalayout {
-    // chain id of this contract
+    /// @notice Chain ID where this contract is deployed
     uint256 public chainId;
-    // ledger Interface
+    
+    /// @notice Interface to the main ledger contract
     ILedger public ledger;
-    // crosschain relay interface
+    
+    /// @notice Interface to the cross-chain messaging relay
     IOrderlyCrossChain public crossChainRelay;
-    // operatorManager Interface
+    
+    /// @notice Interface to manage operator permissions
     IOperatorManager public operatorManager;
-    // map of chainId => VaultCrossChainManager
+    
+    /// @notice Maps chain IDs to their respective vault cross-chain manager addresses
     mapping(uint256 => address) public vaultCrossChainManagers;
 
+    /// @notice Maps token hash and chain ID to token decimals for amount conversion
+    /// @dev Format: tokenHash => chainId => decimals
     mapping(bytes32 => mapping(uint256 => uint128)) public tokenDecimalMapping;
 
+    /// @notice Ensures only the ledger contract can call certain functions
     modifier onlyLedger() {
         require(msg.sender == address(ledger), "LedgerCrossChainManager: caller is not ledger");
         _;
     }
 
+    /// @notice Ensures only the cross-chain relay can call certain functions
     modifier onlyRelay() {
         require(msg.sender == address(crossChainRelay), "LedgerCrossChainManager: caller is not crossChainRelay");
         _;
     }
 }
 
+/// @notice Handles token decimal conversions between different chains
 contract DecimalManager is LedgerCrossChainManagerDatalayout {
     /// @notice Sets the token decimal.
     /// @param tokenHash token hash
@@ -93,11 +114,11 @@ contract DecimalManager is LedgerCrossChainManagerDatalayout {
 }
 
 /**
- * CrossChainManager is responsible for executing cross-chain tx.
- * This contract should only have one in main-chain (avalanche)
+ * @title Ledger Cross Chain Manager Implementation
+ * @notice Manages cross-chain operations between Ledger and Vaults
+ * @dev This contract should only be deployed on the main chain (where ledger exists)
  *
- * Ledger(manager addr, chain id) -> LedgerCrossChainManager -> OrderlyCrossChain -> VaultCrossChainManager(Identified by chain id) -> Vault
- *
+ * Flow: Ledger -> LedgerCrossChainManager -> CrossChainRelay -> VaultCrossChainManager -> Vault
  */
 contract LedgerCrossChainManagerUpgradeable is
     IOrderlyCrossChainReceiver,
@@ -108,81 +129,97 @@ contract LedgerCrossChainManagerUpgradeable is
     LedgerCrossChainManagerDatalayout,
     DecimalManager
 {
+    /// @notice Emitted when a deposit is successfully received and processed
     event DepositReceived(AccountTypes.AccountDeposit data);
+    
+    /// @notice Emitted when a test withdrawal operation completes
     event TestWithdrawDone();
 
-    /// @notice Initializes the contract.
+    /// @notice Initializes the contract
+    /// @dev Sets up the upgradeable contract with ownership and UUPS functionality
     function initialize() public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
     }
 
+    /// @dev Required override for UUPS proxy pattern
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
+    /// @notice Upgrades the implementation contract
+    /// @dev Only callable by owner through proxy
+    /// @param newImplementation Address of new implementation contract
     function upgradeTo(address newImplementation) public override onlyOwner {
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
     }
 
-    /// @notice set chain id
-    /// @param _chainId chain id
+    /// @notice Sets the chain ID for this contract instance
+    /// @dev Critical for cross-chain message routing and token decimal conversions
+    /// @param _chainId The chain ID where this contract is deployed
     function setChainId(uint256 _chainId) external onlyOwner {
         chainId = _chainId;
     }
 
-    /// @notice set ledger
-    /// @param _ledger ledger address
+    /// @notice Links this contract to the Orderly Ledger
+    /// @dev The Ledger contract will be the only one allowed to initiate withdrawals
+    /// @param _ledger Address of the Orderly Ledger contract
     function setLedger(address _ledger) external onlyOwner {
         ledger = ILedger(_ledger);
     }
 
-    /// @notice set crossChainRelay
-    /// @param _crossChainRelay crossChainRelay address
+    /// @notice Sets the cross-chain relay contract address
+    /// @dev The relay handles the actual cross-chain message transmission via LayerZero
+    /// @param _crossChainRelay Address of the cross-chain relay contract
     function setCrossChainRelay(address _crossChainRelay) external onlyOwner {
         crossChainRelay = IOrderlyCrossChain(_crossChainRelay);
     }
 
-    /// @notice set operatorManager
-    /// @param _operatorManager operatorManager address
+    /// @notice Sets the operator manager contract address
+    /// @dev The operator manager handles permissions and operational controls
+    /// @param _operatorManager Address of the operator manager contract
     function setOperatorManager(address _operatorManager) external onlyOwner {
         operatorManager = IOperatorManager(_operatorManager);
     }
 
-    /// @notice set vaultCrossChainManager
-    /// @param _chainId chain id
-    /// @param _vaultCrossChainManager vaultCrossChainManager address
+    /// @notice Maps a chain ID to its vault cross-chain manager address
+    /// @dev Required for routing messages to the correct vault on each chain
+    /// @param _chainId The chain ID where the vault exists
+    /// @param _vaultCrossChainManager Address of the vault's cross-chain manager
     function setVaultCrossChainManager(uint256 _chainId, address _vaultCrossChainManager) external onlyOwner {
         vaultCrossChainManagers[_chainId] = _vaultCrossChainManager;
     }
 
-    /// @notice set token decimal
-    /// @param tokenHash ERC20 token hash
-    /// @param tokenChainId token chain id
-    /// @param decimal token decimal
+    /// @notice Sets the decimal places for a token on a specific chain
+    /// @dev Critical for accurate token amount conversions between chains
+    /// @param tokenHash The hash of the token symbol
+    /// @param tokenChainId The chain ID where the token exists
+    /// @param decimal The number of decimal places for the token
     function setTokenDecimal(bytes32 tokenHash, uint256 tokenChainId, uint128 decimal) external onlyOwner {
         _setTokenDecimal(tokenHash, tokenChainId, decimal);
     }
 
-    /// @notice send a cross-chain deposit
-    /// @param data deposit data
+    /// @notice Processes a deposit from a vault chain
+    /// @dev Emits DepositReceived event and forwards to ledger
+    /// @param data The deposit information including account and token details
     function deposit(AccountTypes.AccountDeposit memory data) internal {
         emit DepositReceived(data);
         ledger.accountDeposit(data);
     }
 
-    /// @notice receive message from relay, relay will call this function to send messages
-    /// @param message message
-    /// @param payload payload
+    /// @notice Handles incoming cross-chain messages from the relay
+    /// @dev Routes messages based on their type and performs necessary decimal conversions
+    /// @param message The cross-chain message metadata
+    /// @param payload The actual message data
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload)
         external
         override
         onlyRelay
     {
         require(message.dstChainId == chainId, "LedgerCrossChainManager: dstChainId not match");
+
         if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit)) {
+            // Handle deposit from vault
             VaultTypes.VaultDeposit memory data = abi.decode(payload, (VaultTypes.VaultDeposit));
-
             uint128 cvtTokenAmount = convertDecimal(data.tokenAmount, data.tokenHash, message.srcChainId, chainId);
-
             AccountTypes.AccountDeposit memory depositData = AccountTypes.AccountDeposit({
                 accountId: data.accountId,
                 brokerHash: data.brokerHash,
@@ -192,20 +229,16 @@ contract LedgerCrossChainManagerUpgradeable is
                 srcChainId: message.srcChainId,
                 srcChainDepositNonce: data.depositNonce
             });
-
             deposit(depositData);
         } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultWithdraw)) {
+            // Handle withdrawal confirmation from vault
             VaultTypes.VaultWithdraw memory data = abi.decode(payload, (VaultTypes.VaultWithdraw));
-
-            // handle test withdraw
             if (data.tokenHash == Utils.calculateStringHash("CrossChainManagerTest")) {
                 emit TestWithdrawDone();
                 return;
             }
-
             uint128 cvtTokenAmount = convertDecimal(data.tokenAmount, data.tokenHash, message.srcChainId, chainId);
             uint128 cvtFeeAmount = convertDecimal(data.fee, data.tokenHash, message.srcChainId, chainId);
-
             AccountTypes.AccountWithdraw memory withdrawData = AccountTypes.AccountWithdraw({
                 accountId: data.accountId,
                 sender: data.sender,
@@ -217,23 +250,20 @@ contract LedgerCrossChainManagerUpgradeable is
                 chainId: message.srcChainId,
                 withdrawNonce: data.withdrawNonce
             });
-
             withdrawFinish(withdrawData);
-        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCFinishData))
-        {
+        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCFinishData)) {
+            // Handle burn completion from vault
             RebalanceTypes.RebalanceBurnCCFinishData memory data =
                 abi.decode(payload, (RebalanceTypes.RebalanceBurnCCFinishData));
             uint128 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
             data.amount = cvtTokenAmount;
-
             ledger.rebalanceBurnFinish(data);
-        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCFinishData))
-        {
+        } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCFinishData)) {
+            // Handle mint completion from vault
             RebalanceTypes.RebalanceMintCCFinishData memory data =
                 abi.decode(payload, (RebalanceTypes.RebalanceMintCCFinishData));
             uint128 cvtTokenAmount = convertDecimal(data.amount, data.tokenHash, message.srcChainId, chainId);
             data.amount = cvtTokenAmount;
-
             ledger.rebalanceMintFinish(data);
         } else {
             revert("LedgerCrossChainManager: payloadDataType not match");
@@ -266,6 +296,36 @@ contract LedgerCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
+    /// @notice send a cross-chain withdrawal from the ledger to the vault. but only withdraw to contract address
+    /// @param data Struct containing withdrawal data.
+    function withdraw2Contract(EventTypes.Withdraw2Contract memory data) external override onlyLedger {
+        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
+            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Withdraw2Contract),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdraw2Contract),
+            srcCrossChainManager: address(this),
+            dstCrossChainManager: vaultCrossChainManagers[data.chainId],
+            srcChainId: chainId,
+            dstChainId: data.chainId
+        });
+
+        // convert token amount to dst chain decimal
+        uint128 cvtTokenAmount =
+            convertDecimal(data.tokenAmount, data.tokenHash, chainId, data.chainId);
+        uint128 cvtFeeAmount =
+            convertDecimal(data.fee, data.tokenHash, chainId, data.chainId);
+        data.tokenAmount = cvtTokenAmount;
+        data.fee = cvtFeeAmount;
+
+        bytes memory payload = abi.encode(data);
+
+        crossChainRelay.sendMessage(message, payload);
+    }
+
+
+    /// @notice Initiates a token burn operation on a vault chain
+    /// @dev Converts token amounts to vault chain decimals before sending
+    /// @param burnData Contains burn request details including amount and chain info
     function burn(RebalanceTypes.RebalanceBurnCCData memory burnData) external override onlyLedger {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurn),
@@ -277,7 +337,7 @@ contract LedgerCrossChainManagerUpgradeable is
             dstChainId: burnData.burnChainId
         });
 
-        // convert token amount to dst chain decimal
+        // Convert token amount to destination chain decimals
         uint128 cvtTokenAmount =
             convertDecimal(burnData.amount, burnData.tokenHash, chainId, burnData.burnChainId);
         burnData.amount = cvtTokenAmount;
@@ -287,6 +347,9 @@ contract LedgerCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
+    /// @notice Initiates a token mint operation on a vault chain
+    /// @dev Converts token amounts to vault chain decimals before sending
+    /// @param mintData Contains mint request details including amount and chain info
     function mint(RebalanceTypes.RebalanceMintCCData memory mintData) external override onlyLedger {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMint),
@@ -298,7 +361,7 @@ contract LedgerCrossChainManagerUpgradeable is
             dstChainId: mintData.mintChainId
         });
 
-        // convert token amount to dst chain decimal
+        // Convert token amount to destination chain decimals
         uint128 cvtTokenAmount =
             convertDecimal(mintData.amount, mintData.tokenHash, chainId, mintData.mintChainId);
         mintData.amount = cvtTokenAmount;
@@ -308,8 +371,9 @@ contract LedgerCrossChainManagerUpgradeable is
         crossChainRelay.sendMessage(message, payload);
     }
 
-    /// @notice send a test cross-chain withdrawal for connection test
-    /// @param dstChainId destination chain id
+    /// @notice Sends a test withdrawal message to verify cross-chain connectivity
+    /// @dev Uses a special token symbol "CrossChainManagerTest" for testing
+    /// @param dstChainId The destination chain to test connectivity with
     function sendTestWithdraw(uint256 dstChainId) external onlyOwner {
         EventTypes.WithdrawData memory data = EventTypes.WithdrawData({
             tokenAmount: 100,
@@ -326,6 +390,7 @@ contract LedgerCrossChainManagerUpgradeable is
             brokerId: "brokerId",
             tokenSymbol: "CrossChainManagerTest"
         });
+
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Withdraw),
             option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
@@ -336,7 +401,7 @@ contract LedgerCrossChainManagerUpgradeable is
             dstChainId: data.chainId
         });
 
-        // convert token amount to dst chain decimal
+        // Convert amounts to destination chain decimals
         uint128 cvtTokenAmount =
             convertDecimal(data.tokenAmount, Utils.calculateStringHash(data.tokenSymbol), chainId, data.chainId);
         uint128 cvtFeeAmount =
@@ -345,17 +410,18 @@ contract LedgerCrossChainManagerUpgradeable is
         data.fee = cvtFeeAmount;
 
         bytes memory payload = abi.encode(data);
-
         crossChainRelay.sendMessage(message, payload);
     }
 
-    /// @notice withdraw finished
-    /// @param message withdraw message
+    /// @notice Processes a withdrawal completion message
+    /// @dev Internal function called when a withdrawal is confirmed by vault
+    /// @param message The withdrawal completion details
     function withdrawFinish(AccountTypes.AccountWithdraw memory message) internal {
         ledger.accountWithDrawFinish(message);
     }
 
-    /// @notice get role
+    /// @notice Returns the role identifier for this contract
+    /// @return A string indicating this is the ledger cross-chain manager
     function getRole() external pure returns (string memory) {
         return "ledger";
     }

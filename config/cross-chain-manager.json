@@ -269,6 +269,12 @@
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xCf474548756Eb48A14D08Ca514F728f72a8F629D",
       "role": "vault"
+    },
+    "sonictest": {
+      "proxy": "0xdeCdf6F646D5Cfaf16abf12222cCC84fEbae5934",
+      "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
+      "manager": "0x45f4caBF70150356Abf4072AbB6267a8F2144F2A",
+      "role": "vault"
     }
   },
   "production": {

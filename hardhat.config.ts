@@ -11,13 +11,6 @@ import "@nomicfoundation/hardhat-foundry";
 //import * as tdly from "./tenderly-hardhat/src";
 //tdly.setup();
 
-import "./tasks/accounts";
-import "./tasks/sampleTask";
-import "./tasks/balance";
-import "./tasks/deployLock";
-import "./tasks/setupRelay";
-import "./tasks/sendPing";
-import "./tasks/mockCrossChain";
 import { getSingletonFactoryInfo } from "@safe-global/safe-singleton-factory";
 import { DeterministicDeploymentInfo } from "hardhat-deploy/types";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -57,11 +50,11 @@ const deterministicDeployment = (network: string): DeterministicDeploymentInfo =
 
 function getRpcUrl(networkName: string) {
   if (networkName) {
-    const url = process.env["RPC_URL_" + networkName.toUpperCase()];
+    const url = process.env[networkName.toUpperCase() + "_RPC_URL"];
     if (url && url !== '') {
       return url
     } else {
-      throw new Error('RPC_URL_' + networkName.toUpperCase() + ' not found');
+      throw new Error(networkName.toUpperCase() + '_RPC_URL not found');
     }
   }
 }

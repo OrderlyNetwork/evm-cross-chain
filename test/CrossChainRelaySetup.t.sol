@@ -2,7 +2,7 @@ pragma solidity 0.8.19;
 
 import "forge-std/Test.sol";
 import "../contracts/CrossChainRelayUpgradeable.sol";
-import "../contracts/CrossChainRelayProxy.sol";
+import "../contracts/OrderlyProxy.sol";
 import "../contracts/layerzero/mocks/LZEndpointMock.sol";
 
 contract CrossChainRelaySetup is Test {
@@ -10,8 +10,8 @@ contract CrossChainRelaySetup is Test {
     uint16 constant _ledgerLzChainId = 1002;
     uint16 constant _vaultChainId = 1;
     uint16 constant _ledgerChainId = 2;
-    CrossChainRelayProxy _srcRelayProxy;
-    CrossChainRelayProxy _dstRelayProxy;
+    OrderlyProxy _srcRelayProxy;
+    OrderlyProxy _dstRelayProxy;
     CrossChainRelayUpgradeable _srcRelayImpl;
     CrossChainRelayUpgradeable _dstRelayImpl;
     LZEndpointMock _srcEndpoint;
@@ -20,8 +20,8 @@ contract CrossChainRelaySetup is Test {
     function deployCrossChainRelay() public {
         _srcEndpoint = new LZEndpointMock(_vaultLzChainId);
         _dstEndpoint = new LZEndpointMock(_ledgerLzChainId);
-        _srcRelayProxy = new CrossChainRelayProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
-        _dstRelayProxy = new CrossChainRelayProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
+        _srcRelayProxy = new OrderlyProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
+        _dstRelayProxy = new OrderlyProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
 
         CrossChainRelayUpgradeable(payable(address(_srcRelayProxy))).initialize(address(_srcEndpoint));
         CrossChainRelayUpgradeable(payable(address(_dstRelayProxy))).initialize(address(_dstEndpoint));
@@ -49,8 +49,8 @@ contract CrossChainRelaySetup is Test {
         dstRelay.addChainIdMapping(_ledgerChainId, _ledgerLzChainId);
     }
 
-    function newCrossChainRelay() public returns (CrossChainRelayProxy) {
-        CrossChainRelayProxy proxy = new CrossChainRelayProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
+    function newCrossChainRelay() public returns (OrderlyProxy) {
+        OrderlyProxy proxy = new OrderlyProxy(address(new CrossChainRelayUpgradeable()), bytes(""));
         CrossChainRelayUpgradeable(payable(address(proxy))).initialize(address(_srcEndpoint));
         return proxy;
     }

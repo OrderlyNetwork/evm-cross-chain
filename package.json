@@ -5,7 +5,9 @@
   "main": "dist/index",
   "types": "dist/index",
   "scripts": {
-    "test": "mocha"
+    "test:script": "jest",
+    "test:script:watch": "jest --watch",
+    "test:script:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",

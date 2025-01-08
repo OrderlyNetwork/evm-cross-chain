@@ -1,5 +1,0 @@
-{
-    "env": "dev",
-    "vaultNetwork": "arbitrumgoerli",
-    "ledgerNetwork": "orderlyop"
-}

@@ -30,3 +30,8 @@ tx.json
 proposal/
 
 tmp/
+
+ccmanager.json
+proxymanager.json
+relay.json
+proxyrelay.json

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "evm-cross-chain/script/baseScripts/BaseScript.s.sol";
-import "evm-cross-chain/script/baseScripts/ConfigHelper.s.sol";
-import "evm-cross-chain/script/baseScripts/RelayHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/RelayHelper.s.sol";
 import "evm-cross-chain/contracts/CrossChainRelayUpgradeable.sol";
-import "evm-cross-chain/contracts/CrossChainRelayProxy.sol";
+import "evm-cross-chain/contracts/OrderlyProxy.sol";
 
 contract UpgradeRelay is BaseScript, ConfigHelper, RelayHelper {
     using StringUtils for string;
@@ -20,7 +20,7 @@ contract UpgradeRelay is BaseScript, ConfigHelper, RelayHelper {
         console.log("[UpgradeRelay]broadcast: ", broadcast);
 
         RelayDeployData memory relayData = getRelayDeployData(env, network);
-        vmSelectRpcAndBroadcast(network);
+        vmSelectRpcAndBroadcast(env, network);
         address newRelay = upgradeRelay(relayData.proxy);
         vm.stopBroadcast();
 

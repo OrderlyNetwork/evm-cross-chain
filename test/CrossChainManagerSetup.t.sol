@@ -5,7 +5,12 @@ import "./CrossChainRelaySetup.t.sol";
 import "../contracts/LedgerCrossChainManagerUpgradeable.sol";
 import "../contracts/VaultCrossChainManagerUpgradeable.sol";
 import "../contracts/CrossChainRelayUpgradeable.sol";
-import "../contracts/CrossChainManagerProxy.sol";
+import "../contracts/OrderlyProxy.sol";
+
+contract DummyContract {
+    // fallback that no reverts
+    fallback() external {}
+}
 
 contract CrossChainManagerSetup is Test, CrossChainRelaySetup {
     LedgerCrossChainManagerUpgradeable _ledgerManagerProxy;
@@ -16,8 +21,8 @@ contract CrossChainManagerSetup is Test, CrossChainRelaySetup {
     function deployCrossChainManager() public {
         _ledgerManagerImpl = new LedgerCrossChainManagerUpgradeable();
         _vaultManagerImpl = new VaultCrossChainManagerUpgradeable();
-        CrossChainManagerProxy ledgerManagerProxy = new CrossChainManagerProxy(address(_ledgerManagerImpl), bytes(""));
-        CrossChainManagerProxy vaultManagerProxy = new CrossChainManagerProxy(address(_vaultManagerImpl), bytes(""));
+        OrderlyProxy ledgerManagerProxy = new OrderlyProxy(address(_ledgerManagerImpl), bytes(""));
+        OrderlyProxy vaultManagerProxy = new OrderlyProxy(address(_vaultManagerImpl), bytes(""));
 
         _ledgerManagerProxy = LedgerCrossChainManagerUpgradeable(address(ledgerManagerProxy));
         _vaultManagerProxy = VaultCrossChainManagerUpgradeable(address(vaultManagerProxy));
@@ -36,6 +41,10 @@ contract CrossChainManagerSetup is Test, CrossChainRelaySetup {
         _ledgerManagerProxy.setChainId(_ledgerChainId);
         _ledgerManagerProxy.setCrossChainRelay(address(_dstRelayProxy));
 
+        // set dummy contract as vault
+        _vaultManagerProxy.setVault(address(new DummyContract()));
+        _ledgerManagerProxy.setLedger(address(new DummyContract()));
+
         CrossChainRelayUpgradeable(payable(address(_srcRelayProxy))).setManagerAddress(address(_vaultManagerProxy));
         CrossChainRelayUpgradeable(payable(address(_dstRelayProxy))).setManagerAddress(address(_ledgerManagerProxy));
     }
@@ -44,14 +53,14 @@ contract CrossChainManagerSetup is Test, CrossChainRelaySetup {
 contract CrossChainManagerFactory {
     function newLedgerCrossChainManager() public returns (address) {
         LedgerCrossChainManagerUpgradeable ledgerManager = new LedgerCrossChainManagerUpgradeable();
-        CrossChainManagerProxy ledgerManagerProxy = new CrossChainManagerProxy(address(ledgerManager), bytes(""));
+        OrderlyProxy ledgerManagerProxy = new OrderlyProxy(address(ledgerManager), bytes(""));
         LedgerCrossChainManagerUpgradeable(payable(address(ledgerManagerProxy))).initialize();
         return address(ledgerManagerProxy);
     }
 
     function newVaultCrossChainManager() public returns (address) {
         VaultCrossChainManagerUpgradeable vaultManager = new VaultCrossChainManagerUpgradeable();
-        CrossChainManagerProxy vaultManagerProxy = new CrossChainManagerProxy(address(vaultManager), bytes(""));
+        OrderlyProxy vaultManagerProxy = new OrderlyProxy(address(vaultManager), bytes(""));
         VaultCrossChainManagerUpgradeable(payable(address(vaultManagerProxy))).initialize();
         return address(vaultManagerProxy);
     }

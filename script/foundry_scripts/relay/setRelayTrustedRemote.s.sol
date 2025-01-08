@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "evm-cross-chain/script/baseScripts/BaseScript.s.sol";
-import "evm-cross-chain/script/baseScripts/ConfigHelper.s.sol";
-import "evm-cross-chain/script/baseScripts/RelayHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/RelayHelper.s.sol";
 import "evm-cross-chain/contracts/CrossChainRelayUpgradeable.sol";
-import "evm-cross-chain/contracts/CrossChainRelayProxy.sol";
+import "evm-cross-chain/contracts/OrderlyProxy.sol";
 
 contract SetRelayTrustedRemote is BaseScript, ConfigHelper, RelayHelper {
     function run() external {
@@ -19,7 +19,7 @@ contract SetRelayTrustedRemote is BaseScript, ConfigHelper, RelayHelper {
 
         RelayDeployData memory srcRelayData = getRelayDeployData(env, srcNetwork);
         RelayDeployData memory dstRelayData = getRelayDeployData(env, dstNetwork);
-        vmSelectRpcAndBroadcast(srcNetwork);
+        vmSelectRpcAndBroadcast(env, srcNetwork);
 
         setRelayLzTrustedRemote(srcRelayData.proxy, dstRelayData.proxy, dstNetwork);
 

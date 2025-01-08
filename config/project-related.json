@@ -1,170 +1,178 @@
 {
-    "qa": {
-        "fuji": {
-            "vault": "0xb960E6329a75716ea11090B6B42580d3004dab77"
-        },
-        "sepolia": {
-            "vault": "0xd5164A5a83c64E59F842bC091E06614b84D95fF5"
-        },
-        "arbitrumgoerli": {
-            "vault": "0x22b10472d3Da206aaA85D3f19E91A8da15E0F56A"
-        },
-        "opgoerli": {
-            "vault": "0x7fc077e4487bb03D393a0C2b87B52798E19602DB"
-        },
-        "opsepolia": {
-            "vault": "0xd5164A5a83c64E59F842bC091E06614b84D95fF5"
-        },
-        "arbsepolia": {
-            "vault": "0xB15a3a4D451311e03e34d9331C695078Ad5Cf5F1"
-        },
-        "mumbai": {
-            "vault": "0x7C4570Db29bF8dF8Aa0dBF6bdE637264F9E0Bd67"
-        },
-        "basesepolia": {
-            "vault": "0xEcb4abe96113c9caA3204e96C63C5377D02cb636"
-        },
-        "amoy": {
-            "vault": "0x835E970110E4a46BCA21A7551FEaA5F532F72701"
-        },
-        "mantlesepolia": {
-            "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
-        },
-        "seidev": {
-            "vault": "0x3ac2Ba11Ca2f9f109d50fb1a46d4C23fCadbbef6"
-        },
-        "storytest": {
-            "vault": ""
-        },
-        "morphholesky": {
-            "vault": ""
-        },
-        "orderlyop": {
-            "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
-            "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
-        }
+  "qa": {
+    "fuji": {
+      "vault": "0xb960E6329a75716ea11090B6B42580d3004dab77"
     },
-    "staging": {
-        "fuji": {
-            "vault": "0xAB6c8F6245B67421302AAe30AcEB10E00c30F463"
-        },
-        "sepolia": {
-            "vault": "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f"
-        },
-        "opgoerli": {
-            "vault": "0x1bae7b601760A45710B43Da2C8f8a3c933A144D2"
-        },
-        "arbitrumgoerli": {
-            "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
-        },
-        "opsepolia": {
-            "vault": "0xEfF2896077B6ff95379EfA89Ff903598190805EC"
-        },
-        "arbsepolia": {
-            "vault": "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f"
-        },
-        "mumbai": {
-            "vault": "0xB483f9D0bD47371B54087983214887c3Be103b92"
-        },
-        "basesepolia": {
-            "vault": "0xdc7348975aE9334DbdcB944DDa9163Ba8406a0ec"
-        },
-        "amoy": {
-            "vault": "0xDf3A1a266BCc75B88Ce9b786DF521F8DaeD5b08b"
-        },
-        "mantlesepolia": {
-            "vault": "0xfb0E5f3D16758984E668A3d76f0963710E775503"
-        },
-        "seidev": {
-            "vault": "0xA603f6e124259d37e43dd5008cB7613164D6a6e3"
-        },
-        "storytest": {
-            "vault": ""
-        },
-        "morphholesky": {
-            "vault": ""
-        },
-        "orderlyop": {
-            "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
-            "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
-        }
+    "sepolia": {
+      "vault": "0xd5164A5a83c64E59F842bC091E06614b84D95fF5"
     },
-    "dev": {
-        "fuji": {
-            "vault": "0x695Cb2ab1b2Db899F8B653B36eF865D13E6809a8"
-        },
-        "sepolia": {
-            "vault": "0x1A26FBE7A6Dc6c12b8E10CD703b0c520Ee996B15"
-        },
-        "opgoerli": {
-            "vault": "0xe014a38501cF2B8139dED0b60Ed4FbD02C113b59"
-        },
-        "arbitrumgoerli": {
-            "vault": "0x0C554dDb6a9010Ed1FD7e50d92559A06655dA482"
-        },
-        "opsepolia": {
-            "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
-        },
-        "mumbai": {
-            "vault": "0x56604D4097042f7950Eb8BFc58b0Dff072089070"
-        },
-        "arbsepolia": {
-            "vault": "0x3ac2ba11ca2f9f109d50fb1a46d4c23fcadbbef6"
-        },
-        "basesepolia": {
-            "vault": "0x2A5b650A894409372DDeE241EDAC92d4152bE24d"
-        },
-        "amoy": {
-            "vault": "0x2a5b650a894409372ddee241edac92d4152be24d"
-        },
-        "mantlesepolia": {
-            "vault": "0x3CAA46F94610BDa1C60267a364d2E154E677BdF9"
-        },
-        "seidev": {
-            "vault": "0x2A5b650A894409372DDeE241EDAC92d4152bE24d"
-        },
-        "storytest": {
-            "vault": ""
-        },
-        "morphholesky": {
-            "vault": ""
-        },
-        "orderlyop": {
-            "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",
-            "operator-manager": "0xe34614EB781C5838C78B7f913b89A05e7a5b97e2"
-        }
+    "arbitrumgoerli": {
+      "vault": "0x22b10472d3Da206aaA85D3f19E91A8da15E0F56A"
     },
-    "production": {
-        "optimism": {
-            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
-        },
-        "arbitrum": {
-            "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
-        },
-        "polygon": {
-            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
-        },
-        "base": {
-            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
-        },
-        "mantle": {
-            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
-        },
-        "ethereum": {
-            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
-        },
-        "avalanche": {
-            "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
-        },
-        "sei": {
-            "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
-        },
-        "morph": {
-            "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
-        },
-        "orderlymain": {
-            "ledger": "0x6F7a338F2aA472838dEFD3283eB360d4Dff5D203",
-            "operator-manager": "0x7CC5B6433eb33164c88F6512f56C566CFC3420BF"
-        }
+    "opgoerli": {
+      "vault": "0x7fc077e4487bb03D393a0C2b87B52798E19602DB"
+    },
+    "opsepolia": {
+      "vault": "0xd5164A5a83c64E59F842bC091E06614b84D95fF5"
+    },
+    "arbsepolia": {
+      "vault": "0xB15a3a4D451311e03e34d9331C695078Ad5Cf5F1"
+    },
+    "mumbai": {
+      "vault": "0x7C4570Db29bF8dF8Aa0dBF6bdE637264F9E0Bd67"
+    },
+    "basesepolia": {
+      "vault": "0xEcb4abe96113c9caA3204e96C63C5377D02cb636"
+    },
+    "amoy": {
+      "vault": "0x835E970110E4a46BCA21A7551FEaA5F532F72701"
+    },
+    "mantlesepolia": {
+      "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
+    },
+    "seidev": {
+      "vault": "0x3ac2Ba11Ca2f9f109d50fb1a46d4C23fCadbbef6"
+    },
+    "storytest": {
+      "vault": ""
+    },
+    "morphholesky": {
+      "vault": ""
+    },
+    "orderlyop": {
+      "ledger": "0x50F59504D3623Ad99302835da367676d1f7E3D44",
+      "operator-manager": "0x7Cd1FBdA284997Be499D3294C9a50352Dd682155"
     }
+  },
+  "staging": {
+    "fuji": {
+      "vault": "0xAB6c8F6245B67421302AAe30AcEB10E00c30F463"
+    },
+    "sepolia": {
+      "vault": "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f"
+    },
+    "opgoerli": {
+      "vault": "0x1bae7b601760A45710B43Da2C8f8a3c933A144D2"
+    },
+    "arbitrumgoerli": {
+      "vault": "0xd64AeB281f3E8cd70e668b6cb24De7e532dC214D"
+    },
+    "opsepolia": {
+      "vault": "0xEfF2896077B6ff95379EfA89Ff903598190805EC"
+    },
+    "arbsepolia": {
+      "vault": "0x0EaC556c0C2321BA25b9DC01e4e3c95aD5CDCd2f"
+    },
+    "mumbai": {
+      "vault": "0xB483f9D0bD47371B54087983214887c3Be103b92"
+    },
+    "basesepolia": {
+      "vault": "0xdc7348975aE9334DbdcB944DDa9163Ba8406a0ec"
+    },
+    "amoy": {
+      "vault": "0xDf3A1a266BCc75B88Ce9b786DF521F8DaeD5b08b"
+    },
+    "mantlesepolia": {
+      "vault": "0xfb0E5f3D16758984E668A3d76f0963710E775503"
+    },
+    "seidev": {
+      "vault": "0xA603f6e124259d37e43dd5008cB7613164D6a6e3"
+    },
+    "storytest": {
+      "vault": ""
+    },
+    "morphholesky": {
+      "vault": ""
+    },
+    "orderlyop": {
+      "ledger": "0x1826B75e2ef249173FC735149AE4B8e9ea10abff",
+      "operator-manager": "0x1A46be28AB241F5A64F82ddFc384911520E3d557"
+    }
+  },
+  "dev": {
+    "fuji": {
+      "vault": "0x695Cb2ab1b2Db899F8B653B36eF865D13E6809a8"
+    },
+    "sepolia": {
+      "vault": "0x1A26FBE7A6Dc6c12b8E10CD703b0c520Ee996B15"
+    },
+    "opgoerli": {
+      "vault": "0xe014a38501cF2B8139dED0b60Ed4FbD02C113b59"
+    },
+    "arbitrumgoerli": {
+      "vault": "0x0C554dDb6a9010Ed1FD7e50d92559A06655dA482"
+    },
+    "opsepolia": {
+      "vault": "0x08a17582C4cCe303C37439341c6E6138Fb62304d"
+    },
+    "mumbai": {
+      "vault": "0x56604D4097042f7950Eb8BFc58b0Dff072089070"
+    },
+    "arbsepolia": {
+      "vault": "0x3ac2ba11ca2f9f109d50fb1a46d4c23fcadbbef6"
+    },
+    "basesepolia": {
+      "vault": "0x2A5b650A894409372DDeE241EDAC92d4152bE24d"
+    },
+    "amoy": {
+      "vault": "0x2a5b650a894409372ddee241edac92d4152be24d"
+    },
+    "mantlesepolia": {
+      "vault": "0x3CAA46F94610BDa1C60267a364d2E154E677BdF9"
+    },
+    "seidev": {
+      "vault": "0x2A5b650A894409372DDeE241EDAC92d4152bE24d"
+    },
+    "storytest": {
+      "vault": ""
+    },
+    "morphholesky": {
+      "vault": ""
+    },
+    "orderlyop": {
+      "ledger": "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e",
+      "operator-manager": "0xe34614EB781C5838C78B7f913b89A05e7a5b97e2"
+    },
+    "sonictest": {
+      "vault": "0xA603f6e124259d37e43dd5008cB7613164D6a6e3"
+    }
+  },
+  "production": {
+    "optimism": {
+      "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+    },
+    "arbitrum": {
+      "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
+    },
+    "polygon": {
+      "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+    },
+    "base": {
+      "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+    },
+    "mantle": {
+      "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+    },
+    "ethereum": {
+      "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+    },
+    "avalanche": {
+      "vault": "0x816f722424b49cf1275cc86da9840fbd5a6167e9"
+    },
+    "sei": {
+      "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
+    },
+    "morph": {
+      "vault": "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9"
+    },
+    "orderlymain": {
+      "ledger": "0x6F7a338F2aA472838dEFD3283eB360d4Dff5D203",
+      "operator-manager": "0x7CC5B6433eb33164c88F6512f56C566CFC3420BF"
+    }
+  },
+  "env": {
+    "sonictest": {
+      "vault": "1"
+    }
+  }
 }

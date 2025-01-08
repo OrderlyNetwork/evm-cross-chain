@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "evm-cross-chain/script/baseScripts/BaseScript.s.sol";
-import "evm-cross-chain/script/baseScripts/ConfigHelper.s.sol";
-import "evm-cross-chain/script/baseScripts/CCManagerHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/CCManagerHelper.s.sol";
 import "evm-cross-chain/contracts/VaultCrossChainManagerUpgradeable.sol";
 import "evm-cross-chain/contracts/LedgerCrossChainManagerUpgradeable.sol";
-import "evm-cross-chain/contracts/CrossChainManagerProxy.sol";
+import "evm-cross-chain/contracts/OrderlyProxy.sol";
 import "evm-cross-chain/contracts/interface/ICrossChainManager.sol";
 
 contract ManagerInitializeOnly is BaseScript, ConfigHelper, CCManagerHelper {
@@ -15,10 +15,8 @@ contract ManagerInitializeOnly is BaseScript, ConfigHelper, CCManagerHelper {
     function run() external {
         string memory env = vm.envString("FS_managerInitializeOnly_env");
         string memory network = vm.envString("FS_managerInitializeOnly_network");
-        string memory role = vm.envString("FS_managerInitializeOnly_role");
-        bool broadcast = vm.envBool("FS_managerInitializeOnly_broadcast");
 
-        vmSelectRpcAndBroadcast(network);
+        vmSelectRpcAndBroadcast(env, network);
 
         CCManagerDeployData memory managerData = getCCManagerDeployData(env, network);
 

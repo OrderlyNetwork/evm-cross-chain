@@ -8,5 +8,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["foundry_ts/**/*"]
+  "include": ["script/**/*"]
 }
