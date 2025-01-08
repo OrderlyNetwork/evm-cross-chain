@@ -1,7 +1,0 @@
-{
-    "env": "qa",
-    "vaultNetwork": "arbitrumgoerli",
-    "ledgerNetwork": "orderlyop",
-    "upradeVault": 0,
-    "upgradeLedger": 0
-}

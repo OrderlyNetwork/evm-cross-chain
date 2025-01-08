@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "evm-cross-chain/script/baseScripts/BaseScript.s.sol";
-import "evm-cross-chain/script/baseScripts/ConfigHelper.s.sol";
-import "evm-cross-chain/script/baseScripts/CCManagerHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/CCManagerHelper.s.sol";
 import "evm-cross-chain/contracts/VaultCrossChainManagerUpgradeable.sol";
 import "evm-cross-chain/contracts/LedgerCrossChainManagerUpgradeable.sol";
-import "evm-cross-chain/contracts/CrossChainManagerProxy.sol";
+import "evm-cross-chain/contracts/OrderlyProxy.sol";
 import "evm-cross-chain/contracts/interface/ICrossChainManager.sol";
 
 contract PrintCCManagerTokenDecimal is BaseScript, ConfigHelper, CCManagerHelper {
@@ -24,23 +24,21 @@ contract PrintCCManagerTokenDecimal is BaseScript, ConfigHelper, CCManagerHelper
 
         CCManagerDeployData memory managerData = getCCManagerDeployData(env, network);
 
-        vmSelectRpcAndBroadcast(network);
+        vmSelectRpcAndBroadcast(env, network);
 
         LedgerCrossChainManagerUpgradeable ledgerManager =
             LedgerCrossChainManagerUpgradeable(payable(managerData.proxy));
 
         // print token decimal
-        TokenDecimalConfig[] memory tokenConfigs = getTokenDecimals(env, tokenNetwork);
-        for (uint256 i = 0; i < tokenConfigs.length; i++) {
-            console.log("token: ", tokenConfigs[i].name);
-            console.log("tokenHash: ");
-            console.logBytes32(tokenConfigs[i].tokenHash);
-            console.log("tokenDecimal: ", tokenConfigs[i].decimals);
-            console.log(
-                "in contract decimal: ",
-                ledgerManager.tokenDecimalMapping(tokenConfigs[i].tokenHash, getChainId(network))
-            );
-        }
+        TokenDecimalConfig memory tokenConfig = getUsdcDecimal();
+        console.log("token: ", tokenConfig.name);
+        console.log("tokenHash: ");
+        console.logBytes32(tokenConfig.tokenHash);
+        console.log("tokenDecimal: ", tokenConfig.decimals);
+        console.log(
+            "in contract decimal: ",
+            ledgerManager.tokenDecimalMapping(tokenConfig.tokenHash, getChainId(network))
+        );
 
         vm.stopBroadcast();
     }

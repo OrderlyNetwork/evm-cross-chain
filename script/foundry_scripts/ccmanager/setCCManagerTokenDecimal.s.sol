@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "evm-cross-chain/script/baseScripts/BaseScript.s.sol";
-import "evm-cross-chain/script/baseScripts/ConfigHelper.s.sol";
-import "evm-cross-chain/script/baseScripts/CCManagerHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/BaseScript.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/ConfigHelper.s.sol";
+import "evm-cross-chain/script/foundry_scripts/baseScripts/CCManagerHelper.s.sol";
 import "evm-cross-chain/contracts/VaultCrossChainManagerUpgradeable.sol";
 import "evm-cross-chain/contracts/LedgerCrossChainManagerUpgradeable.sol";
-import "evm-cross-chain/contracts/CrossChainManagerProxy.sol";
+import "evm-cross-chain/contracts/OrderlyProxy.sol";
 import "evm-cross-chain/contracts/interface/ICrossChainManager.sol";
 
 contract SetCCManagerTokenDecimal is BaseScript, ConfigHelper, CCManagerHelper {
@@ -19,15 +19,13 @@ contract SetCCManagerTokenDecimal is BaseScript, ConfigHelper, CCManagerHelper {
 
         CCManagerDeployData memory managerData = getCCManagerDeployData(env, network);
 
-        TokenDecimalConfig[] memory tokenDecimals = getTokenDecimals(env, tokenNetwork);
+        TokenDecimalConfig memory tokenDecimal = getUsdcDecimal();
 
-        vmSelectRpcAndBroadcast(network);
+        vmSelectRpcAndBroadcast(env, network);
 
-        for (uint256 i = 0; i < tokenDecimals.length; i++) {
-            setTokenDecimal(
-                managerData.proxy, tokenDecimals[i].tokenHash, tokenNetwork, uint128(tokenDecimals[i].decimals)
-            );
-        }
+        setTokenDecimal(
+            managerData.proxy, tokenDecimal.tokenHash, tokenNetwork, uint128(tokenDecimal.decimals)
+        );
 
         vm.stopBroadcast();
     }

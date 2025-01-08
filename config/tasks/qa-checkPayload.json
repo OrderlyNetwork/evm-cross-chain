@@ -1,5 +1,0 @@
-{
-    "env": "qa",
-    "srcNetwork": "orderlyop",
-    "dstNetwork": "arbitrumgoerli"
-}

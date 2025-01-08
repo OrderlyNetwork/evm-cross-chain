@@ -1,4 +1,0 @@
-{
-    "networks": ["orderlyop", "arbitrumgoerli"],
-    "env": "qa"
-}

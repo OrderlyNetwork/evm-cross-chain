@@ -9,33 +9,39 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-// Datalayout for the Cross Chain Relay
+/// @notice Data storage layout for the CrossChainRelay contract
+/// @dev Separate contract to enforce proper storage layout with upgradeable contracts
 contract CrossChainRelayDataLayout {
-    // A mapping to track trusted callers
+    /// @notice Mapping of addresses to their caller status (1 = trusted, 0 = untrusted)
     mapping(address => uint8) public _callers;
 
-    // Raw chain id to layerzero chain id mapping
+    /// @notice Maps native chain IDs to their corresponding LayerZero chain IDs
     mapping(uint256 => uint16) public _chainIdMapping;
 
-    // layerzero chain id to raw chain id mapping
+    /// @notice Reverse mapping of LayerZero chain IDs to native chain IDs
     mapping(uint16 => uint256) public _lzChainIdMapping;
 
-    // chain id to cross chain manager contract address
+    /// @notice Maps chain IDs to their respective cross-chain manager contract addresses
+    /// @dev Deprecated - No longer needed as manager address is stored directly
     mapping(uint256 => address) public _crossChainManagerMapping;
 
-    // chain id to cross chain relay contract address
+    /// @notice Maps chain IDs to their respective cross-chain relay contract addresses
+    /// @dev Deprecated - No longer needed as relay addresses are handled by LayerZero
     mapping(uint256 => address) public _crossChainRelayMapping;
 
-    // flow to gas limit mapping
+    /// @notice Maps message flow types to their gas limits for cross-chain operations
     mapping(uint8 => uint256) public _flowGasLimitMapping;
 
-    // The Current Chain ID
+    /// @notice The chain ID where this contract is deployed
     uint256 public _currentChainId;
 
-    // the manager address
+    /// @notice Address of the cross-chain manager (Vault or Ledger) on this chain
     address public _managerAddress;
 }
 
+/// @title CrossChainRelayUpgradeable
+/// @notice A cross-chain messaging adapter that standardizes communication via LayerZero
+/// @dev This contract acts as an abstraction layer over LayerZero's messaging protocol
 contract CrossChainRelayUpgradeable is
     IOrderlyCrossChain,
     Initializable,
@@ -44,24 +50,33 @@ contract CrossChainRelayUpgradeable is
     UUPSUpgradeable,
     CrossChainRelayDataLayout
 {
-    event MsgReceived(uint8);
+    /// @notice Emitted when a cross-chain message is received and processed
+    /// @param method The type of cross-chain method being processed
+    event MsgReceived(uint8 method);
+    
+    /// @notice Emitted when a ping message is received
     event Ping();
+    
+    /// @notice Emitted when a pong response is sent
     event Pong();
 
     using OrderlyCrossChainMessage for OrderlyCrossChainMessage.MessageV1;
 
+    /// @dev Prevents initialization of the implementation contract
     constructor() {
         _disableInitializers();
     }
 
-    /// @dev Throws if called by any account other than the owner.
+    /// @notice Restricts function access to trusted callers only
+    /// @dev Throws if called by an address not marked as trusted in _callers mapping
     modifier onlyCaller() {
         require(_callers[msg.sender] == 1, "It is not a trusted caller.");
         _;
     }
 
-    /// @notice initialize the contract with the endpoint address
-    /// @param _endpoint the endpoint address
+    /// @notice Initializes the contract with LayerZero endpoint
+    /// @dev Sets up initial trusted callers and initializes inherited contracts
+    /// @param _endpoint The LayerZero endpoint address for cross-chain messaging
     function initialize(address _endpoint) public initializer {
         __Ownable_init();
         __UUPSUpgradeable_init();
@@ -70,96 +85,102 @@ contract CrossChainRelayUpgradeable is
         _callers[_endpoint] = 1;
     }
 
-    /// @notice update the endpoint address
-    /// @param _endpoint the endpoint address
+    /// @notice Updates the LayerZero endpoint address
+    /// @dev Also marks the new endpoint as a trusted caller
+    /// @param _endpoint New LayerZero endpoint address
     function updateEndpoint(address _endpoint) external onlyOwner {
         lzEndpoint = ILayerZeroEndpoint(_endpoint);
         _callers[_endpoint] = 1;
     }
 
+    /// @dev Required override for UUPS proxy pattern
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
 
+    /// @notice Upgrades the implementation contract
+    /// @dev Only callable by owner through proxy
+    /// @param newImplementation Address of new implementation contract
     function upgradeTo(address newImplementation) public override onlyOwner onlyProxy {
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
     }
 
-    // for receive native token
+    /// @dev Allows contract to receive native tokens for cross-chain fees
     receive() external payable {}
 
-    /// @notice withdraw native token
-    /// @param to the receiver address
-    /// @param amount the amount to withdraw
+    /// @notice Withdraws native tokens from the contract
+    /// @param to Recipient address
+    /// @param amount Amount of native tokens to withdraw
     function withdrawNativeToken(address payable to, uint256 amount) external onlyOwner {
         to.transfer(amount);
     }
 
-    /// @notice withdraw ERC20 token
-    /// @param token the token address
-    /// @param to the receiver address
+    /// @notice Withdraws ERC20 tokens from the contract
+    /// @param token Token address
+    /// @param to Recipient address
+    /// @param amount Amount of tokens to withdraw
     function withdrawToken(address token, address to, uint256 amount) external onlyOwner {
         IERC20(token).transfer(to, amount);
     }
 
-    /// @notice set the current chain id
-    /// @param chainId the current chain id
+    /// @notice Sets the current chain ID
+    /// @param chainId The current chain ID
     function setSrcChainId(uint256 chainId) external onlyOwner {
         _currentChainId = chainId;
     }
 
-    /// @notice set the trusted caller
-    /// @param caller the caller address
+    /// @notice Adds a new trusted caller
+    /// @param caller The caller address
     function addCaller(address caller) external onlyOwner {
         _callers[caller] = 1;
     }
 
-    /// @notice remove the trusted caller
-    /// @param caller the caller address
+    /// @notice Removes a trusted caller
+    /// @param caller The caller address
     function removeCaller(address caller) external onlyOwner {
         _callers[caller] = 0;
     }
 
-    /// @notice add chain ids mapping to layerzero chain ids
-    /// @param chainId the raw chain id
-    /// @param lzChainId the layerzero chain id
+    /// @notice Adds a new chain ID mapping to LayerZero chain IDs
+    /// @param chainId The raw chain ID
+    /// @param lzChainId The LayerZero chain ID
     function addChainIdMapping(uint256 chainId, uint16 lzChainId) external onlyOwner {
         _chainIdMapping[chainId] = lzChainId;
         _lzChainIdMapping[lzChainId] = chainId;
     }
 
-    /// @notice set the cross chain manager address
-    /// deprecated no need to set cross chain manager address
-    /// @param chainId the chain id
-    /// @param crossChainManager the cross chain manager address
+    /// @notice Sets the cross-chain manager address
+    /// @dev Deprecated - No longer needed as manager address is stored directly
+    /// @param chainId The chain ID
+    /// @param crossChainManager The cross-chain manager address
     function addCrossChainManagerMapping(uint256 chainId, address crossChainManager) external onlyOwner {
         _crossChainManagerMapping[chainId] = crossChainManager;
     }
 
-    /// @notice set the cross chain relay address
-    /// deprecated no need to set cross chain relay address
-    /// @param chainId the chain id
-    /// @param crossChainRelay the cross chain relay address
+    /// @notice Sets the cross-chain relay address
+    /// @dev Deprecated - No longer needed as relay addresses are handled by LayerZero
+    /// @param chainId The chain ID
+    /// @param crossChainRelay The cross-chain relay address
     function addCrossChainRelayMapping(uint256 chainId, address crossChainRelay) external onlyOwner {
         _crossChainRelayMapping[chainId] = crossChainRelay;
     }
 
-    /// @notice set the manager address
-    /// @param _address the manager address
+    /// @notice Sets the manager address
+    /// @param _address The manager address
     function setManagerAddress(address _address) external onlyOwner {
         _managerAddress = _address;
         _callers[_address] = 1;
     }
 
-    /// @notice set the flow gas limit mapping
-    /// @param flow the flow id
-    /// @param gasLimit the gas limit
+    /// @notice Sets the flow gas limit mapping
+    /// @param flow The flow ID
+    /// @param gasLimit The gas limit
     function addFlowGasLimitMapping(uint8 flow, uint256 gasLimit) external onlyOwner {
         _flowGasLimitMapping[flow] = gasLimit;
     }
 
-    /// @notice estimate gas fee for a center message
-    /// @param data the cross chain meta message
-    /// @param payload the payload
-    /// @return the gas fee
+    /// @notice Estimates the gas fee for a center message
+    /// @param data The cross-chain meta message
+    /// @param payload The payload
+    /// @return The gas fee
     function estimateGasFee(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
         public
         view
@@ -179,9 +200,9 @@ contract CrossChainRelayUpgradeable is
         return nativeFee;
     }
 
-    /// @notice send cross-chain message
-    /// @param data the cross chain meta message
-    /// @param payload the payload
+    /// @notice Sends a cross-chain message
+    /// @param data The cross-chain meta message
+    /// @param payload The payload
     function sendMessage(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
         public
         payable
@@ -204,9 +225,9 @@ contract CrossChainRelayUpgradeable is
         emit MessageSent(data, payload);
     }
 
-    /// @notice send cross-chain message with fee
-    /// @param data the cross chain meta message
-    /// @param payload the payload
+    /// @notice Sends a cross-chain message with fee
+    /// @param data The cross-chain meta message
+    /// @param payload The payload
     function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
         public
         payable
@@ -228,10 +249,10 @@ contract CrossChainRelayUpgradeable is
         emit MessageSent(data, payload);
     }
 
-    /// @notice send cross-chain message with fee
-    /// @param refundReceiver the receiver address for the lz fee refund
-    /// @param data the cross chain meta message
-    /// @param payload the payload
+    /// @notice Sends a cross-chain message with fee
+    /// @param refundReceiver The receiver address for the lz fee refund
+    /// @param data The cross-chain meta message
+    /// @param payload The payload
     function sendMessageWithFeeRefund(
         address refundReceiver,
         OrderlyCrossChainMessage.MessageV1 memory data,
@@ -252,8 +273,8 @@ contract CrossChainRelayUpgradeable is
         emit MessageSent(data, payload);
     }
 
-    /// @notice test function, send ping to another chain
-    /// @param dstChainId the destination chain id
+    /// @notice Tests a function, sends ping to another chain
+    /// @param dstChainId The destination chain ID
     function ping(uint256 dstChainId) internal {
         OrderlyCrossChainMessage.MessageV1 memory data = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Ping),
@@ -267,8 +288,8 @@ contract CrossChainRelayUpgradeable is
         sendMessage(data, bytes(""));
     }
 
-    /// @notice test function, send ping to another chain and expect pong back
-    /// @param dstChainId the destination chain id
+    /// @notice Tests a function, sends ping to another chain and expects pong back
+    /// @param dstChainId The destination chain ID
     function pingPong(uint256 dstChainId) external onlyOwner {
         OrderlyCrossChainMessage.MessageV1 memory data = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.PingPong),
@@ -282,9 +303,9 @@ contract CrossChainRelayUpgradeable is
         sendMessage(data, bytes(""));
     }
 
-    /// @notice receive cross-chain message
-    /// @param data the cross chain meta message
-    /// @param payload the payload
+    /// @notice Receives a cross-chain message
+    /// @param data The cross-chain meta message
+    /// @param payload The payload
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory data, bytes memory payload)
         public
         payable
@@ -303,9 +324,9 @@ contract CrossChainRelayUpgradeable is
         }
     }
 
-    /// @notice receive cross-chain message from layzero endpoint
-    /// @param _srcChainId the source chain id
-    /// @param _payload the payload
+    /// @notice Receives a cross-chain message from LayerZero endpoint
+    /// @param _srcChainId The source chain ID
+    /// @param _payload The payload
     function _blockingLzReceive(uint16 _srcChainId, bytes memory, uint64, bytes memory _payload)
         internal
         virtual

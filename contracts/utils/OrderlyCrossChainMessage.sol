@@ -15,7 +15,8 @@ library OrderlyCrossChainMessage {
         RebalanceBurn, // burn request from ledger to vault
         RebalanceBurnFinish, // burn request finish from vault to ledger
         RebalanceMint, // mint request from ledger to vault
-        RebalanceMintFinish //  mint request finish from vault to ledger
+        RebalanceMintFinish, //  mint request finish from vault to ledger
+        Withdraw2Contract // withdraw to contract address
     }
 
     enum PayloadDataType {
@@ -27,7 +28,8 @@ library OrderlyCrossChainMessage {
         RebalanceBurnCCData,
         RebalanceBurnCCFinishData,
         RebalanceMintCCData,
-        RebalanceMintCCFinishData
+        RebalanceMintCCFinishData,
+        EventTypesWithdraw2Contract
     }
 
     // The structure of the message
