@@ -6,4 +6,3 @@ hardhat-deploy/=node_modules/hardhat-deploy/
 hardhat/=node_modules/hardhat/
 contract-evm/=lib/contract-evm/
 evm-cross-chain/=./
-safe/=lib/safe-contracts/contracts/

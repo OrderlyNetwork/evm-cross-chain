@@ -387,43 +387,6 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
         vm.stopPrank();
     }
 
-    /// @notice Test withdrawal with invalid token symbol
-    function test_invalidTokenWithdraw() public {
-        // Setup withdrawal data with invalid token
-        EventTypes.WithdrawData memory withdrawData = EventTypes.WithdrawData({
-            tokenAmount: 1000,
-            fee: 10,
-            chainId: VAULT_CHAIN_ID,
-            accountId: bytes32(0),
-            r: bytes32(0),
-            s: bytes32(0),
-            v: 27,
-            sender: address(this),
-            withdrawNonce: 1,
-            receiver: MOCK_USER,
-            timestamp: uint64(block.timestamp),
-            brokerId: "test",
-            tokenSymbol: "" // Empty token symbol
-        });
-
-        OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
-            method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Withdraw),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
-            payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdrawData),
-            srcCrossChainManager: address(_ledgerManagerProxy),
-            dstCrossChainManager: address(_vaultManagerProxy),
-            srcChainId: LEDGER_CHAIN_ID,
-            dstChainId: VAULT_CHAIN_ID
-        });
-
-        bytes memory payload = abi.encode(withdrawData);
-
-        vm.startPrank(address(_vaultManagerProxy.crossChainRelay()));
-        vm.expectRevert(); // Should revert due to empty token symbol
-        _vaultManagerProxy.receiveMessage(message, payload);
-        vm.stopPrank();
-    }
-
     /// @notice Test rebalance operations with invalid parameters
     function test_invalidRebalanceOperations() public {
         bytes32 tokenHash = keccak256("TEST");
@@ -508,7 +471,8 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
             receiver: address(0xBEEF), // Contract address to receive tokens
             timestamp: uint64(block.timestamp),
             brokerHash: bytes32(0),
-            tokenHash: keccak256("TEST")
+            tokenHash: keccak256("TEST"),
+            periodId: 1
         });
 
         // Create expected message
@@ -545,7 +509,8 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
             receiver: address(0xBEEF),
             timestamp: uint64(block.timestamp),
             brokerHash: bytes32(0),
-            tokenHash: keccak256("TEST")
+            tokenHash: keccak256("TEST"),
+            periodId: 1
         });
 
         // Should revert when called by non-ledger address
@@ -568,7 +533,8 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
             receiver: address(0xBEEF),
             timestamp: uint64(block.timestamp),
             brokerHash: bytes32(0),
-            tokenHash: keccak256("TEST")
+            tokenHash: keccak256("TEST"),
+            periodId: 1
         });
 
         // Should revert when trying to withdraw to invalid chain

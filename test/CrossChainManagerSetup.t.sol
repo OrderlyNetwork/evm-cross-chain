@@ -9,7 +9,7 @@ import "../contracts/OrderlyProxy.sol";
 
 contract DummyContract {
     // fallback that no reverts
-    fallback() external {}
+    fallback() external payable {}
 }
 
 contract CrossChainManagerSetup is Test, CrossChainRelaySetup {
