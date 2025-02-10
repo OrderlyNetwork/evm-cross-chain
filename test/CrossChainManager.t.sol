@@ -472,7 +472,7 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
             timestamp: uint64(block.timestamp),
             brokerHash: bytes32(0),
             tokenHash: keccak256("TEST"),
-            periodId: 1
+            clientId: 1
         });
 
         // Create expected message
@@ -510,7 +510,7 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
             timestamp: uint64(block.timestamp),
             brokerHash: bytes32(0),
             tokenHash: keccak256("TEST"),
-            periodId: 1
+            clientId: 1
         });
 
         // Should revert when called by non-ledger address
@@ -534,7 +534,7 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
             timestamp: uint64(block.timestamp),
             brokerHash: bytes32(0),
             tokenHash: keccak256("TEST"),
-            periodId: 1
+            clientId: 1
         });
 
         // Should revert when trying to withdraw to invalid chain
