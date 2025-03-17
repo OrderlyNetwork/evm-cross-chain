@@ -15,7 +15,7 @@
   },
   "qa": {
     "orderlyop": {
-      "manager": "0xBE404b97de8A6B1304F3dbC17F565034721A40b7",
+      "manager": "0xEdC1ddc2d3225F75B908508AD1c1Bab8cccE444a",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x2266a110c358468e0Fcb173fE77Ce388889483e8",
       "role": "ledger"
@@ -69,7 +69,7 @@
       "role": "vault"
     },
     "sepolia": {
-      "manager": "0x0C72C988e85344EBda07FabdfE820b852f9F4E0A",
+      "manager": "0xe30d68b648B6a31ffB77A7590bd2b44E351E817F",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0x94843406ac2b468C54c527853246614D5B5753Ab",
       "role": "vault"
@@ -101,7 +101,7 @@
   },
   "staging": {
     "orderlyop": {
-      "manager": "0x7e05B86B8644758156E52e5E246A5223Fc578869",
+      "manager": "0xc89a4051865804EF48EC358e26c666132F98c9DA",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xb592011550a7E2a85c69EdF1788F460075b958fc",
       "role": "ledger"
@@ -120,13 +120,13 @@
     },
     "opsepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "manager": "0xd9341E5F92461236EE9e46b153d96F4B2E8c80cD",
+      "manager": "0x5E8E098Cdc8A77842406364B53eaB0861db60404",
       "proxy": "0x6C14bf583C142B66EC59F8fc725B255e3a94BAA3",
       "role": "vault"
     },
     "arbsepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "manager": "0xEfb319B7656Cc36e23D100F3D6F127bA56c00AA2",
+      "manager": "0x1F8e4731bcdE94f38756130Aa287dE9FB985C3c7",
       "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
       "role": "vault"
     },
@@ -138,7 +138,7 @@
     },
     "basesepolia": {
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
-      "manager": "0xd42E4Fafc3A6dEa9c4d1627900ab00a268128467",
+      "manager": "0xad4c2020fBEf5887B5f617919e8B29F2D450a266",
       "proxy": "0xc8E38C1Fd1422f49DB592BAe619080EA5Deb50e0",
       "role": "vault"
     },
@@ -187,7 +187,7 @@
   },
   "dev": {
     "orderlyop": {
-      "manager": "0x69ecc12bD2D04770b837FF9543D7BB52970807E5",
+      "manager": "0xaCC7A02ab579e8C8771331a1f8aD34DacB4b507f",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xdecdf6f646d5cfaf16abf12222ccc84febae5934",
       "role": "ledger"
@@ -241,7 +241,7 @@
       "role": "vault"
     },
     "sepolia": {
-      "manager": "0x0a9773BEE81921206768E2cAD11f06deC0B97EB4",
+      "manager": "0x03A5391690861CAAeCbDcbb5047c1B46A9606587",
       "owner": "0xF6e22738295Af46e8B0dd35F7426f0f83aD0ff6C",
       "proxy": "0xfB6D8E9cA05A8B5e992bACe77BD6412E3A2AE4f4",
       "role": "vault"
