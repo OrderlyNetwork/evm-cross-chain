@@ -150,7 +150,7 @@ contract VaultCrossChainManagerUpgradeable is
                 sender: data.sender,
                 receiver: data.receiver,
                 withdrawNonce: data.withdrawNonce,
-                periodId: data.periodId
+                clientId: data.clientId
             });
             vault.withdraw2Contract(vaultData);
         } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCData)) {
