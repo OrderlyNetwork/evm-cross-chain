@@ -38,6 +38,13 @@ contract VaultCrossChainManagerDatalayout {
     IOrderlyCrossChain public crossChainRelay;
     /// @notice Maps chain IDs to their respective ledger cross-chain manager addresses
     mapping(uint256 => address) public ledgerCrossChainManagers;
+    /// @notice Flag to indicate the version of the cross-chain relay
+    /// @dev 0: LayerZeroV1, 1: LayerZeroV2
+    uint8 public ccRelayOption;
+    /// @notice Interface to the cross-chain messaging relay v2
+    IOrderlyCrossChain public crossChainRelayV2;
+    /// @notice Mapping of trusted cross-chain relay addresses
+    mapping(address => bool) public trustRelays;
 
     /// @notice Ensures only the vault contract can call certain functions
     modifier onlyVault() {
@@ -47,9 +54,11 @@ contract VaultCrossChainManagerDatalayout {
 
     /// @notice Ensures only the cross-chain relay can call certain functions
     modifier onlyRelay() {
-        require(msg.sender == address(crossChainRelay), "VaultCrossChainManager: only crossChainRelay can call");
+        require(trustRelays[msg.sender], "VaultCrossChainManager: only trusted CCRelay can call");
         _;
     }
+
+    event SetCCRelayStatus(address indexed ccRelay, bool status);
 }
 
 /// @title VaultCrossChainManagerUpgradeable
@@ -98,6 +107,22 @@ contract VaultCrossChainManagerUpgradeable is
     /// @param _crossChainRelay Address of the cross-chain relay contract
     function setCrossChainRelay(address _crossChainRelay) public onlyOwner {
         crossChainRelay = IOrderlyCrossChain(_crossChainRelay);
+    }
+
+    /// @notice Sets the cross-chain relay contract address
+    /// @dev The relay handles the actual cross-chain message transmission
+    /// @param _crossChainRelayV2 Address of the cross-chain relay contract
+    function setCrossChainRelayV2(address _crossChainRelayV2) public onlyOwner {
+        crossChainRelayV2 = IOrderlyCrossChain(_crossChainRelayV2);
+    }
+
+    /// @notice Sets the status of a cross-chain relay
+    /// @dev Allows the owner to enable or disable a relay
+    /// @param _ccRelay The address of the cross-chain relay
+    /// @param _status The new status of the relay (true for enabled, false for disabled)
+    function setRelayStatus(address _ccRelay, bool _status) public onlyOwner {
+        trustRelays[_ccRelay] = _status;
+        emit SetCCRelayStatus(_ccRelay, _status);
     }
 
     /// @notice Sets the ledger chain ID and its cross-chain manager address
@@ -175,7 +200,7 @@ contract VaultCrossChainManagerUpgradeable is
     function getDepositFee(VaultTypes.VaultDeposit memory data) public view override returns (uint256) {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: ccRelayOption,
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
@@ -184,7 +209,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        return crossChainRelay.estimateGasFee(message, payload);
+        return estimateFee(message, payload);
     }
 
     /// @notice Initiates a deposit to the ledger
@@ -193,7 +218,7 @@ contract VaultCrossChainManagerUpgradeable is
     function deposit(VaultTypes.VaultDeposit memory data) external override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: ccRelayOption,
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
@@ -201,8 +226,7 @@ contract VaultCrossChainManagerUpgradeable is
             dstChainId: ledgerChainId
         });
         bytes memory payload = abi.encode(data);
-
-        crossChainRelay.sendMessage(message, payload);
+        sendMessage(message, payload);
     }
 
     /// @notice Initiates a deposit with native token fee payment
@@ -211,7 +235,7 @@ contract VaultCrossChainManagerUpgradeable is
     function depositWithFee(VaultTypes.VaultDeposit memory data) external payable override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: ccRelayOption,
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
@@ -220,7 +244,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        crossChainRelay.sendMessageWithFee{value: msg.value}(message, payload);
+        sendMessageWithFee(message, payload);
     }
 
     /// @notice Initiates a deposit with fee refund capability
@@ -235,7 +259,7 @@ contract VaultCrossChainManagerUpgradeable is
     {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: ccRelayOption,
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
@@ -244,7 +268,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        crossChainRelay.sendMessageWithFeeRefund{value: msg.value}(refundReceiver, message, payload);
+        sendMessageWithFeeRefund(refundReceiver, message, payload);
     }
 
     /// @notice Sends withdrawal confirmation back to the ledger
@@ -253,7 +277,7 @@ contract VaultCrossChainManagerUpgradeable is
     function withdraw(VaultTypes.VaultWithdraw memory data) external override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.WithdrawFinish),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: ccRelayOption,
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultWithdraw),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
@@ -262,7 +286,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        crossChainRelay.sendMessage(message, payload);
+        sendMessage(message, payload);
     }
 
     /// @notice Sends burn completion confirmation to the ledger
@@ -271,7 +295,7 @@ contract VaultCrossChainManagerUpgradeable is
     function burnFinish(RebalanceTypes.RebalanceBurnCCFinishData memory data) external override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceBurnFinish),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: ccRelayOption,
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCFinishData),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
@@ -280,7 +304,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        crossChainRelay.sendMessage(message, payload);
+        sendMessage(message, payload);
     }
 
     /// @notice Sends mint completion confirmation to the ledger
@@ -289,7 +313,7 @@ contract VaultCrossChainManagerUpgradeable is
     function mintFinish(RebalanceTypes.RebalanceMintCCFinishData memory data) external override onlyVault {
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.RebalanceMintFinish),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: ccRelayOption,
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceMintCCFinishData),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
@@ -298,7 +322,44 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        crossChainRelay.sendMessage(message, payload);
+        sendMessage(message, payload);
+    }
+
+    function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
+        if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
+            crossChainRelay.sendMessageWithFee{value: msg.value}(message, payload);
+        } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
+            crossChainRelayV2.sendMessageWithFee{value: msg.value}(message, payload);
+        }
+    }
+
+
+    function sendMessageWithFeeRefund(address refundReceiver, OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
+        if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
+            crossChainRelay.sendMessageWithFeeRefund{value: msg.value}(refundReceiver, message, payload);
+        } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
+            crossChainRelayV2.sendMessageWithFeeRefund{value: msg.value}(refundReceiver, message, payload);
+        }
+    }
+
+    function sendMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
+        if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
+            crossChainRelay.sendMessage(message, payload);
+        } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
+            crossChainRelayV2.sendMessage(message, payload);
+        } else {
+            revert("VaultCrossChainManager: ccRelayOption not match");
+        }
+    }
+
+    function estimateFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal view returns (uint256) {
+        if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
+            return crossChainRelay.estimateGasFee(message, payload);
+        } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
+            return crossChainRelayV2.estimateGasFee(message, payload);
+        } else {
+            revert("VaultCrossChainManager: ccRelayOption not match");
+        }
     }
 
     /// @notice Sends a test withdrawal confirmation back to the ledger
@@ -316,7 +377,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.WithdrawFinish),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: ccRelayOption,
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultWithdraw),
             srcCrossChainManager: address(this),
             dstCrossChainManager: ledgerCrossChainManagers[ledgerChainId],
@@ -325,7 +386,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        crossChainRelay.sendMessage(message, payload);
+        sendMessage(message, payload);
     }
 
     /// @notice Returns the role identifier for this contract

@@ -41,7 +41,7 @@ contract BaseTest is Test {
     ) internal pure returns (OrderlyCrossChainMessage.MessageV1 memory) {
         return OrderlyCrossChainMessage.MessageV1({
             method: method,
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1),
             payloadDataType: 0,
             srcCrossChainManager: srcManager,
             dstCrossChainManager: dstManager,
