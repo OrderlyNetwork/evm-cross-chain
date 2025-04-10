@@ -89,6 +89,7 @@ contract VaultCrossChainManagerUpgradeable is
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
     }
 
+    // ================================ ONLY OWNER FUNCTIONS ================================
     /// @notice Sets the chain ID for this contract instance
     /// @dev Critical for cross-chain message routing
     /// @param _chainId The chain ID where this contract is deployed
@@ -144,6 +145,7 @@ contract VaultCrossChainManagerUpgradeable is
         ledgerCrossChainManagers[_chainId] = _ledgerCrossChainManager;
     }
 
+    // ================================ ONLY RELAY FUNCTIONS ================================
     /// @notice Handles incoming cross-chain messages from the relay
     /// @dev Routes messages based on their type and forwards to vault
     /// @param message The cross-chain message metadata
@@ -205,6 +207,8 @@ contract VaultCrossChainManagerUpgradeable is
         vault.withdraw(data);
     }
 
+
+    // ================================ ONLY VAULT FUNCTIONS ================================
     /// @notice Fetches the deposit fee based on deposit data.
     /// @param data Struct containing deposit data.
     function getDepositFee(VaultTypes.VaultDeposit memory data) public view override returns (uint256) {

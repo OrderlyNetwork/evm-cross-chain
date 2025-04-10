@@ -167,6 +167,7 @@ contract LedgerCrossChainManagerUpgradeable is
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
     }
 
+    // ================================ ONLY OWNER FUNCTIONS ================================
     /// @notice Sets the chain ID for this contract instance
     /// @dev Critical for cross-chain message routing and token decimal conversions
     /// @param _chainId The chain ID where this contract is deployed
@@ -245,6 +246,7 @@ contract LedgerCrossChainManagerUpgradeable is
         ledger.accountDeposit(data);
     }
 
+    // ================================ ONLY RELAY FUNCTIONS ================================
     /// @notice Handles incoming cross-chain messages from the relay
     /// @dev Routes messages based on their type and performs necessary decimal conversions
     /// @param message The cross-chain message metadata
@@ -310,6 +312,7 @@ contract LedgerCrossChainManagerUpgradeable is
         }
     }
 
+    // ================================ ONLY LEDGER FUNCTIONS ================================
     /// @notice send a cross-chain withdrawal from the ledger to the vault.
     /// @param data Struct containing withdrawal data.
     function withdraw(EventTypes.WithdrawData memory data) external override onlyLedger {
