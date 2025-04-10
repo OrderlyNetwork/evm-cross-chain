@@ -59,6 +59,7 @@ contract VaultCrossChainManagerDatalayout {
     }
 
     event SetCCRelayStatus(address indexed ccRelay, bool status);
+    event SetCCRelayOption(uint8 ccRelayOption);
 }
 
 /// @title VaultCrossChainManagerUpgradeable
@@ -123,6 +124,15 @@ contract VaultCrossChainManagerUpgradeable is
     function setRelayStatus(address _ccRelay, bool _status) public onlyOwner {
         trustRelays[_ccRelay] = _status;
         emit SetCCRelayStatus(_ccRelay, _status);
+    }
+
+    /// @notice Sets the cross-chain relay option
+    /// @dev Allows the owner to set the cross-chain relay option
+    /// @param _ccRelayOption The new cross-chain relay option
+    /// @dev 0: LayerZeroV1, 1: LayerZeroV2
+    function setCCRelayOption(uint8 _ccRelayOption) public onlyOwner {
+        ccRelayOption = _ccRelayOption;
+        emit SetCCRelayOption(_ccRelayOption);
     }
 
     /// @notice Sets the ledger chain ID and its cross-chain manager address
