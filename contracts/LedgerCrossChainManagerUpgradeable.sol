@@ -68,7 +68,6 @@ contract LedgerCrossChainManagerDatalayout {
 
     /// @notice Ensures only the cross-chain relay can call certain functions
     modifier onlyEnabledRelay() {
-        // TODO: add ccRelayVersion check, mapping or set
         require(enabledRelays[msg.sender], "LedgerCrossChainManager: only enabled CCRelay can call");
         _;
     }
