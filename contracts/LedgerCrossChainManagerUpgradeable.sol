@@ -240,7 +240,7 @@ contract LedgerCrossChainManagerUpgradeable is
     /// @notice Processes a deposit from a vault chain
     /// @dev Emits DepositReceived event and forwards to ledger
     /// @param data The deposit information including account and token details
-    function deposit(AccountTypes.AccountDeposit memory data) internal {
+    function _deposit(AccountTypes.AccountDeposit memory data) internal {
         emit DepositReceived(data);
         ledger.accountDeposit(data);
     }
@@ -269,7 +269,7 @@ contract LedgerCrossChainManagerUpgradeable is
                 srcChainId: message.srcChainId,
                 srcChainDepositNonce: data.depositNonce
             });
-            deposit(depositData);
+            _deposit(depositData);
         } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultWithdraw)) {
             // Handle withdrawal confirmation from vault
             VaultTypes.VaultWithdraw memory data = abi.decode(payload, (VaultTypes.VaultWithdraw));
@@ -290,7 +290,7 @@ contract LedgerCrossChainManagerUpgradeable is
                 chainId: message.srcChainId,
                 withdrawNonce: data.withdrawNonce
             });
-            withdrawFinish(withdrawData);
+            _withdrawFinish(withdrawData);
         } else if (message.payloadDataType == uint8(OrderlyCrossChainMessage.PayloadDataType.RebalanceBurnCCFinishData)) {
             // Handle burn completion from vault
             RebalanceTypes.RebalanceBurnCCFinishData memory data =
@@ -333,7 +333,7 @@ contract LedgerCrossChainManagerUpgradeable is
 
         bytes memory payload = abi.encode(data);
 
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
     /// @notice send a cross-chain withdrawal from the ledger to the vault. but only withdraw to contract address
@@ -359,7 +359,7 @@ contract LedgerCrossChainManagerUpgradeable is
 
         bytes memory payload = abi.encode(data);
 
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
 
@@ -384,7 +384,7 @@ contract LedgerCrossChainManagerUpgradeable is
 
         bytes memory payload = abi.encode(burnData);
 
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
     /// @notice Initiates a token mint operation on a vault chain
@@ -408,10 +408,14 @@ contract LedgerCrossChainManagerUpgradeable is
 
         bytes memory payload = abi.encode(mintData);
 
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
-    function sendMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
+    /// @notice Sends a message to the cross-chain relay
+    /// @dev Selects the correct cross-chain relay version based on the message option
+    /// @param message The cross-chain message metadata
+    /// @param payload The actual message data
+    function _sendMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
         if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
             crossChainRelay.sendMessage(message, payload);
         } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
@@ -419,6 +423,15 @@ contract LedgerCrossChainManagerUpgradeable is
         }
     }
 
+     /// @notice Processes a withdrawal completion message
+    /// @dev Internal function called when a withdrawal is confirmed by vault
+    /// @param message The withdrawal completion details
+    function _withdrawFinish(AccountTypes.AccountWithdraw memory message) internal {
+        ledger.accountWithDrawFinish(message);
+    }
+
+
+    // ================================ ONLY FOR TEST ================================
     /// @notice Sends a test withdrawal message to verify cross-chain connectivity
     /// @dev Uses a special token symbol "CrossChainManagerTest" for testing
     /// @param dstChainId The destination chain to test connectivity with
@@ -458,15 +471,10 @@ contract LedgerCrossChainManagerUpgradeable is
         data.fee = cvtFeeAmount;
 
         bytes memory payload = abi.encode(data);
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
-    /// @notice Processes a withdrawal completion message
-    /// @dev Internal function called when a withdrawal is confirmed by vault
-    /// @param message The withdrawal completion details
-    function withdrawFinish(AccountTypes.AccountWithdraw memory message) internal {
-        ledger.accountWithDrawFinish(message);
-    }
+   
 
     /// @notice Returns the role identifier for this contract
     /// @return A string indicating this is the ledger cross-chain manager

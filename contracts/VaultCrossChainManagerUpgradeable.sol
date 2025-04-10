@@ -219,7 +219,21 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        return estimateFee(message, payload);
+        return _estimateFee(message, payload);
+    }
+
+    /// @notice Estimates the gas fee for a message
+    /// @dev Estimates the gas fee for a message to the cross-chain relay
+    /// @param message The cross-chain message metadata
+    /// @param payload The actual message payload
+    function _estimateFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal view returns (uint256) {
+        if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
+            return crossChainRelay.estimateGasFee(message, payload);
+        } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
+            return crossChainRelayV2.estimateGasFee(message, payload);
+        } else {
+            revert("VaultCrossChainManager: ccRelayOption not match");
+        }
     }
 
     /// @notice Initiates a deposit to the ledger
@@ -236,7 +250,7 @@ contract VaultCrossChainManagerUpgradeable is
             dstChainId: ledgerChainId
         });
         bytes memory payload = abi.encode(data);
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
     /// @notice Initiates a deposit with native token fee payment
@@ -254,7 +268,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        sendMessageWithFee(message, payload);
+        _sendMessageWithFee(message, payload);
     }
 
     /// @notice Initiates a deposit with fee refund capability
@@ -278,7 +292,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        sendMessageWithFeeRefund(refundReceiver, message, payload);
+        _sendMessageWithFeeRefund(refundReceiver, message, payload);
     }
 
     /// @notice Sends withdrawal confirmation back to the ledger
@@ -296,7 +310,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
     /// @notice Sends burn completion confirmation to the ledger
@@ -314,7 +328,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
     /// @notice Sends mint completion confirmation to the ledger
@@ -332,27 +346,16 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        sendMessage(message, payload);
-    }
-
-    function sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
-        if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
-            crossChainRelay.sendMessageWithFee{value: msg.value}(message, payload);
-        } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
-            crossChainRelayV2.sendMessageWithFee{value: msg.value}(message, payload);
-        }
+        _sendMessage(message, payload);
     }
 
 
-    function sendMessageWithFeeRefund(address refundReceiver, OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
-        if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
-            crossChainRelay.sendMessageWithFeeRefund{value: msg.value}(refundReceiver, message, payload);
-        } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
-            crossChainRelayV2.sendMessageWithFeeRefund{value: msg.value}(refundReceiver, message, payload);
-        }
-    }
 
-    function sendMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
+    /// @notice Sends a message
+    /// @dev Sends a message to the cross-chain relay
+    /// @param message The cross-chain message metadata
+    /// @param payload The actual message payload
+    function _sendMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
         if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
             crossChainRelay.sendMessage(message, payload);
         } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
@@ -362,16 +365,36 @@ contract VaultCrossChainManagerUpgradeable is
         }
     }
 
-    function estimateFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal view returns (uint256) {
+    /// @notice Sends a message with fee payment
+    /// @dev Allows paying cross-chain fees in native tokens (e.g., ETH)
+    /// @param message The cross-chain message metadata
+    /// @param payload The actual message payload
+    function _sendMessageWithFee(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
         if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
-            return crossChainRelay.estimateGasFee(message, payload);
+            crossChainRelay.sendMessageWithFee{value: msg.value}(message, payload);
         } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
-            return crossChainRelayV2.estimateGasFee(message, payload);
+            crossChainRelayV2.sendMessageWithFee{value: msg.value}(message, payload);
         } else {
             revert("VaultCrossChainManager: ccRelayOption not match");
         }
     }
 
+    /// @notice Sends a message with fee refund capability
+    /// @dev Allows specifying a refund address for unused cross-chain fees
+    /// @param refundReceiver Address to receive any unused fee refunds
+    /// @param message The cross-chain message metadata
+    /// @param payload The actual message payload
+    function _sendMessageWithFeeRefund(address refundReceiver, OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload) internal {
+        if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1)) {
+            crossChainRelay.sendMessageWithFeeRefund{value: msg.value}(refundReceiver, message, payload);
+        } else if (message.option == uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV2)) {
+            crossChainRelayV2.sendMessageWithFeeRefund{value: msg.value}(refundReceiver, message, payload);
+        } else {
+            revert("VaultCrossChainManager: ccRelayOption not match");
+        }
+    }
+
+    
     /// @notice Sends a test withdrawal confirmation back to the ledger
     /// @dev Used for testing cross-chain communication
     function _sendTestWithdrawBack() internal {
@@ -396,7 +419,7 @@ contract VaultCrossChainManagerUpgradeable is
         });
         bytes memory payload = abi.encode(data);
 
-        sendMessage(message, payload);
+        _sendMessage(message, payload);
     }
 
     /// @notice Returns the role identifier for this contract
