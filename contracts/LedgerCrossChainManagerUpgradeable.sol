@@ -54,8 +54,8 @@ contract LedgerCrossChainManagerDatalayout {
     /// @dev version number: 0 = LayerZeroV1, 1 = LayerZeroV2
     mapping(uint256 => uint8) public ccRelayOption;
 
-    /// @notice Mapping of trusted cross-chain relay addresses
-    mapping(address => bool) public trustRelays;
+    /// @notice Mapping of enabled cross-chain relay addresses
+    mapping(address => bool) public enabledRelays;
 
     /// @notice Interface to the cross-chain messaging relay v2
     IOrderlyCrossChain public crossChainRelayV2;
@@ -67,9 +67,9 @@ contract LedgerCrossChainManagerDatalayout {
     }
 
     /// @notice Ensures only the cross-chain relay can call certain functions
-    modifier onlyRelay() {
+    modifier onlyEnabledRelay() {
         // TODO: add ccRelayVersion check, mapping or set
-        require(trustRelays[msg.sender], "LedgerCrossChainManager: only trusted CCRelay can call");
+        require(enabledRelays[msg.sender], "LedgerCrossChainManager: only enabled CCRelay can call");
         _;
     }
 
@@ -201,7 +201,7 @@ contract LedgerCrossChainManagerUpgradeable is
     /// @param _ccRelay The address of the cross-chain relay
     /// @param _status The new status of the relay (true for enabled, false for disabled)
     function setRelayStatus(address _ccRelay, bool _status) public onlyOwner {
-        trustRelays[_ccRelay] = _status;
+        enabledRelays[_ccRelay] = _status;
         emit SetCCRelayStatus(_ccRelay, _status);
     }
 
@@ -254,7 +254,7 @@ contract LedgerCrossChainManagerUpgradeable is
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload)
         external
         override
-        onlyRelay
+        onlyEnabledRelay
     {
         require(message.dstChainId == chainId, "LedgerCrossChainManager: dstChainId not match");
 

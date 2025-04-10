@@ -43,8 +43,8 @@ contract VaultCrossChainManagerDatalayout {
     uint8 public ccRelayOption;
     /// @notice Interface to the cross-chain messaging relay v2
     IOrderlyCrossChain public crossChainRelayV2;
-    /// @notice Mapping of trusted cross-chain relay addresses
-    mapping(address => bool) public trustRelays;
+    /// @notice Mapping of enabled cross-chain relay addresses
+    mapping(address => bool) public enabledRelays;
 
     /// @notice Ensures only the vault contract can call certain functions
     modifier onlyVault() {
@@ -53,8 +53,8 @@ contract VaultCrossChainManagerDatalayout {
     }
 
     /// @notice Ensures only the cross-chain relay can call certain functions
-    modifier onlyRelay() {
-        require(trustRelays[msg.sender], "VaultCrossChainManager: only trusted CCRelay can call");
+    modifier onlyEnabledRelay() {
+        require(enabledRelays[msg.sender], "VaultCrossChainManager: only enabled CCRelay can call");
         _;
     }
 
@@ -123,7 +123,7 @@ contract VaultCrossChainManagerUpgradeable is
     /// @param _ccRelay The address of the cross-chain relay
     /// @param _status The new status of the relay (true for enabled, false for disabled)
     function setRelayStatus(address _ccRelay, bool _status) public onlyOwner {
-        trustRelays[_ccRelay] = _status;
+        enabledRelays[_ccRelay] = _status;
         emit SetCCRelayStatus(_ccRelay, _status);
     }
 
@@ -153,7 +153,7 @@ contract VaultCrossChainManagerUpgradeable is
     function receiveMessage(OrderlyCrossChainMessage.MessageV1 memory message, bytes memory payload)
         external
         override
-        onlyRelay
+        onlyEnabledRelay
     {
         require(message.dstChainId == chainId, "VaultCrossChainManager: dstChainId not match");
 
