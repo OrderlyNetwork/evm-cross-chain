@@ -73,7 +73,7 @@ contract LedgerCrossChainManagerDatalayout {
     }
 
     event SetCCRelayStatus(address indexed ccRelay, bool status);
-    event SetCCRelayOption(uint8 ccRelayOption);
+    event SetCCRelayOption(uint256 chainId, uint8 ccRelayOption);
 }
 
 /// @notice Handles token decimal conversions between different chains
@@ -206,11 +206,12 @@ contract LedgerCrossChainManagerUpgradeable is
 
     /// @notice Sets the cross-chain relay option
     /// @dev Allows the owner to set the cross-chain relay option
+    /// @param _chainId The chain ID of vault chain
     /// @param _ccRelayOption The new cross-chain relay option
     /// @dev 0: LayerZeroV1, 1: LayerZeroV2
-    function setCCRelayOption(uint8 _ccRelayOption) public onlyOwner {
-        ccRelayOption = _ccRelayOption;
-        emit SetCCRelayOption(_ccRelayOption);
+    function setCCRelayOption(uint256 _chainId, uint8 _ccRelayOption) public onlyOwner {
+        ccRelayOption[_chainId] = _ccRelayOption;
+        emit SetCCRelayOption(_chainId, _ccRelayOption);
     }
 
     /// @notice Sets the operator manager contract address
