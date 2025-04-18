@@ -85,7 +85,7 @@ contract VaultCrossChainManagerUpgradeable is
     /// @notice Upgrades the implementation contract
     /// @dev Only callable by owner through proxy
     /// @param newImplementation Address of new implementation contract
-    function upgradeTo(address newImplementation) public override onlyOwner {
+    function upgradeTo(address newImplementation) public override onlyOwner onlyProxy {
         _upgradeToAndCallUUPS(newImplementation, new bytes(0), false);
     }
 
