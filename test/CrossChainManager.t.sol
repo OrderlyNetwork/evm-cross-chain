@@ -349,7 +349,7 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
         // Create message with invalid payload type
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1),
             payloadDataType: 99, // Invalid payload type
             srcCrossChainManager: address(_vaultManagerProxy),
             dstCrossChainManager: address(_ledgerManagerProxy),
@@ -371,7 +371,7 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
         // Try to send message to wrong chain
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Deposit),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1),
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.VaultTypesVaultDeposit),
             srcCrossChainManager: address(_vaultManagerProxy),
             dstCrossChainManager: address(_ledgerManagerProxy),
@@ -478,7 +478,7 @@ contract CrossChainManagerTest is BaseTest, CrossChainManagerSetup {
         // Create expected message
         OrderlyCrossChainMessage.MessageV1 memory message = OrderlyCrossChainMessage.MessageV1({
             method: uint8(OrderlyCrossChainMessage.CrossChainMethod.Withdraw2Contract),
-            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZero),
+            option: uint8(OrderlyCrossChainMessage.CrossChainOption.LayerZeroV1),
             payloadDataType: uint8(OrderlyCrossChainMessage.PayloadDataType.EventTypesWithdraw2Contract),
             srcCrossChainManager: address(_ledgerManagerProxy),
             dstCrossChainManager: address(_vaultManagerProxy),
